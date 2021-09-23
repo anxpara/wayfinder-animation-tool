@@ -30,7 +30,7 @@ WAT is written in Typescript because TS is superior, although TS compiles down t
 2. Add an invisible wayfinder div at a common ancestor of those waypoints.
 3. Add traveler divs to the wayfinder. The traveler divs are only wrappers for the actual content.
 4. Load those elements into Typescript and create their respective waypoint objects.
-5. Use sendToWpAnimParams(waypoint, wayfinder) to get all the parameters necessary to animate travelers to waypoints.
+5. Call sendToWaypointAnimParams(waypoint, wayfinder) to get all the parameters necessary to animate travelers to waypoints.
 6. Plug the parameters straight into an AnimeJS animation function using the spread operator.
 7. Profit
 
