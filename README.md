@@ -45,15 +45,15 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 Html
 
 ```html
-<div id="ps-waypoint" class="card potion-shop"><p>Potion shop</p></div>
-<div id="bf-waypoint" class="card battlefield"><p>Battlefield</p></div>
+<div id="ps-waypoint" class="square-card potion-shop"><p>Potion shop</p></div>
+<div id="bf-waypoint" class="square-card battlefield"><p>Battlefield</p></div>
 
 <div class="wayfinder">
-  <!-- traveler divs are only wrappers for actual content -->
+  <!-- traveler divs are generally only wrappers for actual content -->
   <div id="knight-traveler" class="traveler">
-    <div class="card knight">
+    <div class="square-card knight">
       <p>Knight</p>
-      <p>"I am going into battle, and I want only your strongest potions."</p>
+      <p>"Hello, potion seller. I am going into battle, and I want only your strongest potions."</p>
     </div>
   </div>
 </div>
@@ -66,27 +66,28 @@ SCSS
 .wayfinder { @include wat.wayfinder; }
 .traveler { @include wat.traveler; }
 
-.card {
+.square-card {
   width: 18.8em;
   height: 18.8em;
   padding: 0.63em;
-  border: dashed 0.16em; // Travelers' content divs should match any borders on waypoints.
-  // outline: dashed 0.16em; // Outlines don't affect size or position, and don't need to match
-}
-
-.knight {
-  color: blue;
-  border: solid;
-  vertical-align: bottom;
+  border: dashed 0.2em; // travelers' content divs should match any border widths on waypoints.
+  // outline: dashed 0.2em; // outlines don't affect size or position, so they don't need to match
 }
 
 .potion-shop,
 .battlefield {
-  margin: 1.26em;
+  // margins are useful for waypoints, but they're generally unnecessary on travelers and may lead to wonky effects
+  margin: 1.26em; 
   p { text-align: end; }
 }
 .potion-shop { color: green; }
 .battlefield { color: red; }
+
+.knight {
+  color: blue;
+  border-style: solid;
+  vertical-align: bottom;
+}
 ```
 
 Typescript
@@ -95,20 +96,20 @@ Typescript
   import { sendToWaypointAnimParams, Waypoint } from 'wayfinder-animation-tool';
   import anime from 'animejs';
 
-  var wayfinderElement = document.getElementById('wf')!;
-  var potionShopElement = document.getElementById('ps-waypoint')!;
-  var battlefieldElement = document.getElementById('bf-waypoint')!;
+  let wayfinderElement = document.getElementById('wf')!;
+  let potionShopElement = document.getElementById('ps-waypoint')!;
+  let battlefieldElement = document.getElementById('bf-waypoint')!;
   
-  var potionShopWaypoint: Waypoint = {
+  let potionShopWaypoint: Waypoint = {
     name: 'Potion shop',
     element: potionShopElement,
   };
-  var battlefieldWaypoint: Waypoint = {
+  let battlefieldWaypoint: Waypoint = {
     name: 'Battlefield',
     element: battlefieldElement,
   };
   
-  var watParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
+  let watParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
   anime.set('#knight-traveler', {
     ...watParams,
   });
