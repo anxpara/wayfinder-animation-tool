@@ -3,7 +3,7 @@
   <br>
   Wayfinder Animation Tool
 </h1>
-<h4 align="center">Animate the web intuitively | <a href="https://wayfinder.anxpara.com" target="_blank">wayfinder.anxpara.com</a> | BETA </h4>
+<h4 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://wayfinder.anxpara.com" target="_blank">wayfinder.anxpara.com</a> | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h4>
 
 ### Download
 
