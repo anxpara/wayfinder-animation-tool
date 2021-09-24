@@ -1,0 +1,130 @@
+/** REQUIRED MIXINS */
+
+/**
+* the animation container must be removed from the page's flow, and its position must be identical to
+* the wayfinder's position. absolute positioning is recommended, it will support scrolling
+*
+* the animation container should also be placed after the wayfinder in the html file in order to 
+* maintain stacking order
+*
+* if the wayfinder has an unusual positioning, then adjust the animation container to match
+*/
+@mixin wayfinder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+
+  // hide this to prevent inspector tool from being blocked by the animation container
+  // in the case that the wayfinder's width/height are ever non-zero
+  visibility: hidden;
+}
+
+/** traveler divs should generally be used only as wrappers for actual content */
+@mixin traveler {
+  visibility: visible;
+
+  position: relative;
+
+  // optimization for animejs, avoids uncommon artifacts
+  // not supported by ie but who cares
+  will-change: transforms;
+}
+
+/** COMMON HEADACHE FIXES */
+
+/**
+* want to prevent horizontal scrolling when animated divs extend outside the page?
+* especially on mobile, which can cause annoying touch input and scroll hiccuping bugs?
+* 
+* add this mixin to the wayfinder, and add the mixin below to the body
+*
+* normally this would be easy for most divs, but absolutely positioned divs have wonky behavior regarding
+* filling the page and hiding overflow
+*
+* make sure to also hide horizontal overflow of any waypoints or content outside the wayfinder,
+* which should be simpler, assuming they aren't positioned absolutely
+*/
+@mixin wayfinder--hide-x-overflow {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/**
+* in order for the wayfinder to fill the entire page, body must use this mixin
+*
+* this technique is needed for divs with absolute positioning, since
+* height: 100% would end up being the viewport height, not the page height, and because
+* overflow-x sucks and only works when the height is set correctly
+*
+* there are some promising css properties regarding horizontal clipping, that sound like they
+* could make all of this unnecessary, but they didn't work nicely last time I tried them
+*/
+@mixin body--enable-absolute-divs-to-fill-page-height {
+  position: relative;
+  float: left;
+  min-height: 100vh;
+}
+
+/**
+*  wayfinder will match the travelers's size to the waypoint's size, but this
+*  won't necessarily be reflected in the traveler's child
+*
+*  so if there's only one child in the traveler and you want to force it to match the waypoint's size,j
+*  you can add this mixin
+*
+*  otherwise, place whatever elements in the traveler you'd like and design them to flow with
+*  any size changes you've added
+*/
+@mixin traveler-child--fill-waypoint-size {
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+/** ADDITIONAL STYLING MIXINS */
+
+/** cool h2 nameplate to label waypoints clearly */
+@mixin waypoint-nameplate {
+  position: absolute;
+
+  right: 0.5em;
+  bottom: -0.2em;
+
+  font-size: 1.3em;
+
+  min-width: 1.1em;
+  padding: 0 0.6em 0 0.6em;
+  text-align: center;
+
+  padding-top: 0.09em;
+  padding-bottom: 0.15em;
+
+  border: dotted 0.1em;
+  border-radius: 1.5em;
+}
+
+/** same, but floated up a couple layers */
+@mixin waypoint-floating-nameplate {
+  @include waypoint-nameplate;
+
+  z-index: 2;
+
+  color: lightseagreen;
+  background: #181a1b;
+  border-style: dashed;
+}
+
+/**
+* gives a layered look to a floating nameplate, looks cool,
+* also great for z-index layer visualization
+*
+* make sure to hide text and set width to match
+*/
+@mixin waypoint-floating-nameplate-shadow {
+  @include waypoint-nameplate;
+
+  right: 0.9em;
+  bottom: 0.2em;
+}

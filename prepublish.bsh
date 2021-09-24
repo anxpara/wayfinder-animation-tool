@@ -1,0 +1,3 @@
+mkdir -p dist
+cp src/*.scss dist/
+tsc
