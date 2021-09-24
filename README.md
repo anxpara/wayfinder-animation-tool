@@ -82,7 +82,10 @@ SCSS
   p { text-align: end; }
 }
 .potion-shop { color: green; }
-.battlefield { color: red; }
+.battlefield {
+  color: red;
+  transform: translateY(-5em) rotate(45deg);
+}
 
 .knight {
   color: blue;
