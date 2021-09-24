@@ -1,3 +1,5 @@
 mkdir -p dist
 cp src/*.scss dist/
+cp README.md dist/
+cp LICENSE dist/
 tsc

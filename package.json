@@ -1,12 +1,10 @@
 {
   "name": "wayfinder-animation-tool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Animate the web intuitively",
   "main": "dist/wayfinder.js",
   "types": "dist/wayfinder.d.ts",
-  "files": [
-    "dist/*.scss"
-  ],
+  "files": [],
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine --config='jasmine.json'",
     "clean": "rm -rf dist",
