@@ -3,7 +3,7 @@
   <br>
   Wayfinder Animation Tool
 </h1>
-<h4 align="center">Animate the web intuitively | <a href="https://wayfinder.anxpara.com" target="_blank">wayfinder.anxpara.com</a> | BETA </h4>
+<h4 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://wayfinder.anxpara.com" target="_blank">wayfinder.anxpara.com</a> | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h4>
 
 ### Download
 
@@ -41,6 +41,7 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 3. Logging...
 
 ## Hello potion seller
+#### <a href="https://dev.anxpara.com" target="_blank">(results)</a>
 
 Html
 
@@ -76,7 +77,7 @@ SCSS
 
 .potion-shop,
 .battlefield {
-  // margins are useful for waypoints, but they're generally unnecessary on travelers and may lead to wonky effects
+  // margins are useful for waypoints, but generally unnecessary on travelers and may lead to wonky effects
   margin: 1.26em; 
   p { text-align: end; }
 }
