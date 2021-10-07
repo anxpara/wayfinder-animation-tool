@@ -3,3 +3,9 @@ cp src/*.scss dist/
 cp README.md dist/
 cp LICENSE dist/
 tsc
+
+rollup dist/wayfinder.js --file dist/umd/wayfinder.js --format umd --name wayfinder
+terser --ecma 6 --compress --mangle -o dist/umd/wayfinder.min.js -- dist/umd/wayfinder.js
+rm dist/umd/wayfinder.js
+
+rollup -c

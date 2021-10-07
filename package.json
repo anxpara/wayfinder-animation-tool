@@ -3,8 +3,13 @@
   "version": "1.0.4",
   "description": "Animate the web intuitively",
   "main": "dist/wayfinder.js",
+  "umd:main": "dist/umd/wayfinder.min.js",
+  "umd:name": "wayfinder",
+  "unpkg": "dist/umd/wayfinder.min.js",
   "types": "dist/wayfinder.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine --config='jasmine.json'",
     "clean": "rm -rf dist",
@@ -15,7 +20,7 @@
     "url": "git+https://github.com/anxpara/wayfinder-animation-tool.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "anxpara anxpara@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/anxpara/wayfinder-animation-tool/issues"
@@ -23,6 +28,9 @@
   "homepage": "https://github.com/anxpara/wayfinder-animation-tool#readme",
   "dependencies": {},
   "devDependencies": {
+    "rollup": "^2.58.0",
+    "rollup-plugin-dts": "^4.0.0",
+    "terser": "^5.9.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   }
