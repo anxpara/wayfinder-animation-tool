@@ -41,7 +41,7 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 3. Logging...
 
 ## Hello potion seller
-#### <a href="https://dev.anxpara.com" target="_blank">(results)</a>
+#### <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">(View and edit on Codepen)</a>
 
 Html
 
@@ -97,32 +97,38 @@ SCSS
 Typescript
 
 ```typescript
-  import { sendToWaypointAnimParams, Waypoint } from 'wayfinder-animation-tool';
-  import anime from 'animejs';
+import { sendToWaypointAnimParams, Waypoint } from 'wayfinder-animation-tool';
+import anime from 'animejs';
 
-  let wayfinderElement = document.getElementById('wf')!;
-  let potionShopElement = document.getElementById('ps-waypoint')!;
-  let battlefieldElement = document.getElementById('bf-waypoint')!;
-  
-  let potionShopWaypoint: Waypoint = {
-    name: 'Potion shop',
-    element: potionShopElement,
-  };
-  let battlefieldWaypoint: Waypoint = {
-    name: 'Battlefield',
-    element: battlefieldElement,
-  };
-  
-  let watParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
-  anime.set('#knight-traveler', {
-    ...watParams,
+let wayfinderElement = document.getElementById('wf')!;
+let potionShopElement = document.getElementById('ps-waypoint')!;
+let battlefieldElement = document.getElementById('bf-waypoint')!;
+
+let potionShopWaypoint: Waypoint = {
+  name: 'Potion shop',
+  element: potionShopElement,
+};
+let battlefieldWaypoint: Waypoint = {
+  name: 'Battlefield',
+  element: battlefieldElement,
+};
+
+let psParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
+let bfParams = sendToWaypointAnimParams(battlefieldWaypoint, wayfinderElement);
+
+function animate(): void {
+  anime.set("#knight-traveler", {
+    ...psParams
   });
 
-  watParams = sendToWaypointAnimParams(battlefieldWaypoint, wayfinderElement);
   anime({
-    targets: '#knight-traveler',
-    ...watParams,
+    targets: "#knight-traveler",
+    ...bfParams,
     delay: 1000,
-    easing: 'easeInOutQuart',
+    easing: "easeInOutQuart"
   });
+}
+
+animate();
+setInterval(animate, 3000);
 ```
