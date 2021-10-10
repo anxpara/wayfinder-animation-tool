@@ -10,24 +10,20 @@
 * if the wayfinder has an unusual positioning, then adjust the animation container to match
 */
 @mixin wayfinder {
+  visibility: hidden;
   position: absolute;
   left: 0;
   top: 0;
   width: 0;
   height: 0;
-
-  // hide this to prevent inspector tool from being blocked by the animation container
-  // in the case that the wayfinder's width/height are ever non-zero
-  visibility: hidden;
 }
 
 /** traveler divs should generally be used only as wrappers for actual content */
 @mixin traveler {
   visibility: visible;
+  position: absolute;
 
-  position: relative;
-
-  // optimization for animejs, avoids uncommon artifacts
+  // optimization for animejs, prevents artifacts that occur in specific situations
   // not supported by ie but who cares
   will-change: transforms;
 }
