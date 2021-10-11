@@ -18,7 +18,7 @@ Wayfinder is a super lightweight animation tool that allows you to use the predi
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
 * Visualize and test your waypoints and travelers in real-time while tinkering with browser dev tools
-* Target desktop and mobile together the same way you would with any other site
+* Escape old paradigms for targeting both   desktop and mobile together
 * Lift off from waypoints with additional relative animations and transforms, if desired
 * Easily incorporate wayfinder into an existing site (theoretically, atm), since any old div can be a waypoint with no modification
 
