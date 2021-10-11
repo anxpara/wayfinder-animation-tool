@@ -1,13 +1,10 @@
 /** REQUIRED MIXINS */
 
 /**
-* the animation container must be removed from the page's flow, and its position must be identical to
-* the wayfinder's position. absolute positioning is recommended, it will support scrolling
+* the wayfinder div must be removed from the page's flow, and its position must be identical to
+* its parent's position
 *
-* the animation container should also be placed after the wayfinder in the html file in order to 
-* maintain stacking order
-*
-* if the wayfinder has an unusual positioning, then adjust the animation container to match
+* wayfinder div should generally be placed at the end of the div it's in, for z-index purposes
 */
 @mixin wayfinder {
   visibility: hidden;
