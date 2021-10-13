@@ -9,3 +9,5 @@ terser --ecma 6 --compress --mangle -o dist/umd/wayfinder.min.js -- dist/umd/way
 rm dist/umd/wayfinder.js
 
 rollup -c
+
+sass src/wayfinder.scss dist/wayfinder.css --no-source-map

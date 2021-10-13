@@ -1,3 +1,4 @@
+<!-- prettier-ignore-start -->
 <h1 align="center">
   <a href="wayfinder.anxpara.com"><img src="https://i.imgur.com/H5KVcwM.jpg" width="250"/></a>
   <br>
@@ -18,11 +19,11 @@ Wayfinder is a super lightweight animation tool that allows you to use the predi
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
 * Visualize and test your waypoints and travelers in real-time while tinkering with browser dev tools
-* Escape old paradigms for targeting both   desktop and mobile together
+* Escape old paradigms for developing/animating desktop and mobile together
 * Lift off from waypoints with additional relative animations and transforms, if desired
 * Easily incorporate wayfinder into an existing site (theoretically, atm), since any old div can be a waypoint with no modification
 
-WAT is written in Typescript because TS is superior, although TS compiles down to JS, if you must use it. A couple required scss mixins are provided for a quick start, but their properties can be manually copied if you're not using scss/sass. Wat has zero dependencies.
+WAT is written in Typescript because TS is superior, although TS compiles down to JS, if you must use it. A couple required scss mixins are provided in wayfinder.scss, or as classes in wayfinder.css. WAT currently has zero dependencies, but will eventually depend on a matrix library, e.g. glMatrix.
 
 ## How it works
 
@@ -132,3 +133,5 @@ function animate(): void {
 animate();
 setInterval(animate, 3000);
 ```
+
+<!-- prettier-ignore-end -->

@@ -14,6 +14,9 @@
   width: 0;
   height: 0;
 }
+.wayfinder {
+  @include wayfinder;
+}
 
 /** traveler divs should generally be used only as wrappers for actual content */
 @mixin traveler {
@@ -23,6 +26,9 @@
   // optimization for animejs, prevents artifacts that occur in specific situations
   // not supported by ie but who cares
   will-change: transforms;
+}
+.traveler {
+  @include traveler;
 }
 
 /** COMMON HEADACHE FIXES */
@@ -44,6 +50,9 @@
   height: 100%;
   overflow-x: hidden;
 }
+.wayfinder--hide-x-overflow {
+  @include wayfinder--hide-x-overflow;
+}
 
 /**
 * in order for the wayfinder to fill the entire page, body must use this mixin
@@ -60,6 +69,9 @@
   float: left;
   min-height: 100vh;
 }
+.body--enable-absolute-divs-to-fill-page-height {
+  @include body--enable-absolute-divs-to-fill-page-height;
+}
 
 /**
 *  wayfinder will match the travelers's size to the waypoint's size, but this
@@ -74,6 +86,9 @@
 @mixin traveler-child--fill-waypoint-size {
   width: -webkit-fill-available;
   height: -webkit-fill-available;
+}
+.traveler-child--fill-waypoint-size {
+  @include traveler-child--fill-waypoint-size;
 }
 
 /** ADDITIONAL STYLING MIXINS */
@@ -97,6 +112,9 @@
   border: dotted 0.1em;
   border-radius: 1.5em;
 }
+.waypoint-nameplate {
+  @include waypoint-nameplate;
+}
 
 /** same, but floated up a couple layers */
 @mixin waypoint-floating-nameplate {
@@ -107,6 +125,9 @@
   color: lightseagreen;
   background: #181a1b;
   border-style: dashed;
+}
+.waypoint-floating-nameplate {
+  @include waypoint-floating-nameplate;
 }
 
 /**
@@ -120,4 +141,7 @@
 
   right: 0.9em;
   bottom: 0.2em;
+}
+.waypoint-floating-nameplate-shadow {
+  @include waypoint-floating-nameplate-shadow;
 }
