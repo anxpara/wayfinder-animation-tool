@@ -26,10 +26,10 @@
     "url": "https://github.com/anxpara/wayfinder-animation-tool/issues"
   },
   "homepage": "https://github.com/anxpara/wayfinder-animation-tool#readme",
-  "dependencies": {},
   "devDependencies": {
     "rollup": "^2.58.0",
     "rollup-plugin-dts": "^4.0.0",
+    "sass": "^1.42.1",
     "terser": "^5.9.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
