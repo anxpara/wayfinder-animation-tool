@@ -2,16 +2,16 @@
   "name": "wayfinder-animation-tool",
   "version": "1.0.6",
   "description": "Animate the web intuitively",
-  "main": "dist/wayfinder.js",
+  "main": "dist/cjs/wayfinder.js",
+  "module": "dist/es/wayfinder.js",
   "umd:main": "dist/umd/wayfinder.min.js",
   "umd:name": "wayfinder",
   "unpkg": "dist/umd/wayfinder.min.js",
-  "types": "dist/wayfinder.d.ts",
+  "types": "dist/cjs/wayfinder.d.ts",
   "files": [
     "dist/**"
   ],
   "scripts": {
-    "test": "ts-node node_modules/jasmine/bin/jasmine --config='jasmine.json'",
     "clean": "rm -rf dist",
     "prepublish": "bash prepublish.bsh"
   },
