@@ -111,7 +111,6 @@ export class SendToWpResultsLogData<WaypointType> {
   waypoint: WaypointType | undefined;
   waypointFullStyle: CSSStyleDeclaration | undefined;
   wayfinderElement: HTMLElement | undefined;
-  wayfinderFullStyle: CSSStyleDeclaration | undefined;
   animParamResults: WatAnimParams | undefined;
 }
 
@@ -134,7 +133,6 @@ function makeSendToWpResultsLogData(
     waypoint: destWp,
     waypointFullStyle: destWp.element ? getElementStyle(destWp.element) : undefined,
     wayfinderElement: wayfinder,
-    wayfinderFullStyle: getElementStyle(wayfinder),
     animParamResults,
   };
 }
