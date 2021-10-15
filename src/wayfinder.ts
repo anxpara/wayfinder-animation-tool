@@ -3,7 +3,7 @@ import {
   get2dTransformMatrixOfElement,
   get3dTransformMatrixOfElement,
   convertMatrixToString,
-  getElementStyle,
+  getComputedStyleOfElement,
 } from "./utils/css-utils";
 import { WatAnimParams } from "./wat-anim-params";
 
@@ -109,7 +109,7 @@ export function transformToWaypointAnimParams(
 export class SendToWpResultsLogData<WaypointType> {
   waypointName: string = "";
   waypoint!: WaypointType;
-  waypointFullStyle!: CSSStyleDeclaration;
+  waypointComputedStyle!: CSSStyleDeclaration;
   wayfinderElement!: HTMLElement;
   animParamResults!: WatAnimParams;
 }
@@ -135,7 +135,7 @@ function makeSendToWpResultsLogData(
   return {
     waypointName: destWp.name,
     waypoint: destWp,
-    waypointFullStyle: getElementStyle(destWp.element),
+    waypointComputedStyle: getComputedStyleOfElement(destWp.element),
     wayfinderElement: wayfinder,
     animParamResults,
   };

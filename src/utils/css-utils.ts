@@ -1,4 +1,4 @@
-export function getElementStyle(element: HTMLElement): CSSStyleDeclaration {
+export function getComputedStyleOfElement(element: HTMLElement): CSSStyleDeclaration {
   return window.getComputedStyle(element);
 }
 
@@ -29,7 +29,7 @@ Object.freeze(identityMatrix3d);
 
 /** if the element has a 3d transform, then it is ignored and a 2d identity matrix is returned */
 export function get2dTransformMatrixOfElement(element: HTMLElement): string[] {
-  let matrixArray = convertMatrixToArray(getElementStyle(element).transform);
+  let matrixArray = convertMatrixToArray(getComputedStyleOfElement(element).transform);
 
   if (!matrixArray) {
     return [...identityMatrix2d];
@@ -45,7 +45,7 @@ export function get2dTransformMatrixOfElement(element: HTMLElement): string[] {
 
 /** if the element has a 2d transform, then the 2d transform is converted to a 3d transform */
 export function get3dTransformMatrixOfElement(element: HTMLElement): string[] {
-  let matrixArray = convertMatrixToArray(getElementStyle(element).transform);
+  let matrixArray = convertMatrixToArray(getComputedStyleOfElement(element).transform);
 
   if (!matrixArray) {
     return [...identityMatrix3d];
