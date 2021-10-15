@@ -32,7 +32,7 @@ export type Waypoint<Type = any> = {
   name: string;
   element?: HTMLElement;
   stash?: Type;
-  sendToWpResultsLogger?: SendToWpResultsLogger<Waypoint<Type>>;
+  sendResultsLogger?: SendResultsLogger<Waypoint<Type>>;
 };
 
 /**
@@ -52,8 +52,8 @@ export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElemen
     ...transformToWaypointAnimParams(destWp, wayfinder),
   };
 
-  if (destWp.sendToWpResultsLogger) {
-    destWp.sendToWpResultsLogger(makeSendToWpResultsLogData(destWp, wayfinder, params));
+  if (destWp.sendResultsLogger) {
+    destWp.sendResultsLogger(makeSendResultsLogData(destWp, wayfinder, params));
   }
 
   return params;
@@ -105,8 +105,7 @@ export function transformToWaypointAnimParams(
 
 /** logging */
 
-/** waypointFullStyle might be broken at the moment */
-export class SendToWpResultsLogData<WaypointType> {
+export class SendResultsLogData<WaypointType> {
   waypointName: string = "";
   waypoint!: WaypointType;
   waypointComputedStyle!: CSSStyleDeclaration;
@@ -114,20 +113,20 @@ export class SendToWpResultsLogData<WaypointType> {
   animParamResults!: WatAnimParams;
 }
 
-export type SendToWpResultsLogger<WaypointType> = (resultsLogData: SendToWpResultsLogData<WaypointType>) => void;
+export type SendResultsLogger<WaypointType> = (resultsLogData: SendResultsLogData<WaypointType>) => void;
 
 /** quick and easy option */
-export function makeSimpleSendToWpResultsLogger(enabled: boolean): SendToWpResultsLogger<Waypoint> {
-  return (sendResults: SendToWpResultsLogData<Waypoint>) => {
+export function makeSimpleSendResultsLogger(enabled: boolean): SendResultsLogger<Waypoint> {
+  return (sendResults: SendResultsLogData<Waypoint>) => {
     if (enabled) console.log(sendResults);
   };
 }
 
-function makeSendToWpResultsLogData(
+function makeSendResultsLogData(
   destWp: Waypoint,
   wayfinder: HTMLElement,
   animParamResults: WatAnimParams
-): SendToWpResultsLogData<Waypoint> {
+): SendResultsLogData<Waypoint> {
   if (!destWp.element) {
     throw new Error("Destination waypoint has no element.");
   }
