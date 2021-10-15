@@ -108,10 +108,10 @@ export function transformToWaypointAnimParams(
 /** waypointFullStyle might be broken at the moment */
 export class SendToWpResultsLogData<WaypointType> {
   waypointName: string = "";
-  waypoint: WaypointType | undefined;
-  waypointFullStyle: CSSStyleDeclaration | undefined;
-  wayfinderElement: HTMLElement | undefined;
-  animParamResults: WatAnimParams | undefined;
+  waypoint!: WaypointType;
+  waypointFullStyle!: CSSStyleDeclaration;
+  wayfinderElement!: HTMLElement;
+  animParamResults!: WatAnimParams;
 }
 
 export type SendToWpResultsLogger<WaypointType> = (resultsLogData: SendToWpResultsLogData<WaypointType>) => void;
@@ -128,10 +128,14 @@ function makeSendToWpResultsLogData(
   wayfinder: HTMLElement,
   animParamResults: WatAnimParams
 ): SendToWpResultsLogData<Waypoint> {
+  if (!destWp.element) {
+    throw new Error("Destination waypoint has no element.");
+  }
+
   return {
     waypointName: destWp.name,
     waypoint: destWp,
-    waypointFullStyle: destWp.element ? getElementStyle(destWp.element) : undefined,
+    waypointFullStyle: getElementStyle(destWp.element),
     wayfinderElement: wayfinder,
     animParamResults,
   };
