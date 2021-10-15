@@ -18,21 +18,23 @@ export { WatAnimParams } from "./wat-anim-params";
  * params/characteristics for each waypoint for when it's time
  * to send a traveler there. e.g. you could store a hex color code
  * as a Waypoint<string>'s stash. Or you could make the stash an object
- * that contains multiple custom params or data
+ * that contains custom params, references to other dom elements,
+ * or whatever data you want
  *
- * sendToWpResultsLogger: this makes logging easy once travelers start
- * flying around everywhere
+ * loggingEnabled: enables a default logger that prints a SendResultsLogData
+ * object on each call to sendToWaypointAnimParams
  *
- * a basic logger can be obtained from makeSimpleSendToWpResultsLogger(isEnabled),
- * or you can make a custom one that adds info from your stash or whatever you want
+ * customSendResultsLogger: if you want to replace the default logging,
+ * then provide a callback
  *
  * note: using elements other than divs is untested and may lead to undefined behavior
  */
-export type Waypoint<Type = any> = {
+export type Waypoint<StashType = any> = {
   name: string;
   element?: HTMLElement;
-  stash?: Type;
-  sendResultsLogger?: SendResultsLogger<Waypoint<Type>>;
+  stash?: StashType;
+  loggingEnabled?: boolean;
+  customSendResultsLogger?: SendResultsLogger<Waypoint<StashType>>;
 };
 
 /**
@@ -52,8 +54,8 @@ export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElemen
     ...transformToWaypointAnimParams(destWp, wayfinder),
   };
 
-  if (destWp.sendResultsLogger) {
-    destWp.sendResultsLogger(makeSendResultsLogData(destWp, wayfinder, params));
+  if (destWp.loggingEnabled) {
+    logSendResults(destWp, wayfinder, params);
   }
 
   return params;
@@ -105,21 +107,23 @@ export function transformToWaypointAnimParams(
 
 /** logging */
 
-export class SendResultsLogData<WaypointType> {
-  waypointName: string = "";
-  waypoint!: WaypointType;
+export class SendResultsLogData<StashType = any> {
+  waypointName!: string;
+  waypoint!: Waypoint<StashType>;
   waypointComputedStyle!: CSSStyleDeclaration;
   wayfinderElement!: HTMLElement;
   animParamResults!: WatAnimParams;
 }
 
-export type SendResultsLogger<WaypointType> = (resultsLogData: SendResultsLogData<WaypointType>) => void;
+export type SendResultsLogger<StashType = any> = (resultsLogData: SendResultsLogData<StashType>) => void;
 
-/** quick and easy option */
-export function makeSimpleSendResultsLogger(enabled: boolean): SendResultsLogger<Waypoint> {
-  return (sendResults: SendResultsLogData<Waypoint>) => {
-    if (enabled) console.log(sendResults);
-  };
+function logSendResults(destWp: Waypoint, wayfinder: HTMLElement, animParamResults: WatAnimParams): void {
+  const resultsLogData = makeSendResultsLogData(destWp, wayfinder, animParamResults);
+  if (destWp.customSendResultsLogger) {
+    destWp.customSendResultsLogger(resultsLogData);
+  } else {
+    console.log(resultsLogData);
+  }
 }
 
 function makeSendResultsLogData(
