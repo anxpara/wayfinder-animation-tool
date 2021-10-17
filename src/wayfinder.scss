@@ -1,10 +1,10 @@
 /** REQUIRED MIXINS */
 
 /**
-* the wayfinder div must be removed from the page's flow, and its position must be identical to
-* its parent's position
+* the wayfinder div must be removed from the page's flow, and its origin must be (0, 0). width and
+* height don't matter unless clipping is desired, see optional mixins below
 *
-* wayfinder div should generally be placed at the end of the div it's in, for z-index purposes
+* the wayfinder div should generally be placed at the end of the div it's in, for z-index purposes
 */
 @mixin wayfinder {
   visibility: hidden;
@@ -23,7 +23,7 @@
   visibility: visible;
   position: absolute;
 
-  // optimization for animejs, prevents artifacts that occur in specific situations
+  // animation optimization, can prevent artifacts that occur in specific situations
   // not supported by ie but who cares
   will-change: transforms;
 }
@@ -31,57 +31,67 @@
   @include traveler;
 }
 
-/** COMMON HEADACHE FIXES */
-
-/**
-* want to prevent horizontal scrolling when animated divs extend outside the page?
-* especially on mobile, which can cause annoying touch input and scroll hiccuping bugs?
+/** CLIPPING AND DISABLE MOBILE X-SCROLL MIXINS
+*
+* note: the original reason I made these clipping mixins was to remove horizontal scrolling on mobile if travelers extended past the edge of the screen
+* The way the standard implemented 'overflow-x: hidden' sucks and there aren't any other simple ways to get width-only clipping.
+* instead, I've found it's best to enable full clipping and just make sure that the height of the container doesn't get in the way
 * 
-* add this mixin to the wayfinder, and add the mixin below to the body
+* in order for the wayfinder to clip at the edge of the screen, it needs to fill the body's width. this is not the default behavior,
+* since the wayfinder is 'positioned.' A positioned element with width and height set to 100% will fill its most recent
+* *positioned* ancestor
 *
-* normally this would be easy for most divs, but absolutely positioned divs have wonky behavior regarding
-* filling the page and hiding overflow
-*
-* make sure to also hide horizontal overflow of any waypoints or content outside the wayfinder,
-* which should be simpler, assuming they aren't positioned absolutely
+* a couple mixin options are provided below to prep the body element for wayfinder clipping
+* 
+* of course, if you want to clip to something other than the actual page then you don't have to use those particular mixins, although the technique
+* will probably be the same
 */
-@mixin wayfinder--hide-x-overflow {
+@mixin wayfinder--clip-to-nearest-positioned-ancestor {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
-.wayfinder--hide-x-overflow {
-  @include wayfinder--hide-x-overflow;
+.wayfinder--clip-to-nearest-positioned-ancestor {
+  @include wayfinder--clip-to-nearest-positioned-ancestor;
 }
 
 /**
-* in order for the wayfinder to fill the entire page, body must use this mixin
-*
-* this technique is needed for divs with absolute positioning, since
-* height: 100% would end up being the viewport height, not the page height, and because
-* overflow-x sucks and only works when the height is set correctly
-*
-* there are some promising css properties regarding horizontal clipping, that sound like they
-* could make all of this unnecessary, but they didn't work nicely last time I tried them
+* extremely useful for avoiding x-scroll and annoying hiccups from touch input and scrolling on mobile
+* https://www.freecodecamp.org/news/html-page-width-height/
 */
-@mixin body--enable-absolute-divs-to-fill-page-height {
+@mixin body--enable-clipping-to-page-width {
   position: relative;
-  float: left;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 100vh; // in case the content doesn't fill the whole page height
+
+  // these will likely fuck things up if set differently
+  margin: 0;
+  padding: 0;
+  float: none;
 }
-.body--enable-absolute-divs-to-fill-page-height {
-  @include body--enable-absolute-divs-to-fill-page-height;
+.body--enable-clipping-to-page-width {
+  @include body--enable-clipping-to-page-width;
 }
 
+/** useful in case you still want horizontal scroll, but you don't want travelers to add extra width beyond the content */
+@mixin body--enable-clipping-to-content-width {
+  @include body--enable-clipping-to-page-width;
+  min-width: fit-content;
+  min-width: -moz-fit-content;
+}
+.body--enable-clipping-to-content-width {
+  @include body--enable-clipping-to-content-width;
+}
+
+/** MISC. MIXINS */
+
 /**
-*  wayfinder will match the travelers's size to the waypoint's size, but this
-*  won't necessarily be reflected in the traveler's child
+* wayfinder will match the travelers's size to the waypoint's size, but this
+* won't necessarily be reflected in the traveler's child. if you want to force
+* a single child to match the waypoint's size, add this mixin
 *
-*  so if there's only one child in the traveler and you want to force it to match the waypoint's size,j
-*  you can add this mixin
-*
-*  otherwise, place whatever elements in the traveler you'd like and design them to flow with
-*  any size changes you've added
+* note that animating the width and height of a traveler might perform poorly if abused,
+* since changing the dom flow every tick could be expensive
 */
 @mixin traveler-child--fill-waypoint-size {
   width: -webkit-fill-available;
@@ -91,9 +101,19 @@
   @include traveler-child--fill-waypoint-size;
 }
 
-/** ADDITIONAL STYLING MIXINS */
+/** 
+* add click cursor on desktop without ruining mobile click style on some browsers
+* haven't tested this broadly
+*/
+@mixin clickable--mobile-friendly {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
 
-/** cool h2 nameplate to label waypoints clearly */
+/** BONUS STYLING MIXINS */
+
+/** nice h2 nameplate to label waypoints clearly */
 @mixin waypoint-nameplate {
   position: absolute;
 
@@ -130,12 +150,7 @@
   @include waypoint-floating-nameplate;
 }
 
-/**
-* gives a layered look to a floating nameplate, looks cool,
-* also great for z-index layer visualization
-*
-* make sure to hide text and set width to match
-*/
+/** gives a layered look to a floating nameplate, good for z-index layer visualization */
 @mixin waypoint-floating-nameplate-shadow {
   @include waypoint-nameplate;
 
