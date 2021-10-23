@@ -25,6 +25,10 @@ WAT can be used with any animation framework, but is designed with AnimeJs in mi
 
 WAT is written in Typescript because TS is superior, although TS compiles down to JS if you prefer. A couple required scss mixins are provided in wayfinder.scss, or as classes in wayfinder.css. WAT currently has zero dependencies, but will eventually depend on a matrix library, e.g. glMatrix.
 
+<div align="center">
+  <img src="https://github.com/anxpara/wayfinder-animation-tool/blob/main/documentation/assets/img/timeline-swatch-demo-gif.gif">
+</div>
+
 ## How it works
 
 1. Throw waypoint divs onto your site, using whatever fancy (or simple) html, css, transforms, etc. you'd like.
