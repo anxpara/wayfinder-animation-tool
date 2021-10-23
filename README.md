@@ -14,28 +14,28 @@ $ npm install wayfinder-animation-tool --save
 
 ## What is Wayfinder?
 
-Wayfinder is a super lightweight animation tool that allows you to use the predictability(TM lol) and responsiveness of html and scss/sass to place waypoint divs throughout your site and effortlessly animate traveler divs between them. 
+Wayfinder is a light-weight animation tool that allows you to use the deterministic behavior and responsiveness of html and css to place waypoint divs throughout your site and effortlessly animate traveler divs between them.
 
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
 * Visualize and test your waypoints and travelers in real-time while tinkering with browser dev tools
-* Escape old paradigms for developing/animating desktop and mobile together
+* Target and animate desktop and mobile together with ease
 * Lift off from waypoints with additional relative animations and transforms, if desired
-* Easily incorporate wayfinder into an existing site (theoretically, atm), since any old div can be a waypoint with no modification
+* Easily incorporate wayfinder into an existing site (theoretically, atm), since any div can be a waypoint with no modification
 
-WAT is written in Typescript because TS is superior, although TS compiles down to JS, if you must use it. A couple required scss mixins are provided in wayfinder.scss, or as classes in wayfinder.css. WAT currently has zero dependencies, but will eventually depend on a matrix library, e.g. glMatrix.
+WAT is written in Typescript because TS is superior, although TS compiles down to JS if you prefer. A couple required scss mixins are provided in wayfinder.scss, or as classes in wayfinder.css. WAT currently has zero dependencies, but will eventually depend on a matrix library, e.g. glMatrix.
 
 ## How it works
 
-1. Throw waypoint divs onto your site, using whatever fancy (or simple) html, scss, transforms, etc. you'd like.
+1. Throw waypoint divs onto your site, using whatever fancy (or simple) html, css, transforms, etc. you'd like.
 2. Add an invisible wayfinder div at a common ancestor of those waypoints.
-3. Add traveler divs to the wayfinder. The traveler divs are only wrappers for the actual content.
+3. Add traveler divs to the wayfinder. The traveler divs are only wrappers for actual content.
 4. Load elements into Typescript and create respective waypoint objects.
 5. Call sendToWaypointAnimParams(waypoint, wayfinder) to get all the parameters necessary to animate travelers to waypoints.
 6. Plug the parameters straight into an AnimeJS animation function using the spread operator.
 7. Profit
 
-Wayfinder's simplicity makes it easy to use however you'd like. In addition, several optional features and scss mixins are provided that add extra power and also take care of common headaches
+Wayfinder's simplicity makes it easy to use however you'd like. In addition, several additional features and scss mixins are provided that add extra power and also take care of common headaches
 
 1. Stash...
 2. Additional scss mixins...
@@ -79,13 +79,14 @@ SCSS
 .potion-shop,
 .battlefield {
   // margins are useful for waypoints, but generally unnecessary on travelers and may lead to wonky effects
-  margin: 1.26em; 
+  margin: 1.26em;
+  float: left;
   p { text-align: end; }
 }
 .potion-shop { color: green; }
 .battlefield {
   color: red;
-  transform: translateY(-5em) rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .knight {
@@ -114,24 +115,26 @@ let battlefieldWaypoint: Waypoint = {
   element: battlefieldElement,
 };
 
-let psParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
-let bfParams = sendToWaypointAnimParams(battlefieldWaypoint, wayfinderElement);
+function set(): void {
+  let psParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
+  anime.set("#knight-traveler", {
+    ...psParams,
+    opacity: 1
+  });
+  setTimeout(animate, 1000);
+}
 
 function animate(): void {
-  anime.set("#knight-traveler", {
-    ...psParams
-  });
-
+  let bfParams = sendToWaypointAnimParams(battlefieldWaypoint, wayfinderElement);
   anime({
     targets: "#knight-traveler",
     ...bfParams,
-    delay: 1000,
     easing: "easeInOutQuart"
   });
+  setTimeout(set, 3000);
 }
 
-animate();
-setInterval(animate, 3000);
+set();
 ```
 
 <!-- prettier-ignore-end -->
