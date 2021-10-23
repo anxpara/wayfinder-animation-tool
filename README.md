@@ -45,8 +45,9 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 2. Additional scss mixins...
 3. Logging...
 
-## Hello potion seller
-#### <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">(View and edit on Codepen)</a>
+<h2>Hello potion seller</h2>
+<a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">(View and edit on Codepen)</a>
+<img height="280px" src="https://github.com/anxpara/wayfinder-animation-tool/blob/main/documentation/assets/img/potion-seller-demo-gif.gif">
 
 Html
 
