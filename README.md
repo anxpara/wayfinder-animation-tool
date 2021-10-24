@@ -148,9 +148,11 @@ set();
 
 * Share Wayfinder with your friends!
 * Join the WAT discord: <a href="https://discord.gg/qTpEwE8q6k">https://discord.gg/qTpEwE8q6k</a>
-* Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
-* Show me some cool shit you made with WAT. I might ask to link any Codepens you send me as demos
+* Send me some cool animations you've made with WAT. I can link them as examples if you'd like
 * Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
 * Submit PRs if you'd like to contribute to the project
+* Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
+
+
 
 <!-- prettier-ignore-end -->
