@@ -142,4 +142,15 @@ function animate(): void {
 set();
 ```
 
+## Support the development of Wayfinder
+
+#### All support is greatly appreciated, here are some ways you can help out:
+
+* Share Wayfinder with your friends!
+* Join the WAT discord: <a href="https://discord.gg/qTpEwE8q6k">https://discord.gg/qTpEwE8q6k</a>
+* Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
+* Show me some cool shit you made with WAT. I might ask to link any Codepens you send me as demos
+* Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
+* Submit PRs if you'd like to contribute to the project
+
 <!-- prettier-ignore-end -->
