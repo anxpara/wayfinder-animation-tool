@@ -101,6 +101,22 @@
   @include traveler-child--fill-waypoint-size;
 }
 
+/**
+* allow mouse input to pass through a transformed element to elements behind it,
+* while preserving mouse input for the children of the element
+*
+* $pointer-events-of-children: set the pointer-events for all children of the element. default value is all
+*/
+@mixin transformed-element--enable-pass-through-of-pointer-events($pointer-events-of-children: all) {
+  pointer-events: none;
+  > * {
+    pointer-events: $pointer-events-of-children;
+  }
+}
+.transformed-element--enable-pass-through-of-pointer-events {
+  @include transformed-element--enable-pass-through-of-pointer-events(all);
+}
+
 /** 
 * add click cursor on desktop without ruining mobile click style on some browsers
 * haven't tested this broadly
