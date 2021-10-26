@@ -117,7 +117,7 @@ let battlefieldWaypoint: Waypoint = {
   element: battlefieldElement,
 };
 
-function set(): void {
+function setup(): void {
   let psParams = sendToWaypointAnimParams(potionShopWaypoint, wayfinderElement);
   anime.set("#knight-traveler", {
     ...psParams,
@@ -133,10 +133,10 @@ function animate(): void {
     ...bfParams,
     easing: "easeInOutQuart"
   });
-  setTimeout(set, 3000);
+  setTimeout(setup, 3000);
 }
 
-set();
+setup();
 ```
 </br>
 
