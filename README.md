@@ -28,6 +28,7 @@ WAT is written in Typescript because TS is superior, although TS compiles down t
 <div align="center">
   <img src="https://github.com/anxpara/wayfinder-animation-tool/blob/main/documentation/assets/img/timeline-swatch-demo-gif.gif">
 </div>
+</br>
 
 ## How it works
 
@@ -39,11 +40,7 @@ WAT is written in Typescript because TS is superior, although TS compiles down t
 6. Plug the parameters straight into an AnimeJS animation function using the spread operator.
 7. Profit
 
-Wayfinder's simplicity makes it easy to use however you'd like. In addition, several additional features and scss mixins are provided that add extra power and also take care of common headaches
-
-1. Stash...
-2. Additional scss mixins...
-3. Logging...
+Here's what the simplest wayfinder animation might look like...
 
 <h2>Hello potion seller</h2>
 <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">(View and edit on Codepen)</a>
@@ -141,16 +138,83 @@ function animate(): void {
 
 set();
 ```
+</br>
 
-## Support the development of Wayfinder
+## **Additional features**
+
+Wayfinder's simplicity makes it easy to use however you'd like. In addition, several optional features and scss mixins are provided that add extra power and also take care of common headaches.
+
+### Bonus scss mixins
+
+* Optional mixins can be found in wayfinder.scss (see file for full documentation)...
+* Enable horizontal clipping and disable horizontal scrolling--especially useful on mobile
+* Reinstate pointer event pass-through for transparent travelers that have been transformed
+* Quickly add nameplates to waypoints for easy labeling
+
+### Stash
+
+* Every waypoint has a stash. You can throw whatever you want into it, or you can ignore it. For example...
+
+```typescript
+class ColorSquareStash {
+  color: string = '';
+  backgroundColor: string = '';
+  floatX: string = '';
+  floatY: string = '';
+  currentButtonAnim: AnimeInstance | undefined;
+}
+let riserWp: Waypoint<ColorSquareStash> = {
+    name: 'riser',
+    stash: {
+      color: '#32B3AA',
+      backgroundColor: 'rgba(0, 0, 20, 0.8)',
+      floatX: '1.2em',
+      floatY: '1em',
+      currentButtonAnim: undefined,
+    },
+};
+```
+
+### Logging
+
+* A default logger is provided which will print useful data like the resulting animParams, the waypoint's computed css style, the waypoint itself, etc.
+
+```typescript
+let riserWp = {
+    name: 'riser',
+    loggingEnabled: true,
+};
+```
+
+<div align="center">  
+  <img src="https://i.imgur.com/Q1Ag6DO.png">
+</div>
+
+* Not pretty enough? You can provide your own logging callback which takes the default logging data
+
+```typescript
+function prettyLogger(resultsLogData: SendResultsLogData): void {
+  console.log('pretty');
+}
+
+let riserWp = {
+    loggingEnabled: true,
+    customSendResultsLogger: prettyLogger,
+};
+```
+</br>
+
+<h1 align="center">Support the development of Wayfinder</h1>
 
 #### All support is greatly appreciated, here are some ways you can help out:
 
 * Share Wayfinder with your friends!
 * Join the WAT discord: <a href="https://discord.gg/qTpEwE8q6k">https://discord.gg/qTpEwE8q6k</a>
-* Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
-* Show me some cool shit you made with WAT. I might ask to link any Codepens you send me as demos
+* Send me some cool animations you've made with WAT. I can link them as examples if you'd like
 * Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
 * Submit PRs if you'd like to contribute to the project
+* Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
+
+
 
 <!-- prettier-ignore-end -->
