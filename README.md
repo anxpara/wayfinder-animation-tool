@@ -187,7 +187,7 @@ let riserWp = {
 ```
 
 <div align="center">  
-  <img src="https://i.imgur.com/Q1Ag6DO.png">
+  <img src="https://raw.githubusercontent.com/anxpara/wayfinder-animation-tool/main/documentation/assets/img/logging-example-output.png">
 </div>
 
 * Not pretty enough? You can provide your own logging callback which takes the default logging data
