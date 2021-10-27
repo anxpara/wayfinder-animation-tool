@@ -4,7 +4,8 @@
   <br>
   Wayfinder Animation Tool
 </h1>
-<h4 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://wayfinder.anxpara.com" target="_blank">Demo</a> | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h4>
+<h4 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h4>
+<h5 align="center">  <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller demo</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash demo</a> | <a href="https://wayfinder.anxpara.com" target="_blank">Advanced demo</a> </h5>
 
 ### Download
 
@@ -14,7 +15,7 @@ $ npm install wayfinder-animation-tool --save
 
 ## What is Wayfinder?
 
-Wayfinder is a light-weight animation tool that allows you to use the deterministic behavior and responsiveness of html and css to place waypoint divs throughout your site and effortlessly animate traveler divs between them.
+Wayfinder is a light-weight animation tool for JS/Typescript that lets you use the deterministic behavior and responsiveness of html and css to place waypoint divs throughout your site and effortlessly animate traveler divs between them.
 
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
