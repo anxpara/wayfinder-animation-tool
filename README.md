@@ -158,22 +158,39 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 
 ```typescript
 class ColorSquareStash {
+  title: string = '';
   color: string = '';
-  backgroundColor: string = '';
+  scale: string = '';
   floatX: string = '';
   floatY: string = '';
   currentButtonAnim: AnimeInstance | undefined;
 }
-let riserWp: Waypoint<ColorSquareStash> = {
-    name: 'riser',
+let expanderWp: Waypoint<ColorSquareStash> = {
+    name: 'expander',
+    element: document.getElementById('expander-wp'),
     stash: {
-      color: '#32B3AA',
-      backgroundColor: 'rgba(0, 0, 20, 0.8)',
-      floatX: '1.2em',
-      floatY: '1em',
+      title: 'darkcyan',
+      color: '#1A8C8A',
+      scale: '1.18',
+      floatX: '2em',
+      floatY: '0.2em',
       currentButtonAnim: undefined,
     },
 };
+function summonColorSquareToWaypoint(destWp: Waypoint<ColorSquareStash>): void {
+  anime({
+    targets: '.color-square-traveler',
+    ...this.sendToWaypointAnimParams(destWp, wayfinder),
+    duration: durationMs,
+    easing: 'easeOutQuint',
+
+    color: destWp.stash.color,
+    scale: destWp.stash.scale,
+    translateX: destWp.stash.floatX,
+    translateY: destWp.stash.floatY,
+    changeBegin: () => updateColorSquareText(destWp.stash.title, textChangeDelayMs),
+  });
+}
 ```
 
 ### Logging
