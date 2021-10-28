@@ -226,13 +226,11 @@ let riserWp = {
 
 #### All support is greatly appreciated, here are some ways you can help out:
 
-* Share Wayfinder with your friends!
+* Help beta test by making cool animations and sites. I'm curious to see what people make, and what ways people find to use WAT
 * Join the WAT discord: <a href="https://discord.gg/qTpEwE8q6k">https://discord.gg/qTpEwE8q6k</a>
-* Send me some cool animations you've made with WAT. I can link them as examples if you'd like
+* Share Wayfinder with your friends
 * Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
 * Submit PRs if you'd like to contribute to the project
 * Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
-
-
 
 <!-- prettier-ignore-end -->
