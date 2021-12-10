@@ -1,11 +1,11 @@
 <!-- prettier-ignore-start -->
 <h1 align="center">
-  <a href="wayfinder.anxpara.com"><img src="https://i.imgur.com/H5KVcwM.jpg" width="250"/></a>
-  <br>
-  Wayfinder Animation Tool
+  <font size="5">Wayfinder Animation Tool</font>
 </h1>
-<h4 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h4>
-<h5 align="center">  <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller demo</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash demo</a> | <a href="https://wayfinder.anxpara.com" target="_blank">Advanced demo</a> </h5>
+<h3 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h3>
+<h4 align="center">  <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller demo</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash demo</a> | <a href="https://wayfinder.anxpara.com" target="_blank">Advanced demo</a> </h4>
+
+<div align="center"><img width="460px" src="https://github.com/anxpara/wayfinder-animation-tool/blob/main/documentation/assets/img/potion-seller-demo-gif.gif"></div>
 
 ### Download
 
@@ -15,7 +15,7 @@ $ npm install wayfinder-animation-tool --save
 
 ## What is Wayfinder?
 
-Wayfinder is a light-weight animation tool for JS/Typescript that lets you use the deterministic behavior and responsiveness of html and css to place waypoint divs throughout your site and effortlessly animate traveler divs between them.
+Wayfinder is a light-weight animation tool for JS/Typescript that lets you animate "traveler" divs to and from other ordinary divs (referred to as "waypoints") on your site. This makes it super easy to animate using the deterministic behavior and responsiveness of html and css, which means animating for both desktop and mobile is a breeze.
 
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
@@ -231,6 +231,6 @@ let riserWp = {
 * Share Wayfinder with your friends
 * Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
 * Submit PRs if you'd like to contribute to the project
-* Donate to my Patreon: <a href="https://www.patreon.com/anxpara">https://www.patreon.com/anxpara</a>
+* Donate to my Ko-fi: <a href="https://ko-fi.com/anxpara">https://ko-fi.com/anxpara</a>
 
 <!-- prettier-ignore-end -->
