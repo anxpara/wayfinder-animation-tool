@@ -222,6 +222,8 @@ let riserWp = {
 ```
 </br>
 
+<div align="center"><a href="https://wayfinder.anxpara.com"><img src="https://i.imgur.com/H5KVcwM.jpg" width="300"/></a></div>
+
 <h1 align="center">Support the development of Wayfinder</h1>
 
 #### All support is greatly appreciated, here are some ways you can help out:
