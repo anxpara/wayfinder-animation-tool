@@ -60,7 +60,7 @@
 * https://www.freecodecamp.org/news/html-page-width-height/
 */
 @mixin body--enable-clipping-to-page-width {
-  position: relative;
+  position: absolute;
   width: 100%;
   min-height: 100vh; // in case the content doesn't fill the whole page height
 
