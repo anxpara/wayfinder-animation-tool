@@ -68,7 +68,7 @@ export function resizeToWaypointAnimParams(destWp: Waypoint, _wayfinder: HTMLEle
   }
 
   let wpOffsetRect = getOffsetRectOfElement(destWp.element);
-  return { width: wpOffsetRect.width, height: wpOffsetRect.height };
+  return { width: wpOffsetRect.width + 'px', height: wpOffsetRect.height + 'px'};
 }
 
 /**

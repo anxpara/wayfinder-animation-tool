@@ -23,8 +23,8 @@
  * wayfinder. it's only filled when using the smart scaling tool
  */
 export type WatAnimParams = {
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
   matrix?: string;
   matrix3d?: string;
   translateX?: number;
