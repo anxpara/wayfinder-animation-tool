@@ -1,6 +1,6 @@
-export function getComputedStyleOfElement(element: HTMLElement): CSSStyleDeclaration {
-  return window.getComputedStyle(element);
-}
+import { glMatrix, mat4, vec3 } from "gl-matrix";
+
+glMatrix.setMatrixArrayType(Array);
 
 export function getViewportRectOfElement(element: HTMLElement): DOMRect {
   return element.getBoundingClientRect();
@@ -10,16 +10,19 @@ export function getOffsetRectOfElement(element: HTMLElement): DOMRect {
   return new DOMRect(element.offsetLeft, element.offsetTop, element.offsetWidth, element.offsetHeight);
 }
 
-// would be nice
-/*export function getContentRectOfElement(element: HTMLElement): DOMRect {
-  return new DOMRect( ... );
-}*/
+export function getTransformOriginOfElement(element: HTMLElement): vec3 {
+  let originString = window.getComputedStyle(element).transformOrigin;
+  let coords = originString.split(" ").map((str) => Number.parseFloat(str));
+  return vec3.fromValues(coords[0], coords[1], coords.length > 2 ? coords[2] : 0);
+}
 
-export const identityMatrix2d = ["1", "0", "0", "1", "0", "0"];
-Object.freeze(identityMatrix2d);
+export function isContainerOffsetRelevantToChildren(el: HTMLElement): boolean {
+  let style = window.getComputedStyle(el);
+  return style.transform == "none" && style.position == "static";
+}
 
 // prettier-ignore
-export const identityMatrix3d = [
+const identityMatrix3d = [
   '1', '0', '0', '0',
   '0', '1', '0', '0',
   '0', '0', '1', '0',
@@ -27,45 +30,30 @@ export const identityMatrix3d = [
 ];
 Object.freeze(identityMatrix3d);
 
-/** if the element has a 3d transform, then it is ignored and a 2d identity matrix is returned */
-export function get2dTransformMatrixOfElement(element: HTMLElement): string[] {
-  let matrixArray = convertMatrixToArray(getComputedStyleOfElement(element).transform);
+export function get3dTransformMatrixOfElement(element: HTMLElement): mat4 {
+  let cssTransformArray = convertCssTransformToArray(window.getComputedStyle(element).transform);
 
-  if (!matrixArray) {
-    return [...identityMatrix2d];
+  if (!cssTransformArray) {
+    let transformMatrix = mat4.create();
+    mat4.identity(transformMatrix);
+    return transformMatrix;
   }
 
-  if (matrixArray!.length == 16) {
-    console.warn("Expected 2d css transform matrix, but got 3d. Returning 2d identity matrix");
-    return [...identityMatrix2d];
+  if (cssTransformArray.length == 6) {
+    let transformCopy = [...cssTransformArray];
+    cssTransformArray = [...identityMatrix3d];
+    cssTransformArray[0] = transformCopy[0];
+    cssTransformArray[1] = transformCopy[1];
+    cssTransformArray[4] = transformCopy[2];
+    cssTransformArray[5] = transformCopy[3];
+    cssTransformArray[12] = transformCopy[4];
+    cssTransformArray[13] = transformCopy[5];
   }
 
-  return matrixArray;
+  return convertCssTransformArrayToMat4(cssTransformArray);
 }
 
-/** if the element has a 2d transform, then the 2d transform is converted to a 3d transform */
-export function get3dTransformMatrixOfElement(element: HTMLElement): string[] {
-  let matrixArray = convertMatrixToArray(getComputedStyleOfElement(element).transform);
-
-  if (!matrixArray) {
-    return [...identityMatrix3d];
-  }
-
-  if (matrixArray.length == 6) {
-    let matrixCopy = [...matrixArray];
-    matrixArray = [...identityMatrix3d];
-    matrixArray[0] = matrixCopy[0];
-    matrixArray[1] = matrixCopy[1];
-    matrixArray[4] = matrixCopy[2];
-    matrixArray[5] = matrixCopy[3];
-    matrixArray[12] = matrixCopy[4];
-    matrixArray[13] = matrixCopy[5];
-  }
-
-  return matrixArray;
-}
-
-export function convertMatrixToArray(transform: string): string[] | null {
+function convertCssTransformToArray(transform: string): string[] | null {
   if (transform == "none") {
     return null;
   }
@@ -75,6 +63,21 @@ export function convertMatrixToArray(transform: string): string[] | null {
   return values.split(", ");
 }
 
-export function convertMatrixToString(matrix: string[]): string {
-  return matrix.join(", ");
+function convertCssTransformArrayToMat4(cssMatrix: string[]): mat4 {
+  let floats = cssMatrix.map((str) => parseFloat(str));
+
+  // prettier-ignore
+  return mat4.fromValues(
+    floats[0],  floats[1],  floats[2],  floats[3],
+    floats[4],  floats[5],  floats[6],  floats[7],
+    floats[8],  floats[9],  floats[10], floats[11],
+    floats[12], floats[13], floats[14], floats[15]
+  );
+}
+
+export function convertMat4ToCssTransformString(mat: mat4): string {
+  let str = mat4.str(mat);
+  str = str.split("(")[1];
+  str = str.split(")")[0];
+  return str;
 }

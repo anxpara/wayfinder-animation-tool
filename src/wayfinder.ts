@@ -1,25 +1,21 @@
+import { mat4, vec3 } from "gl-matrix";
 import {
   getOffsetRectOfElement,
-  get2dTransformMatrixOfElement,
   get3dTransformMatrixOfElement,
-  convertMatrixToString,
-  getComputedStyleOfElement,
+  getTransformOriginOfElement,
+  convertMat4ToCssTransformString,
+  isContainerOffsetRelevantToChildren,
 } from "./utils/css-utils";
 import { WatAnimParams } from "./wat-anim-params";
 
 export { WatAnimParams } from "./wat-anim-params";
 
-/** todo: write tests */
-
 /**
  * stash: you can use the stash however you want, or just ignore it
  *
  * the stash can be a very useful mechanism to store additional
- * params/characteristics for each waypoint for when it's time
- * to send a traveler there. e.g. you could store a hex color code
- * as a Waypoint<string>'s stash. Or you could make the stash an object
- * that contains custom params, references to other dom elements,
- * or whatever data you want
+ * params/characteristics in each waypoint for when it's time
+ * to send a traveler there
  *
  * loggingEnabled: enables a default logger that prints a SendResultsLogData
  * object on each call to sendToWaypointAnimParams
@@ -27,7 +23,10 @@ export { WatAnimParams } from "./wat-anim-params";
  * customSendResultsLogger: if you want to replace the default logging,
  * then provide a callback
  *
- * note: using elements other than divs is untested and may lead to undefined behavior
+ * ---
+ *
+ * note: using elements other than divs as waypoints is untested and could
+ * possibly lead to undefined behavior
  */
 export type Waypoint<StashType = any> = {
   name: string;
@@ -38,11 +37,8 @@ export type Waypoint<StashType = any> = {
 };
 
 /**
- * returns all animation parameters needed to move and resize a traveler div to
- * match the destination waypoint's div
- *
- * bug: cannot use intermediate transforms between wayfinder and waypoint yet.
- * will be killer when fixed
+ * returns all animation parameters needed to resize, move, and transform a traveler to
+ * match the waypoint
  */
 export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElement): WatAnimParams {
   if (!destWp.element) {
@@ -61,48 +57,101 @@ export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElemen
   return params;
 }
 
-/** expensive animation, but that's the user's choice */
+/**
+ * animating width and height is expensive. prefer animating between same-sized waypoints,
+ * or find the right instant to set the size once
+ */
 export function resizeToWaypointAnimParams(destWp: Waypoint, _wayfinder: HTMLElement): WatAnimParams {
   if (!destWp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
   let wpOffsetRect = getOffsetRectOfElement(destWp.element);
-  return { width: wpOffsetRect.width + 'px', height: wpOffsetRect.height + 'px'};
+  return { width: wpOffsetRect.width + "px", height: wpOffsetRect.height + "px" };
 }
 
 /**
- * this implementation will eventually be rewritten to allow intermediate transforms
- * which will be killer. Interface will still be the same, so it won't break anything.
- * (That's why the wayfinder element is required but not used.)
+ * builds a transform matrix that projects the waypoint onto the wayfinder,
+ * including all intermediate offsets and transforms between the wayfinder and the waypoint
+ *
+ * https://www.w3.org/TR/css-transforms-2/
+ *
+ * the following css properties are not supported on any elements between the wayfinder
+ * and the waypoint, nor the waypoint itself:
+ *   position: fixed;
+ *   perspective: *;
+ *   perspective-origin: *;
  */
-export function transformToWaypointAnimParams(
-  destWp: Waypoint,
-  _wayfinder: HTMLElement,
-  enable3dTransforms = true
-): WatAnimParams {
+export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElement): WatAnimParams {
   if (!destWp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
-  let matrix = enable3dTransforms
-    ? get3dTransformMatrixOfElement(destWp.element)
-    : get2dTransformMatrixOfElement(destWp.element);
-
-  // bake the waypoint's top and left into the transform to allow for additional
-  // translate animations by the user
-  let wpOffsetRect = getOffsetRectOfElement(destWp.element);
-  let xTranslateIndex = enable3dTransforms ? 12 : 4; // hardcoded 3d and 2d matrix indices
-  let yTranslateIndex = enable3dTransforms ? 13 : 5;
-  matrix[xTranslateIndex] = (parseFloat(matrix[xTranslateIndex]) + wpOffsetRect.left).toString();
-  matrix[yTranslateIndex] = (parseFloat(matrix[yTranslateIndex]) + wpOffsetRect.top).toString();
-
-  let matrixString = convertMatrixToString(matrix);
-
-  if (enable3dTransforms) {
-    return { matrix3d: matrixString };
+  let elementsDownToWp = getElementsFromWayfinderToWaypoint(destWp, wayfinder);
+  if (!elementsDownToWp) {
+    throw new Error("Couldn't find the given wayfinder div within any of the waypoint's ancestors.");
   }
-  return { matrix: matrixString };
+
+  // builds the transform needed to project the waypoint onto the wayfinder
+  let combinedTransform = mat4.create();
+  mat4.identity(combinedTransform);
+
+  // track parent offsets in case they must be removed from the element's offsets
+  let parentOffsetRect: DOMRect = new DOMRect(0, 0, 0, 0);
+
+  elementsDownToWp.forEach((el) => {
+    // get element's transform
+    let currentTransform = get3dTransformMatrixOfElement(el);
+
+    // apply the element's transform-origin
+    let transformOrigin = getTransformOriginOfElement(el);
+    let originMatrix = mat4.create();
+    mat4.fromTranslation(originMatrix, transformOrigin);
+    mat4.multiply(currentTransform, originMatrix, currentTransform);
+
+    // factor in overall offset from parent
+    let offsetRect = getOffsetRectOfElement(el);
+    let overallOffset = vec3.fromValues(
+      offsetRect.left - parentOffsetRect.left - el.scrollLeft,
+      offsetRect.top - parentOffsetRect.top - el.scrollTop,
+      0
+    );
+    let offsetMatrix = mat4.create();
+    mat4.fromTranslation(offsetMatrix, overallOffset);
+    mat4.multiply(currentTransform, offsetMatrix, currentTransform);
+
+    // multiply the combined transform with the current transform
+    mat4.multiply(combinedTransform, combinedTransform, currentTransform);
+
+    // remove the transform-origin
+    mat4.invert(originMatrix, originMatrix);
+    mat4.multiply(combinedTransform, combinedTransform, originMatrix);
+
+    if (isContainerOffsetRelevantToChildren(el)) {
+      parentOffsetRect = offsetRect;
+    } else {
+      parentOffsetRect = new DOMRect(0, 0, 0, 0);
+    }
+  });
+
+  return { matrix3d: convertMat4ToCssTransformString(combinedTransform) };
+}
+
+function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLElement): HTMLElement[] {
+  let wayfinderParent = wayfinder.parentElement;
+  let currentParent = waypoint.element!.parentElement;
+  let elementList: HTMLElement[] = [waypoint.element!];
+
+  while (currentParent && !currentParent.isSameNode(wayfinderParent)) {
+    elementList.push(currentParent);
+    currentParent = currentParent!.parentElement;
+  }
+  if (currentParent != wayfinderParent) {
+    return [];
+  }
+
+  elementList.reverse();
+  return elementList;
 }
 
 /** logging */
@@ -138,7 +187,7 @@ function makeSendResultsLogData(
   return {
     waypointName: destWp.name,
     waypoint: destWp,
-    waypointComputedStyle: getComputedStyleOfElement(destWp.element),
+    waypointComputedStyle: window.getComputedStyle(destWp.element),
     wayfinderElement: wayfinder,
     animParamResults,
   };
