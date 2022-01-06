@@ -10,8 +10,8 @@ tsc --module commonjs --outdir dist/cjs
 
 tsc --module es6 --outdir dist/es
 
-rollup dist/es/wayfinder.js --file dist/umd/wayfinder.js --format umd --name wayfinder
+rollup dist/es/wayfinder.js --file dist/umd/wayfinder.js --format umd --name wayfinder --plugin @rollup/plugin-node-resolve
 terser --ecma 6 --compress --mangle -o dist/umd/wayfinder.min.js -- dist/umd/wayfinder.js
 rm dist/umd/wayfinder.js
 
-rollup ./dist/es/wayfinder.d.ts --file dist/umd/wayfinder.min.d.ts --format umd --plugin ./node_modules/rollup-plugin-dts/
+rollup ./dist/es/wayfinder.d.ts --file dist/umd/wayfinder.min.d.ts --format umd --plugin ./node_modules/rollup-plugin-dts
