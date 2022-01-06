@@ -23,6 +23,11 @@
   visibility: visible;
   position: absolute;
 
+  // travelers must use a transform origin of 0, not center
+  // if you want to do any post transformations around the center,
+  // then you'll need to use a matrix library like glMatrix
+  transform-origin: 0 0 0;
+
   // animation optimization, can prevent artifacts that occur in specific situations
   // not supported by ie but who cares
   will-change: transforms;
