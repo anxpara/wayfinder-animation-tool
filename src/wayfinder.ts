@@ -5,6 +5,7 @@ import {
   getTransformOriginOfElement,
   convertMat4ToCssTransformString,
   isContainerOffsetRelevantToChildren,
+  getCenterOfElement,
 } from "./utils/css-utils";
 import { WatAnimParams } from "./wat-anim-params";
 
@@ -58,8 +59,11 @@ export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElemen
 }
 
 /**
- * animating width and height is expensive. prefer animating between same-sized waypoints,
- * or find the right instant to set the size once
+ * By convention, travelers must match the destination waypoint's width and height in order to
+ * preserve a center origin on the traveler
+ *
+ * animating width and height can be expensive. if you must animate between different-sized waypoints,
+ * consider finding a good instant to set the dimensions once
  */
 export function resizeToWaypointAnimParams(destWp: Waypoint, _wayfinder: HTMLElement): WatAnimParams {
   if (!destWp.element) {
@@ -71,16 +75,11 @@ export function resizeToWaypointAnimParams(destWp: Waypoint, _wayfinder: HTMLEle
 }
 
 /**
- * builds a transform matrix that projects the waypoint onto the wayfinder,
- * including all intermediate offsets and transforms between the wayfinder and the waypoint
+ * builds a transform matrix that projects the waypoint onto the wayfinder
+ *  supports 'transform-style: preserve-3d;'
+ *  doesn't currently support 'perspective: *;'
  *
- * https://www.w3.org/TR/css-transforms-2/
- *
- * the following css properties are not supported on any elements between the wayfinder
- * and the waypoint, nor the waypoint itself:
- *   position: fixed;
- *   perspective: *;
- *   perspective-origin: *;
+ * https://www.w3.org/TR/css-transforms-2
  */
 export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElement): WatAnimParams {
   if (!destWp.element) {
@@ -92,22 +91,42 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
     throw new Error("Couldn't find the given wayfinder div within any of the waypoint's ancestors.");
   }
 
-  // builds the transform needed to project the waypoint onto the wayfinder
-  let combinedTransform = mat4.create();
-  mat4.identity(combinedTransform);
+  let accumulatedTransform = mat4.create();
+  mat4.identity(accumulatedTransform);
 
   // track parent offsets in case they must be removed from the element's offsets
   let parentOffsetRect: DOMRect = new DOMRect(0, 0, 0, 0);
 
-  elementsDownToWp.forEach((el) => {
-    // get element's transform
-    let currentTransform = get3dTransformMatrixOfElement(el);
+  // shift the frame of reference to the traveler's transform origin
+  // (by convention, this matches the waypoint's center, might eventually add an option to provide the
+  //  traveler's transform origin directly)
+  let travelerCenter = getCenterOfElement(destWp.element);
+  let travelerCenterMatrix = mat4.create();
+  mat4.fromTranslation(travelerCenterMatrix, travelerCenter);
+  mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
+
+  elementsDownToWp.forEach((el, i) => {
+    let parent = el.parentElement;
+    if (parent && isContainerOffsetRelevantToChildren(parent) && i != elementsDownToWp.length - 1) {
+      parentOffsetRect = getOffsetRectOfElement(parent);
+    } else {
+      parentOffsetRect = new DOMRect(0, 0, 0, 0);
+    }
 
     // apply the element's transform-origin
     let transformOrigin = getTransformOriginOfElement(el);
     let originMatrix = mat4.create();
     mat4.fromTranslation(originMatrix, transformOrigin);
-    mat4.multiply(currentTransform, originMatrix, currentTransform);
+    mat4.invert(originMatrix, originMatrix);
+    mat4.multiply(accumulatedTransform, originMatrix, accumulatedTransform);
+
+    // pre-multiply the combined transform with the current element's transform
+    let currentTransform = get3dTransformMatrixOfElement(el);
+    mat4.multiply(accumulatedTransform, currentTransform, accumulatedTransform);
+
+    // remove the transform-origin
+    mat4.invert(originMatrix, originMatrix);
+    mat4.multiply(accumulatedTransform, originMatrix, accumulatedTransform);
 
     // factor in overall offset from parent
     let offsetRect = getOffsetRectOfElement(el);
@@ -118,23 +137,40 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
     );
     let offsetMatrix = mat4.create();
     mat4.fromTranslation(offsetMatrix, overallOffset);
-    mat4.multiply(currentTransform, offsetMatrix, currentTransform);
+    mat4.multiply(accumulatedTransform, offsetMatrix, accumulatedTransform);
 
-    // multiply the combined transform with the current transform
-    mat4.multiply(combinedTransform, combinedTransform, currentTransform);
-
-    // remove the transform-origin
-    mat4.invert(originMatrix, originMatrix);
-    mat4.multiply(combinedTransform, combinedTransform, originMatrix);
-
-    if (isContainerOffsetRelevantToChildren(el)) {
-      parentOffsetRect = offsetRect;
-    } else {
-      parentOffsetRect = new DOMRect(0, 0, 0, 0);
+    // flatten transform onto xy plane if not preserving 3d
+    if (!shouldElementPreserve3d(el, wayfinder)) {
+      // prettier-ignore
+      let scaleZ = mat4.fromValues(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 0.000001, 0, // 0.000001 works but 0 doesn't? https://i.imgur.com/5xQSpql.jpg
+        0, 0, 0, 1
+      );
+      mat4.mul(accumulatedTransform, scaleZ, accumulatedTransform);
     }
   });
 
-  return { matrix3d: convertMat4ToCssTransformString(combinedTransform) };
+  // remove the traveler's frame of reference that was initially applied
+  mat4.invert(travelerCenterMatrix, travelerCenterMatrix);
+  mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
+
+  return { matrix3d: convertMat4ToCssTransformString(accumulatedTransform) };
+}
+
+function shouldElementPreserve3d(element: HTMLElement, wayfinder: HTMLElement): boolean {
+  let wayfinderParent = wayfinder.parentElement;
+  let currentParent = element!.parentElement;
+
+  while (currentParent && !currentParent.isSameNode(wayfinderParent)) {
+    if (getComputedStyle(currentParent).transformStyle == "preserve-3d") {
+      return true;
+    }
+    currentParent = currentParent!.parentElement;
+  }
+
+  return false;
 }
 
 function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLElement): HTMLElement[] {
@@ -150,7 +186,6 @@ function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLE
     return [];
   }
 
-  elementList.reverse();
   return elementList;
 }
 
