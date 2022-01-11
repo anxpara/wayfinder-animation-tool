@@ -61,6 +61,11 @@
 /**
 * extremely useful for avoiding x-scroll and annoying hiccups from touch input and scrolling on mobile
 * https://www.freecodecamp.org/news/html-page-width-height/
+*
+* IMPORTANT: you must use the following meta tag to set the viewport width for mobile devices:
+*   <head>
+*     <meta name="viewport" content="width=device-width, initial-scale=1">
+*   </head>
 */
 @mixin body--enable-clipping-to-page-width {
   position: absolute;
@@ -128,6 +133,14 @@
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
+
+  // these might also work
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -user-select: none;
 }
 
 /** BONUS STYLING MIXINS */
