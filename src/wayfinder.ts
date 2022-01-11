@@ -7,27 +7,45 @@ import {
   isContainerOffsetRelevantToChildren,
   getCenterOfElement,
 } from "./css-utils";
-import { WatAnimParams } from "./wat-anim-params";
-
-export { WatAnimParams } from "./wat-anim-params";
 
 /**
- * stash: you can use the stash however you want, or just ignore it
+ * WatAnimParams is a subset of AnimeJs' AnimeParams, which means integration with
+ * AnimeJs is as simple as using the object spread operator:
  *
- * the stash can be a very useful mechanism to store additional
- * params/characteristics in each waypoint for when it's time
- * to send a traveler there
+ *  anime({
+ *    targets: '#traveler',
+ *    ...sendToWaypointAnimParams(waypoint, wayfinderElement)
+ *  });
+ *
+ * however, none of these parameters are unique to AnimeJs, and would still be useful
+ * with other animation libraries, albeit some extra integration work may be needed
+ *
+ * --
+ *
+ * wayfinder bakes all translations and relative positionings into the matrix3d param,
+ * which means AnimeJs' translation/scale/etc. params are still available for relative effects
+ */
+ export type WatAnimParams = {
+  width?: string;
+  height?: string;
+  matrix3d?: string;
+};
+
+/**
+ * a Waypoint represents any element you want to send travelers to. to animate
+ * something quick and dirty you can do...
+ * 
+ *   sendToWaypointAnimParams({name: 'myWp', element: myWpElement}, wayfinderElement);
+ * 
+ * stash: use the stash however you want, or just ignore it. can be a very useful
+ * mechanism for storing additional params/characteristics in each waypoint for
+ * when it's time to send a traveler there
  *
  * loggingEnabled: enables a default logger that prints a SendResultsLogData
- * object on each call to sendToWaypointAnimParams
+ * object each time sendToWaypointAnimParams is called
  *
- * customSendResultsLogger: if you want to replace the default logging,
- * then provide a callback
- *
- * ---
- *
- * note: using elements other than divs as waypoints is untested and could
- * possibly lead to undefined behavior
+ * customSendResultsLogger: if you want to replace the default logging, then 
+ * provide a callback
  */
 export type Waypoint<StashType = any> = {
   name: string;
@@ -38,8 +56,7 @@ export type Waypoint<StashType = any> = {
 };
 
 /**
- * returns all animation parameters needed to resize, move, and transform a traveler to
- * match the waypoint
+ * returns all animation parameters needed to resize, move, and transform a traveler to the waypoint
  */
 export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElement): WatAnimParams {
   if (!destWp.element) {
@@ -59,8 +76,8 @@ export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElemen
 }
 
 /**
- * By convention, travelers must match the destination waypoint's width and height in order to
- * preserve a center origin on the traveler
+ * by convention, travelers must match the destination waypoint's width and height in order to
+ * preserve a center origin on the traveler. this restriction might be removed eventually
  *
  * animating width and height can be expensive. if you must animate between different-sized waypoints,
  * consider finding a good instant to set the dimensions once
@@ -76,8 +93,8 @@ export function resizeToWaypointAnimParams(destWp: Waypoint, _wayfinder: HTMLEle
 
 /**
  * builds a transform matrix that projects the waypoint onto the wayfinder
- *  supports 'transform-style: preserve-3d;'
- *  doesn't currently support 'perspective: *;'
+ *  -supports 'transform-style: preserve-3d;'
+ *  -doesn't currently support 'perspective: *;'
  *
  * https://www.w3.org/TR/css-transforms-2
  */
@@ -99,7 +116,7 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
 
   // shift the frame of reference to the traveler's transform origin
   // (by convention, this matches the waypoint's center, might eventually add an option to provide the
-  //  traveler's transform origin directly)
+  // traveler's transform origin directly)
   let travelerCenter = getCenterOfElement(destWp.element);
   let travelerCenterMatrix = mat4.create();
   mat4.fromTranslation(travelerCenterMatrix, travelerCenter);
