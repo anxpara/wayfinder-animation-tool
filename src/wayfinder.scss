@@ -81,7 +81,10 @@
   @include body--enable-clipping-to-page-width;
 }
 
-/** useful in case you still want horizontal scroll, but you don't want travelers to add extra width beyond the content */
+/** 
+* useful in case you still want horizontal scroll, but you don't want travelers to add extra width beyond the content
+* keep in mind that the body won't consider absolutely positioned children as content
+*/
 @mixin body--enable-clipping-to-content-width {
   @include body--enable-clipping-to-page-width;
   min-width: fit-content;
