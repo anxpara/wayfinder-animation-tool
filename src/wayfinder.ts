@@ -6,7 +6,7 @@ import {
   convertMat4ToCssTransformString,
   isContainerOffsetRelevantToChildren,
   getCenterOfElement,
-} from "./utils/css-utils";
+} from "./css-utils";
 import { WatAnimParams } from "./wat-anim-params";
 
 export { WatAnimParams } from "./wat-anim-params";
