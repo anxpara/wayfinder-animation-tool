@@ -9,23 +9,25 @@
 
 ### Download
 
+
 ```bash
 $ npm install wayfinder-animation-tool --save
 ```
 
 ## What is Wayfinder?
 
-Wayfinder is a light-weight animation tool for JS/Typescript that lets you animate "traveler" divs to and from other ordinary divs (referred to as "waypoints") on your site. This makes it super easy to animate using the deterministic behavior and responsiveness of html and css, which means animating for both desktop and mobile is a breeze.
+Wayfinder is a light-weight animation tool for JS/Typescript that lets you animate "traveler" divs to and from other ordinary elements ("waypoints") on your site. This makes it super easy to animate using the deterministic behavior and responsiveness of html and css, which means animating for both desktop and mobile is a breeze.
 
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
 * Visualize and test your waypoints and travelers in real-time while tinkering with browser dev tools
 * Target and animate desktop and mobile together with ease
 * Lift off from waypoints with additional relative animations and transforms, if desired
-* Easily incorporate wayfinder into an existing site (theoretically, atm), since any div can be a waypoint with no modification
+* Easily incorporate wayfinder into an existing site, since any element can be a waypoint with no modification
 
-WAT is written in Typescript because TS is superior, although TS compiles down to JS if you prefer. A couple required scss mixins are provided in wayfinder.scss, or as classes in wayfinder.css. WAT currently has zero dependencies, but will eventually depend on a matrix library, e.g. glMatrix.
+WAT is written in Typescript because TS is superior, although TS compiles down to JS if you prefer. A couple required scss mixins are provided in wayfinder.scss (or as classes in wayfinder.css). WAT only has one dependency: glMatrix.
 
+</br>
 <div align="center">
   <img src="https://github.com/anxpara/wayfinder-animation-tool/blob/main/documentation/assets/img/timeline-swatch-demo-gif.gif">
 </div>
@@ -180,7 +182,7 @@ let expanderWp: Waypoint<ColorSquareStash> = {
 function summonColorSquareToWaypoint(destWp: Waypoint<ColorSquareStash>): void {
   anime({
     targets: '.color-square-traveler',
-    ...this.sendToWaypointAnimParams(destWp, wayfinder),
+    ...sendToWaypointAnimParams(destWp, wayfinder),
     duration: durationMs,
     easing: 'easeOutQuint',
 
@@ -220,6 +222,7 @@ let riserWp = {
     customSendResultsLogger: prettyLogger,
 };
 ```
+</br>
 </br>
 
 <div align="center"><a href="https://wayfinder.anxpara.com"><img src="https://i.imgur.com/H5KVcwM.jpg" width="300"/></a></div>
