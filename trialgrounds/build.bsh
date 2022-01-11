@@ -1,0 +1,17 @@
+cd ..
+npm link
+cd trialgrounds
+npm link wayfinder-animation-tool
+
+mkdir -p build
+
+cp src/trialgrounds.html build/trialgrounds.html
+
+sass src/trialgrounds.scss build/trialgrounds.css --no-source-map
+
+tsc --project ./ --module umd
+cp build/src/index.js build/index.js
+
+rollup src/trialgrounds.ts --file build/trialgrounds.js --name trialgrounds --format umd --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-typescript
+
+rm -rf build/src

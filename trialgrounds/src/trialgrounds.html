@@ -1,1 +1,52 @@
-Trialgrounds
+<head lang="en">
+  <title>trialgrounds</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./trialgrounds/trialgrounds.css" />
+  <script src="./trialgrounds/trialgrounds.js"></script>
+</head>
+<body>
+  <!-- standalone tests-->
+  <div id="standalone-trialgrounds" class="trial-grounds standalone-trialgrounds">
+    <div id="wp-standalone-waypoint-template" class="waypoint-template">
+      <div class="fail-content">standalone wp</div>
+    </div>
+
+    <div id="standalone-wayfinder" class="wayfinder standalone-wayfinder"></div>
+  </div>
+
+  <!-- nested tests -->
+  <div id="nested-trialgrounds" class="trial-grounds nested-trialgrounds">
+    <div id="nested-container-template" class="nested-container nested-container-template">
+      <div id="wp-nested-waypoint-template" class="nested-waypoint waypoint-template">
+        <div class="fail-content">nested wp</div>
+      </div>
+    </div>
+
+    <div id="sticky-root" class="nested-container nested-scroll-container sticky-root">
+      <div class="spacer"></div>
+      <div id="nested-sticky-container" class="nested-container sticky-container">
+        <div id="wp-nested-sticky" class="nested-waypoint sticky-waypoint">
+          <div class="fail-content">nested-sticky</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <div id="nested-wayfinder" class="wayfinder nested-wayfinder"></div>
+  </div>
+
+  <!-- controller -->
+  <div id="controller" class="controller">
+    <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="hide()">hide</div>
+    <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="show()">show</div>
+    <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="set()">set</div>
+    <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="auto()">auto</div>
+  </div>
+
+  <!-- templates -->
+  <div id="t-test-traveler-template" class="test-traveler">
+    <div class="pass-content">test traveler</div>
+  </div>
+</body>

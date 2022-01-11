@@ -1,13 +1,14 @@
 {
     "compilerOptions": {
       "target": "es6",
-      "module": "commonjs",
+      "module": "es2015",
       "rootDir": "./",
       "outDir": "./build",
       "esModuleInterop": true,
       "strict": true,
       "forceConsistentCasingInFileNames": true,
       "importHelpers": true,
+      "moduleResolution": "node"
     },
     "exclude": ["dist", "node_modules", "**/*.spec.ts"],
   }

@@ -1,0 +1,355 @@
+@use "../node_modules/wayfinder-animation-tool/dist/wayfinder.scss" as wat;
+
+@mixin template {
+  display: none;
+}
+
+@mixin card {
+  padding: 0.3em;
+  overflow: hidden;
+}
+
+@mixin test-waypoint {
+  margin-bottom: 1em;
+  width: 7em;
+  height: 5em;
+  color: crimson;
+  outline: dotted 0.1em;
+}
+
+@mixin offset-container {
+  margin: 1.07em;
+  padding: 0.36em;
+}
+
+@mixin diff-origin-container {
+  width: 8em;
+  height: 8em;
+}
+
+html {
+  touch-action: manipulation;
+}
+
+body {
+  @include wat.body--enable-clipping-to-page-width;
+  background-color: #181a1b;
+  font-family: "Oxygen", sans-serif, bold;
+  font-weight: 700;
+  font-size: initial;
+}
+
+.trial-grounds {
+  font-size: 1.75em;
+  margin: 0.5em;
+  color: purple;
+  outline: dotted 0.1em;
+  outline-offset: 0.1em;
+}
+
+.waypoint-template {
+  @include template;
+}
+
+.test-traveler {
+  @include wat.traveler;
+  @include template;
+  color: lime;
+  outline: dotted 0.1em;
+  z-index: 2;
+}
+
+.fail-content {
+  @include card;
+  color: inherit;
+}
+
+.pass-content {
+  @include card;
+  color: lime;
+}
+
+.wayfinder {
+  @include wat.wayfinder;
+}
+
+// CONTROLLER
+
+.controller {
+  font-size: 1.75em;
+  position: fixed;
+  right: -0.1em;
+  top: 20%;
+  z-index: 3;
+}
+
+.controller-button {
+  @include wat.clickable--mobile-friendly;
+  margin: 1.5em 0;
+  border: solid 0.1em;
+  padding: 0.4em;
+  transform: rotateZ(90deg);
+  color: seagreen;
+  background-color: rgba(28, 0, 69, 0.5);
+  text-align: center;
+}
+
+// STANDALONE
+
+.standalone-trialgrounds {
+  margin-bottom: 2.5em;
+}
+
+.standalone-wayfinder {
+  @include wat.wayfinder--clip-to-nearest-positioned-ancestor;
+}
+
+.control-waypoint {
+  @include test-waypoint;
+}
+
+.absolute-waypoint {
+  @include test-waypoint;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+.size-waypoint {
+  @include test-waypoint;
+  width: 5em;
+  height: 3em;
+}
+
+.relative-waypoint {
+  @include test-waypoint;
+  position: relative;
+  top: 0.5em;
+  left: 0.5em;
+}
+
+.translate-waypoint {
+  @include test-waypoint;
+  transform: translateX(1em) translateY(0.5em);
+}
+
+.rotate-origin-0-waypoint {
+  @include test-waypoint;
+
+  transform: rotateZ(10deg);
+  transform-origin: top left;
+  margin-bottom: 1.5em;
+}
+
+.rotate-origin-mid-waypoint {
+  @include test-waypoint;
+  margin-bottom: 1.2em;
+  transform: rotateZ(10deg);
+}
+
+.rotate3d-waypoint {
+  @include test-waypoint;
+  transform: scale(1.25) rotateX(50deg) rotateZ(45deg);
+  margin-bottom: 2em;
+}
+
+.post-translate-down-waypoint {
+  @include test-waypoint;
+  margin-bottom: 4em;
+
+  transform: rotateZ(45deg);
+
+  color: gold;
+}
+
+.post-rotate-waypoint {
+  @include test-waypoint;
+  transform: rotateZ(45deg);
+
+  color: gold;
+}
+
+.x-clipping-waypoint {
+  @include test-waypoint;
+  position: absolute;
+  right: 0.8em;
+  bottom: 0.8em;
+  color: gold;
+}
+
+// NESTED
+
+.nested-trialgrounds {
+  position: relative;
+}
+
+.nested-container-template {
+  @include template;
+}
+
+.nested-waypoint {
+  @include test-waypoint;
+  margin-bottom: 0;
+}
+
+.nested-container {
+  width: -moz-fit-content;
+  width: fit-content;
+  height: fit-content;
+  outline: dotted 0.1em;
+  color: lightseagreen;
+}
+
+.nested-control-container {
+  outline-offset: 0.13em;
+}
+
+.nested-absolute-container {
+  @include offset-container;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  margin: 0;
+}
+
+.nested-offset-container {
+  @include offset-container;
+}
+
+.nested-relative-container {
+  @include offset-container;
+  position: relative;
+  left: 0.7em;
+  top: 0.7em;
+}
+
+.nested-rotates-0-container {
+  @include offset-container;
+  transform: rotateZ(10deg);
+  transform-origin: top left;
+  margin-bottom: 3em;
+}
+
+.nested-rotates-0-waypoint {
+  transform: rotateZ(20deg);
+  transform-origin: top left;
+}
+
+.nested-rotates-center-container {
+  @include offset-container;
+  transform: rotateZ(10deg);
+  margin-bottom: 1.5em;
+}
+
+.nested-rotates-center-waypoint {
+  transform: rotateZ(20deg);
+}
+
+.nested-diff-origin-control-container {
+  @include offset-container;
+  @include diff-origin-container;
+  transform: rotateZ(0deg);
+  margin-bottom: 1.8em;
+}
+
+.diff-origin-rotate-container {
+  @include offset-container;
+  @include diff-origin-container;
+  transform: rotateZ(20deg);
+  margin-bottom: 2.5em;
+}
+
+.diff-origin-rotates-container {
+  @include offset-container;
+  @include diff-origin-container;
+  transform: rotateZ(40deg);
+  margin-bottom: 2.5em;
+}
+
+.diff-origin-rotates-waypoint {
+  transform: rotateZ(10deg);
+}
+
+.countering-3d-rotates-container {
+  @include offset-container;
+  transform: rotateY(30deg);
+}
+
+.countering-3d-rotates-waypoint {
+  transform: rotateY(-30deg);
+}
+
+.countering-preserve3d-rotates-container {
+  @include offset-container;
+  transform: rotateY(30deg);
+  transform-style: preserve-3d;
+  margin-bottom: 1.5em;
+}
+
+.countering-preserve3d-rotates-waypoint {
+  transform: rotateY(-30deg);
+}
+
+.nested-3d-complicated-container {
+  transform: scale(1.25) rotateX(50deg) rotateZ(45deg);
+  margin-bottom: 2em;
+  margin-left: 2em;
+}
+
+.nested-3d-complicated-waypoint {
+  transform: rotateX(10deg) rotateZ(8deg);
+}
+
+.nested-preserve3d-complicated-container {
+  transform: scale(1.25) rotateX(50deg) rotateZ(45deg);
+  transform-style: preserve-3d;
+  margin-left: 2em;
+}
+
+.nested-preserve3d-complicated-waypoint {
+  transform: rotateX(10deg) rotateZ(8deg);
+}
+
+.nested-scroll-container {
+  @include offset-container;
+  margin: 1em;
+  margin-top: 1.2em;
+  width: 3em;
+  height: 2.2em;
+  padding-top: 5.25em;
+  padding-left: 5.25em;
+  overflow: scroll;
+}
+
+.nested-scroll-waypoint {
+  outline-offset: 0.2em;
+  color: gold;
+
+  .fail-content {
+    color: red;
+  }
+}
+
+.sticky-root {
+  @include offset-container;
+  position: relative;
+  margin: 1em;
+  margin-top: 1.2em;
+  width: 7.2em;
+  height: 6.8em;
+  padding: 0.7em;
+}
+
+.sticky-container {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  top: 0;
+  color: red;
+}
+
+.spacer {
+  width: 1.75em;
+  height: 3.5em;
+  outline: slateblue dotted;
+}
