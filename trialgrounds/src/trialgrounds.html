@@ -39,10 +39,16 @@
 
   <!-- controller -->
   <div id="controller" class="controller">
-    <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="hide()">hide</div>
-    <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="show()">show</div>
-    <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="set()">set</div>
-    <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="auto()">auto</div>
+    <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="trialgrounds.hide()">
+      hide
+    </div>
+    <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="trialgrounds.show()">
+      show
+    </div>
+    <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="trialgrounds.set()">set</div>
+    <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="trialgrounds.auto()">
+      auto
+    </div>
   </div>
 
   <!-- templates -->
