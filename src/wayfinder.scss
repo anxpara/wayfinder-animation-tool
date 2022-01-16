@@ -99,22 +99,6 @@
 /** MISC. MIXINS */
 
 /**
-* wayfinder will match the travelers's size to the waypoint's size, but this
-* won't necessarily be reflected in the traveler's child. if you want to force
-* a single child to match the waypoint's size, add this mixin
-*
-* note that animating the width and height of a traveler might perform poorly if abused,
-* since changing the dom flow every tick could be expensive
-*/
-@mixin traveler-child--fill-waypoint-size {
-  width: -webkit-fill-available;
-  height: -webkit-fill-available;
-}
-.traveler-child--fill-waypoint-size {
-  @include traveler-child--fill-waypoint-size;
-}
-
-/**
 * allow mouse input to pass through a transformed element to elements behind it,
 * while preserving mouse input for the children of the element
 *
