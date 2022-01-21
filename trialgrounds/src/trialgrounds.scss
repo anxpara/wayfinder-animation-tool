@@ -167,6 +167,46 @@ body {
   transform: rotateZ(45deg);
 
   color: gold;
+  margin-bottom: 2.5em;
+}
+
+.border-waypoint {
+  @include test-waypoint;
+  border: solid 0.25em;
+  outline: none;
+  color: gold;
+}
+.border-traveler {
+  outline: dashed 0.1em;
+  p {
+    margin: 0em;
+    padding: 0.55em;
+  }
+}
+
+.border-match-waypoint {
+  @include test-waypoint;
+  border: solid 0.25em;
+  outline: none;
+}
+
+.border-match-traveler {
+  outline: none;
+
+  p {
+    margin: 0em;
+  }
+}
+
+.border-match-traveler-child {
+  @include card;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  border: solid 0.25em;
+
+  p {
+    font-size: 0.5em;
+  }
 }
 
 .x-clipping-waypoint {
@@ -304,10 +344,38 @@ body {
   transform: scale(1.25) rotateX(50deg) rotateZ(45deg);
   transform-style: preserve-3d;
   margin-left: 2em;
+  margin-bottom: 1.5em;
 }
 
 .nested-preserve3d-complicated-waypoint {
   transform: rotateX(10deg) rotateZ(8deg);
+}
+
+.container-border-container {
+  margin: 1.07em;
+
+  outline: none;
+  border: solid 0.25em;
+}
+
+.nested-borders-container {
+  margin: 1.07em;
+  outline: none;
+  border: solid 0.25em;
+}
+
+.nested-borders-waypoint {
+  outline: none;
+  border: solid 0.25em;
+  color: gold;
+}
+
+.nested-borders-traveler {
+  outline: dashed 0.15em;
+  p {
+    margin: 0em;
+    padding: 0.55em;
+  }
 }
 
 .scroll-container {

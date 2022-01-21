@@ -10,13 +10,15 @@ let nestedWaypointContainerTemplate: HTMLElement | null = null;
 let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
-const standaloneWaypointNames = ['control', 'absolute', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
-                                 'rotate3d', 'post-translate-down', 'post-rotate', 'x-clipping'];
+const standaloneWaypointNames: string[] = ['control', 'absolute', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
+                                           'rotate3d', 'post-translate-down', 'post-rotate', 'border', /* 'border-match', */ 'x-clipping'];
 // prettier-ignore
-const nestedWaypointNames = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
-                             'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
-                             'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
-                             'scroll', 'sticky'];
+const nestedWaypointNames: string[] = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
+                                       'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
+                                       'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
+                                        'container-border', 'nested-borders', 'scroll', 'sticky',];
+let hardcodedWaypointNames: string[] = ["sticky"];
+let hardcodedTravelerNames: string[] = ["border", "border-match", "nested-borders"];
 let waypointsByName = new Map<string, Waypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
 
@@ -122,8 +124,12 @@ function loadWaypoints(): void {
 
 function spawnTravelers(): void {
   waypointsByName.forEach((wp) => {
+    if (hardcodedTravelerNames.includes(wp.name)) {
+      return;
+    }
     let testTraveler = testTravelerTemplate!.cloneNode(true) as HTMLElement;
     testTraveler.id = "t-test-traveler-" + wp.name;
+    testTraveler.classList.add(wp.name + "-traveler");
     testTraveler.firstElementChild!.innerHTML = wp.name;
     wp.stash!.wf.appendChild(testTraveler);
   });
