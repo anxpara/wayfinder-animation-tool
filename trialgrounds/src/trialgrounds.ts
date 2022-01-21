@@ -16,8 +16,7 @@ const standaloneWaypointNames = ['control', 'absolute', 'size', 'relative', 'tra
 const nestedWaypointNames = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
                              'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
                              'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
-                             'nested-scroll', 'nested-sticky'];
-let hardcodedWaypointNames = ["nested-sticky"];
+                             'scroll', 'sticky'];
 let waypointsByName = new Map<string, Waypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
 
@@ -110,11 +109,15 @@ function loadWaypoints(): void {
     waypointsByName.set(name, wp);
   });
 
-  let scrollContainer = document.getElementById("nested-scroll-container")! as HTMLDivElement;
-  scrollContainer.scrollBy(70, 50);
+  if (nestedWaypointNames.includes("scroll")) {
+    let scrollContainer = document.getElementById("scroll-container")! as HTMLDivElement;
+    scrollContainer.scrollBy(70, 50);
+  }
 
-  let stickyRootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
-  stickyRootContainer.scrollBy(0, 200);
+  if (nestedWaypointNames.includes("sticky")) {
+    let stickyRootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
+    stickyRootContainer.scrollBy(0, 200);
+  }
 }
 
 function spawnTravelers(): void {

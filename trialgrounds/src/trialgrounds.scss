@@ -310,7 +310,7 @@ body {
   transform: rotateX(10deg) rotateZ(8deg);
 }
 
-.nested-scroll-container {
+.scroll-container {
   @include offset-container;
   margin: 1em;
   margin-top: 1.2em;
@@ -321,7 +321,7 @@ body {
   overflow: scroll;
 }
 
-.nested-scroll-waypoint {
+.scroll-waypoint {
   outline-offset: 0.2em;
   color: gold;
 
