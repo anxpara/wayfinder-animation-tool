@@ -1,11 +1,11 @@
 import { mat4, vec3 } from "gl-matrix";
 import {
   getOffsetRectOfElement,
-  get3dTransformMatrixOfElement,
-  getTransformOriginOfElement,
-  convertMat4ToCssTransformString,
-  isContainerOffsetRelevantToChildren,
+  getOffsetFromDirectParent,
   getCenterOfElement,
+  getTransformOriginOfElement,
+  get3dTransformMatrixOfElement,
+  convertMat4ToCssTransformString,
 } from "./css-utils";
 
 /**
@@ -25,7 +25,7 @@ import {
  * wayfinder bakes all translations and relative positionings into the matrix3d param,
  * which means AnimeJs' translation/scale/etc. params are still available for relative effects
  */
- export type WatAnimParams = {
+export type WatAnimParams = {
   width?: string;
   height?: string;
   matrix3d?: string;
@@ -34,9 +34,9 @@ import {
 /**
  * a Waypoint represents any element you want to send travelers to. to animate
  * something quick and dirty you can do...
- * 
+ *
  *   sendToWaypointAnimParams({name: 'myWp', element: myWpElement}, wayfinderElement);
- * 
+ *
  * stash: use the stash however you want, or just ignore it. can be a very useful
  * mechanism for storing additional params/characteristics in each waypoint for
  * when it's time to send a traveler there
@@ -44,7 +44,7 @@ import {
  * loggingEnabled: enables a default logger that prints a SendResultsLogData
  * object each time sendToWaypointAnimParams is called
  *
- * customSendResultsLogger: if you want to replace the default logging, then 
+ * customSendResultsLogger: if you want to replace the default logging, then
  * provide a callback
  */
 export type Waypoint<StashType = any> = {
@@ -111,9 +111,6 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
   let accumulatedTransform = mat4.create();
   mat4.identity(accumulatedTransform);
 
-  // track parent offsets in case they must be removed from the element's offsets
-  let parentOffsetRect: DOMRect = new DOMRect(0, 0, 0, 0);
-
   // shift the frame of reference to the traveler's transform origin
   // (by convention, this matches the waypoint's center, might eventually add an option to provide the
   // traveler's transform origin directly)
@@ -125,13 +122,6 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
   elementsDownToWp.forEach((el, i) => {
     if (el.style.position == "fixed") {
       throw new Error("Fixed position is not supported on waypoints, nor any elements between them and the wayfinder.");
-    }
-
-    let parent = el.parentElement;
-    if (parent && isContainerOffsetRelevantToChildren(parent) && i != elementsDownToWp.length - 1) {
-      parentOffsetRect = getOffsetRectOfElement(parent);
-    } else {
-      parentOffsetRect = new DOMRect(0, 0, 0, 0);
     }
 
     // apply the element's transform-origin
@@ -149,15 +139,17 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
     mat4.invert(originMatrix, originMatrix);
     mat4.multiply(accumulatedTransform, originMatrix, accumulatedTransform);
 
-    // factor in overall offset from parent
-    let offsetRect = getOffsetRectOfElement(el);
-    let overallOffset = vec3.fromValues(
-      offsetRect.left - parentOffsetRect.left - el.scrollLeft,
-      offsetRect.top - parentOffsetRect.top - el.scrollTop,
-      0
-    );
+    // translate by the element's offset from its direct parent
+    let offsetRect = getOffsetFromDirectParent(el);
+    // if element is the root, then use its normal offset rect instead
+    if (i == elementsDownToWp.length - 1) {
+      offsetRect = getOffsetRectOfElement(el);
+    }
+    offsetRect.x -= el.scrollLeft;
+    offsetRect.y -= el.scrollTop;
+    let offsetVec = vec3.fromValues(offsetRect.left, offsetRect.top, 0);
     let offsetMatrix = mat4.create();
-    mat4.fromTranslation(offsetMatrix, overallOffset);
+    mat4.fromTranslation(offsetMatrix, offsetVec);
     mat4.multiply(accumulatedTransform, offsetMatrix, accumulatedTransform);
 
     // flatten transform onto xy plane if not preserving 3d

@@ -10,6 +10,21 @@ export function getOffsetRectOfElement(element: HTMLElement): DOMRect {
   return new DOMRect(element.offsetLeft, element.offsetTop, element.offsetWidth, element.offsetHeight);
 }
 
+export function getOffsetFromDirectParent(element: HTMLElement): DOMRect {
+  let directParent = element.parentElement;
+  let offsetParent = element.offsetParent;
+  let offsetRect = getOffsetRectOfElement(element);
+
+  // browser has included the direct parent's offset in the element's offset, so remove it
+  if (directParent && offsetParent != directParent && offsetParent == directParent.offsetParent) {
+    let offsetOfDirectParent = getOffsetRectOfElement(directParent);
+    offsetRect.x -= offsetOfDirectParent.x;
+    offsetRect.y -= offsetOfDirectParent.y;
+  }
+
+  return offsetRect;
+}
+
 export function getCenterOfElement(element: HTMLElement): vec3 {
   return vec3.fromValues(element.offsetWidth / 2, element.offsetHeight / 2, 0);
 }
@@ -18,11 +33,6 @@ export function getTransformOriginOfElement(element: HTMLElement): vec3 {
   let originString = window.getComputedStyle(element).transformOrigin;
   let coords = originString.split(" ").map((str) => Number.parseFloat(str));
   return vec3.fromValues(coords[0], coords[1], coords.length > 2 ? coords[2] : 0);
-}
-
-export function isContainerOffsetRelevantToChildren(el: HTMLElement): boolean {
-  let style = window.getComputedStyle(el);
-  return style.transform == "none" && style.position == "static";
 }
 
 // prettier-ignore
