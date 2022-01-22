@@ -123,6 +123,10 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
   mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
 
   elementsDownToWp.forEach((el, i) => {
+    if (el.style.position == "fixed") {
+      throw new Error("Fixed position is not supported on waypoints, nor any elements between them and the wayfinder.");
+    }
+
     let parent = el.parentElement;
     if (parent && isContainerOffsetRelevantToChildren(parent) && i != elementsDownToWp.length - 1) {
       parentOffsetRect = getOffsetRectOfElement(parent);
