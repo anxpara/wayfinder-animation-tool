@@ -29,6 +29,11 @@
   // animation optimization, can prevent artifacts that occur in specific situations
   // not supported by ie but who cares
   will-change: transforms;
+
+  // fixes a rendering optimization bug in chrome. travelers inserted far enough away from
+  // the viewport were not being rendered at all once scrolled into view. still not ideal,
+  // since travelers might render slower when brought on-screen quickly. thanks chrome :|
+  content-visibility: auto;
 }
 .traveler {
   @include traveler;
