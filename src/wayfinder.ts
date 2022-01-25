@@ -154,14 +154,10 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
 
     // flatten transform onto xy plane if not preserving 3d
     if (!shouldElementPreserve3d(el, wayfinder)) {
-      // prettier-ignore
-      let scaleZ = mat4.fromValues(
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 0.000001, 0, // 0.000001 works but 0 doesn't? https://i.imgur.com/5xQSpql.jpg
-        0, 0, 0, 1
-      );
-      mat4.mul(accumulatedTransform, scaleZ, accumulatedTransform);
+      accumulatedTransform[2] = 0;
+      accumulatedTransform[6] = 0;
+      accumulatedTransform[10] = 1;
+      accumulatedTransform[14] = 0;
     }
   });
 
