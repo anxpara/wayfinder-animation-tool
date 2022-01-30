@@ -30,9 +30,13 @@
   // not supported by ie but who cares
   will-change: transforms;
 
-  // fixes a rendering optimization bug in chrome. travelers inserted far enough away from
-  // the viewport were not being rendered at all once scrolled into view. still not ideal,
-  // since travelers might render slower when brought on-screen quickly. thanks chrome :|
+  /**
+  * chrome only
+  *
+  * fixes a rendering optimization bug in chrome. elements inserted far enough away from
+  * the viewport sometimes aren't rendered at all once scrolled into view. solution still
+  * not ideal, since elements might render slightly slower when brought on-screen quickly
+  */
   content-visibility: auto;
 }
 .traveler {
@@ -43,18 +47,20 @@
 
 /** CLIPPING AND DISABLE MOBILE X-SCROLL MIXINS
 *
-* note: the original reason I made these clipping mixins was to remove horizontal scrolling on mobile if travelers extended past the edge of the screen
-* The way the standard implemented 'overflow-x: hidden' sucks and there aren't any other simple ways to get width-only clipping.
-* instead, I've found it's best to enable full clipping and just make sure that the height of the container doesn't get in the way
+* note: the original reason I made these clipping mixins was to remove horizontal scrolling on
+* mobile if travelers extended past the edge of the screen The way the standard implemented
+* 'overflow-x: hidden' sucks and there aren't any other simple ways to get width-only clipping.
+* instead, I've found it's best to enable full clipping and just make sure that the height of
+* the container doesn't get in the way
 * 
-* in order for the wayfinder to clip at the edge of the screen, it needs to fill the body's width. this is not the default behavior,
-* since the wayfinder is 'positioned.' A positioned element with width and height set to 100% will fill its most recent
-* *positioned* ancestor
+* in order for the wayfinder to clip at the edge of the screen, it needs to fill the body's
+* width. this is not the default behavior, since the wayfinder is 'positioned.' A positioned
+* element with width and height set to 100% will fill its most recent *positioned* ancestor
 *
 * a couple mixin options are provided below to prep the body element for wayfinder clipping
 * 
-* of course, if you want to clip to something other than the actual page then you don't have to use those particular mixins, although the technique
-* will probably be the same
+* of course, if you want to clip to something other than the actual page then you don't have
+* to use those particular mixins, although the technique will probably be the same
 */
 @mixin wayfinder--clip-to-nearest-positioned-ancestor {
   width: 100%;
@@ -89,8 +95,9 @@
 }
 
 /** 
-* useful in case you still want horizontal scroll, but you don't want travelers to add extra width beyond the content
-* keep in mind that the body won't consider absolutely positioned children as content
+* useful in case you still want horizontal scroll, but you don't want travelers to add extra
+* width beyond the content keep in mind that the body won't consider absolutely positioned
+* children as content
 */
 @mixin body--enable-clipping-to-content-width {
   @include body--enable-clipping-to-page-width;
@@ -107,7 +114,8 @@
 * allow mouse input to pass through a transformed element to elements behind it,
 * while preserving mouse input for the children of the element
 *
-* $pointer-events-of-children: set the pointer-events for all children of the element. default value is all
+* $pointer-events-of-children: set the pointer-events for all children of the element.
+*   (default value is all)
 */
 @mixin transformed-element--enable-pass-through-of-pointer-events($pointer-events-of-children: all) {
   pointer-events: none;
