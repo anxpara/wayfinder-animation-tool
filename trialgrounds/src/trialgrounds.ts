@@ -11,7 +11,7 @@ let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
 const standaloneWaypointNames: string[] = ['control', 'absolute', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
-                                           'rotate3d', 'post-translate-down', 'post-rotate', 'border', /* 'border-match', */ 'x-clipping'];
+                                           'rotate-3d', 'post-translate-down', 'post-rotate', 'border', /* 'border-match', */ 'x-clipping'];
 // prettier-ignore
 const nestedWaypointNames: string[] = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
                                        'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',

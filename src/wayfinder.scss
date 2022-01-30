@@ -43,6 +43,43 @@
   @include traveler;
 }
 
+/** BROWSER BUG WORKAROUNDS */
+
+/**
+* safari 3d stacking/clipping bug
+*
+* note: if you'll only be using 2d transforms, or if you'll never have 3d elements stacked on
+* or behind other elements, then ignore this workaround. a common sign that you've run into
+* this problem is if only half of an element is being rendered, like it was sliced in half at
+* some angle
+*
+* -----
+*
+* unfortunately, there's an ancient bug that apple has left in safari/webkit that breaks the
+* rendering of stacked, 3d-transformed elements
+* 
+* TLDR: in safari, elements with 3d transforms will completely ignore z-indices and stacking
+* contexts, and will potentially clip through elements in front of or behind them. if you
+* want to stack 3d elements, then you'll need to rely entirely on "transform: translateZ()"
+* to avoid clipping
+* 
+* this workaround translates the wayfinder div up the z-axis away from its siblings by an
+* arbitrary unit of 99em. to layer other siblings in front of the wayfinder, use
+* translateZ(100em) or higher.
+* 
+* note: translateZ(99em) is arbitrary and can still be broken with a 3d transform of the right
+* magnitude. this workaround is more of a suggestion. there may be other solutions to this
+* problem, but there's no way to force safari to respect z-indices
+*
+* thanks apple :|
+*/
+@mixin wayfinder--safari-3d-clipping-bug--translatez {
+  transform: translateZ(99em);
+}
+.wayfinder--safari-3d-clipping-bug--translatez {
+  @include wayfinder--safari-3d-clipping-bug--translatez;
+}
+
 /** OPTIONAL MIXINS */
 
 /** CLIPPING AND DISABLE MOBILE X-SCROLL MIXINS

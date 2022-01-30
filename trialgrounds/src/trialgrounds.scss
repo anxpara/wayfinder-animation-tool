@@ -71,6 +71,7 @@ body {
 
 .wayfinder {
   @include wat.wayfinder;
+  @include wat.wayfinder--safari-3d-clipping-bug--translatez;
 }
 
 // CONTROLLER
@@ -81,6 +82,7 @@ body {
   right: -0.1em;
   top: 20%;
   z-index: 3;
+  transform: translateZ(100em);
 }
 
 .controller-button {
@@ -147,7 +149,7 @@ body {
   transform: rotateZ(10deg);
 }
 
-.rotate3d-waypoint {
+.rotate-3d-waypoint {
   @include test-waypoint;
   transform: scale(1.25) rotateX(50deg) rotateZ(45deg);
   margin-bottom: 2em;
