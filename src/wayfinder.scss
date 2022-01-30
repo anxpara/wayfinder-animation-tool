@@ -120,13 +120,16 @@
 }
 
 /** 
-* add click cursor on desktop without ruining mobile click style on some browsers
+* add click cursor on desktop while avoiding annoying mobile click style on some browsers
 * haven't tested this broadly
 */
 @mixin clickable--mobile-friendly {
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
+}
+.clickable--mobile-friendly {
+  @include clickable--mobile-friendly;
 }
 
 /** BONUS STYLING MIXINS */
