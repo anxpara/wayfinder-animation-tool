@@ -6,7 +6,6 @@
 
 @mixin card {
   padding: 0.3em;
-  overflow: hidden;
 }
 
 @mixin test-waypoint {
@@ -208,6 +207,19 @@ body {
 
   p {
     font-size: 0.5em;
+  }
+}
+
+.overflowing-content-waypoint {
+  @include test-waypoint;
+  .fail-content {
+    font-size: 1.5em;
+  }
+}
+
+.overflowing-content-traveler {
+  .pass-content {
+    font-size: 1.5em;
   }
 }
 
