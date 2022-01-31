@@ -3,7 +3,7 @@
   <font size="5">Wayfinder Animation Tool</font>
 </h1>
 <h3 align="center"> EARLY BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h3>
-<h4 align="center">  <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller demo</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash demo</a> | <a href="https://wayfinder.anxpara.com" target="_blank">Advanced demo</a> </h4>
+<h4 align="center">  <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller demo</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash demo</a> | <a href="https://codepen.io/anxpara/pen/dyVVbqg" target="_blank">Trialgrounds</a> </h4>
 
 <div align="center"><img width="460px" src="https://github.com/anxpara/wayfinder-animation-tool/blob/main/documentation/assets/img/potion-seller-demo-gif.gif"></div>
 
@@ -16,7 +16,7 @@ $ npm install wayfinder-animation-tool --save
 
 ## What is Wayfinder?
 
-Wayfinder is a light-weight animation tool for JS/Typescript that lets you animate "traveler" divs to and from other ordinary elements ("waypoints") on your site. This makes it super easy to animate using the deterministic behavior and responsiveness of html and css, which means animating for both desktop and mobile is a breeze.
+Wayfinder is a light-weight animation tool for JS/Typescript that lets you animate floating traveler divs to and from ordinary elements (waypoints) on your site. This makes it easy to lay out your animations using the deterministic behavior and responsiveness of html and css, which makes animating for both desktop and mobile fairly straightforward.
 
 WAT can be used with any animation framework, but is designed with AnimeJs in mind for instant integration.
 
@@ -36,12 +36,12 @@ WAT is written in Typescript because TS is superior, although TS compiles down t
 ## How it works
 
 1. Throw waypoint divs onto your site, using whatever fancy (or simple) html, css, transforms, etc. you'd like.
-2. Add an invisible wayfinder div at a common ancestor of those waypoints.
-3. Add traveler divs to the wayfinder. The traveler divs are only wrappers for actual content.
+2. Add an invisible wayfinder div at a common ancestor of those waypoints using provided mixin. If using 3d transforms, then add the additional safari bug-fix mixin.
+3. Add traveler divs to the wayfinder using provided mixin. The traveler divs are generally only wrappers for actual content.
 4. Load elements into Typescript or Javascript and create respective waypoint objects.
 5. Call sendToWaypointAnimParams(waypoint, wayfinder) to get all the parameters necessary to animate travelers to waypoints.
 6. Plug the parameters straight into an AnimeJS animation function using the spread operator.
-7. Profit
+7. Tinker
 
 Here's what the simplest wayfinder animation might look like...
 
@@ -151,8 +151,10 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 
 * Optional mixins can be found in wayfinder.scss (see file for full documentation)...
 * Enable horizontal clipping and disable horizontal scrolling--especially useful on mobile
+* Fix an ancient 3d rendering bug in safari/webkit
 * Reinstate pointer event pass-through for transparent travelers that have been transformed
 * Quickly add nameplates to waypoints for easy labeling
+
 
 ### Stash
 
