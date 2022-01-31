@@ -39,7 +39,9 @@
 /**
 * safari 3d stacking/clipping bug
 *
-* note: if you'll only be using 2d transforms, or if you'll never have 3d elements stacked on
+* note: required for 3d waypoints
+* 
+* if you'll only be using 2d transforms, or if you'll never have 3d elements stacked on
 * or behind other elements, then ignore this workaround. a common sign that you've run into
 * this problem is if only half of an element is being rendered, like it was sliced in half at
 * some angle
