@@ -41,10 +41,10 @@
 *
 * note: required for 3d waypoints
 * 
-* if you'll only be using 2d transforms, or if you'll never have 3d elements stacked on
-* or behind other elements, then ignore this workaround. a common sign that you've run into
-* this problem is if only half of an element is being rendered, like it was sliced in half at
-* some angle
+* you can ignore this mixin if you'll only be using 2d transforms, or if you're certain
+* you'll never have 3d elements stacked on or behind other elements. a common sign that
+* you've run into this problem is if only half of an element is being rendered, like it
+* was sliced in half at some angle
 *
 * -----
 *
@@ -53,8 +53,8 @@
 * 
 * TLDR: in safari, elements with 3d transforms will completely ignore z-indices and stacking
 * contexts, and will potentially clip through elements in front of or behind them. if you
-* want to stack 3d elements, then you'll need to rely entirely on "transform: translateZ()"
-* to avoid clipping
+* want to stack 3d elements, then you'll need to use z-axis translations as a fallback for
+* z-indices to avoid clipping
 * 
 * this workaround translates the wayfinder div up the z-axis away from its siblings by an
 * arbitrary unit of 99em. to layer other siblings in front of the wayfinder, use
@@ -63,6 +63,8 @@
 * note: translateZ(99em) is arbitrary and can still be broken with a 3d transform of the right
 * magnitude. this workaround is more of a suggestion. there may be other solutions to this
 * problem, but there's no way to force safari to respect z-indices
+*
+* note: you might still need to use z-indices for other browsers
 *
 * thanks apple :|
 */
