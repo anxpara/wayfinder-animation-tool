@@ -13,7 +13,7 @@
   width: 7em;
   height: 5em;
   color: crimson;
-  outline: dotted 0.1em;
+  outline: dotted 0.11em;
 }
 
 @mixin offset-container {
@@ -43,7 +43,7 @@ body {
   margin: 0.5em;
   color: purple;
   outline: dotted 0.1em;
-  outline-offset: 0.1em;
+  outline-offset: -0.1em;
 }
 
 .waypoint-template {
@@ -54,8 +54,7 @@ body {
   @include wat.traveler;
   @include template;
   color: lime;
-  outline: dotted 0.1em;
-  z-index: 2;
+  outline: dotted 0.11em;
 }
 
 .fail-content {
@@ -80,7 +79,6 @@ body {
   position: fixed;
   right: -0.1em;
   top: 20%;
-  z-index: 3;
   transform: translateZ(100em);
 }
 
@@ -178,7 +176,7 @@ body {
   color: gold;
 }
 .border-traveler {
-  outline: dashed 0.1em;
+  outline: dashed 0.11em;
   p {
     margin: 0em;
     padding: 0.55em;
@@ -251,11 +249,12 @@ body {
   width: fit-content;
   height: fit-content;
   outline: dotted 0.1em;
+  outline-offset: 0.1em;
   color: lightseagreen;
 }
 
 .nested-control-container {
-  outline-offset: 0.13em;
+  outline-offset: -0.13em;
 }
 
 .nested-absolute-container {
@@ -404,7 +403,7 @@ body {
 }
 
 .scroll-waypoint {
-  outline-offset: 0.2em;
+  outline-offset: -0.2em;
   color: gold;
 
   .fail-content {
@@ -428,6 +427,7 @@ body {
   left: 0;
   top: 0;
   color: red;
+  outline: none;
 }
 
 .spacer {
