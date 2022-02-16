@@ -14,12 +14,16 @@ export function getOffsetFromDirectParent(element: HTMLElement): DOMRect {
   let directParent = element.parentElement;
   let offsetParent = element.offsetParent;
   let offsetRect = getOffsetRectOfElement(element);
-
+  
   // browser has included the direct parent's offset in the element's offset, so remove it
   if (directParent && offsetParent != directParent && offsetParent == directParent.offsetParent) {
     let offsetOfDirectParent = getOffsetRectOfElement(directParent);
     offsetRect.x -= offsetOfDirectParent.x;
     offsetRect.y -= offsetOfDirectParent.y;
+  } else if (directParent) {
+    let parentStyle = window.getComputedStyle(directParent);
+    offsetRect.x += Number.parseFloat(parentStyle.borderLeftWidth);
+    offsetRect.y += Number.parseFloat(parentStyle.borderTopWidth);
   }
 
   return offsetRect;
