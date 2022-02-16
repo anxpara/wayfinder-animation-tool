@@ -14,33 +14,32 @@ let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
 const standaloneWaypointNames: string[] = ['control', 'absolute', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
-                                           'rotate-3d', 'post-translate-down', 'post-rotate', 'border', 'overflowing-content', /* 'border-match', */ 'x-clipping'];
+                                           'rotate-3d', 'post-translate-down', 'post-rotate', 'overflowing-content', 'x-clipping'];
 // prettier-ignore
 const nestedWaypointNames: string[] = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
                                        'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
                                        'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
-                                        'container-border', 'nested-borders', 'scroll', 'sticky',];
+                                       'scroll', 'sticky',];
 // prettier-ignore
 const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align', 'copy-font-size'];
 let hardcodedWaypointNames: string[] = ["sticky"];
-let hardcodedTravelerNames: string[] = ["border", "border-match", "nested-borders"];
+let hardcodedTravelerNames: string[] = [];
 let waypointsByName = new Map<string, Waypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
 
 const cssCopyLists = new Map<string, string[]>();
-cssCopyLists.set("copy-bg", ["background-color"]);
-cssCopyLists.set("copy-border", ["border-style", "border-width", "outline"]);
+cssCopyLists.set("copy-bg", ["background-color", "border-style", "border-width"]);
+cssCopyLists.set("copy-border", ["border-style", "border-width"]);
 cssCopyLists.set("copy-border-per-side", [
   "border-style",
   "border-left-width",
   "border-right-width",
   "border-top-width",
   "border-bottom-width",
-  "outline",
 ]);
-cssCopyLists.set('copy-border-box-sizing', ["border-style", "border-width", "outline"]);
-cssCopyLists.set('copy-text-align', ["text-align"]);
-cssCopyLists.set('copy-font-size', ["font-size"]);
+cssCopyLists.set("copy-border-box-sizing", ["border-style", "border-width"]);
+cssCopyLists.set("copy-text-align", ["text-align", "border-style", "border-width"]);
+cssCopyLists.set("copy-font-size", ["font-size", "border-style", "border-width"]);
 
 export function init() {
   loadElements();
@@ -193,8 +192,7 @@ function spawnTravelers(): void {
 }
 
 function sendTestTravelerToWpParams(wp: Waypoint): any {
-  let cssCopyProperties = cssCopyLists.get(wp.name);
-
+  let cssCopyProperties = cssCopyLists.get(wp.name) || ["border-style", "border-width"];
   let params = sendToWaypointAnimParams(wp, wp.stash!.wf, cssCopyProperties);
 
   let translateX = "0";

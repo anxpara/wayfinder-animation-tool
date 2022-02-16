@@ -13,7 +13,7 @@
   width: 7em;
   height: 5em;
   color: crimson;
-  outline: dotted 0.11em;
+  border: dotted 0.2em;
 }
 
 @mixin offset-container {
@@ -42,8 +42,7 @@ body {
   font-size: 1.75em;
   margin: 0.5em;
   color: purple;
-  outline: dotted 0.1em;
-  outline-offset: -0.1em;
+  border: dotted 0.1em;
 }
 
 .waypoint-template {
@@ -54,7 +53,6 @@ body {
   @include wat.traveler;
   @include template;
   color: lime;
-  outline: dotted 0.11em;
 }
 
 .fail-content {
@@ -169,45 +167,6 @@ body {
   margin-bottom: 2.5em;
 }
 
-.border-waypoint {
-  @include test-waypoint;
-  border: solid 0.25em;
-  outline: none;
-  color: gold;
-}
-.border-traveler {
-  outline: dashed 0.11em;
-  p {
-    margin: 0em;
-    padding: 0.55em;
-  }
-}
-
-.border-match-waypoint {
-  @include test-waypoint;
-  border: solid 0.25em;
-  outline: none;
-}
-
-.border-match-traveler {
-  outline: none;
-
-  p {
-    margin: 0em;
-  }
-}
-
-.border-match-traveler-child {
-  @include card;
-  width: -webkit-fill-available;
-  height: -webkit-fill-available;
-  border: solid 0.25em;
-
-  p {
-    font-size: 0.5em;
-  }
-}
-
 .overflowing-content-waypoint {
   @include test-waypoint;
   .fail-content {
@@ -248,13 +207,8 @@ body {
   width: -moz-fit-content;
   width: fit-content;
   height: fit-content;
-  outline: dotted 0.1em;
-  outline-offset: 0.1em;
+  border: solid 0.3em;
   color: lightseagreen;
-}
-
-.nested-control-container {
-  outline-offset: -0.13em;
 }
 
 .nested-absolute-container {
@@ -364,33 +318,6 @@ body {
   transform: rotateX(10deg) rotateZ(8deg);
 }
 
-.container-border-container {
-  margin: 1.07em;
-
-  outline: none;
-  border: solid 0.25em;
-}
-
-.nested-borders-container {
-  margin: 1.07em;
-  outline: none;
-  border: solid 0.25em;
-}
-
-.nested-borders-waypoint {
-  outline: none;
-  border: solid 0.25em;
-  color: gold;
-}
-
-.nested-borders-traveler {
-  outline: dashed 0.15em;
-  p {
-    margin: 0em;
-    padding: 0.55em;
-  }
-}
-
 .scroll-container {
   @include offset-container;
   margin: 1em;
@@ -403,8 +330,8 @@ body {
 }
 
 .scroll-waypoint {
-  outline-offset: -0.2em;
-  color: gold;
+  outline: dotted 0.2em gold;
+  outline-offset: 0.2em;
 
   .fail-content {
     color: red;
@@ -426,14 +353,13 @@ body {
   position: sticky;
   left: 0;
   top: 0;
-  color: red;
-  outline: none;
+  border-width: 0;
 }
 
 .spacer {
   width: 1.75em;
   height: 3.5em;
-  outline: slateblue dotted;
+  border: slateblue dotted;
 }
 
 // COPY
@@ -451,14 +377,12 @@ body {
 .copy-border-waypoint {
   @include test-waypoint;
 
-  outline: none;
   border: solid 0.4em;
 }
 
 .copy-border-per-side-waypoint {
   @include test-waypoint;
-  
-  outline: none;
+
   border-style: solid;
   border-left-width: 0.4em;
   border-right-width: 0.2em;
@@ -472,19 +396,18 @@ body {
   width: 8em;
   height: 6em;
 
-  outline: none;
   border: solid 0.4em;
   box-sizing: border-box;
 }
 
 .copy-text-align-waypoint {
   @include test-waypoint;
- 
+
   text-align: center;
 }
 
 .copy-font-size-waypoint {
   @include test-waypoint;
- 
+
   font-size: 1.2em;
 }
