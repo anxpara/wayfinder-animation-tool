@@ -435,3 +435,56 @@ body {
   height: 3.5em;
   outline: slateblue dotted;
 }
+
+// COPY
+
+.copy-trialgrounds {
+  padding: 0.5em;
+}
+
+.copy-bg-waypoint {
+  @include test-waypoint;
+
+  background-color: midnightblue;
+}
+
+.copy-border-waypoint {
+  @include test-waypoint;
+
+  outline: none;
+  border: solid 0.4em;
+}
+
+.copy-border-per-side-waypoint {
+  @include test-waypoint;
+  
+  outline: none;
+  border-style: solid;
+  border-left-width: 0.4em;
+  border-right-width: 0.2em;
+  border-top-width: 0.1em;
+  border-bottom-width: 0.3em;
+}
+
+.copy-border-box-sizing-waypoint {
+  @include test-waypoint;
+
+  width: 8em;
+  height: 6em;
+
+  outline: none;
+  border: solid 0.4em;
+  box-sizing: border-box;
+}
+
+.copy-text-align-waypoint {
+  @include test-waypoint;
+ 
+  text-align: center;
+}
+
+.copy-font-size-waypoint {
+  @include test-waypoint;
+ 
+  font-size: 1.2em;
+}
