@@ -29,6 +29,7 @@ export type WatAnimParams = {
   width?: string;
   height?: string;
   matrix3d?: string;
+  [AnyCopiedCssProperty: string]: any;
 };
 
 /**
@@ -56,16 +57,22 @@ export type Waypoint<StashType = any> = {
 };
 
 /**
- * returns all animation parameters needed to resize, move, and transform a traveler to the waypoint
+ * returns all animation parameters needed to resize, move, and transform a traveler to the waypoint,
+ * and copies any desired css properties
  */
-export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElement): WatAnimParams {
+export function sendToWaypointAnimParams(
+  destWp: Waypoint,
+  wayfinder: HTMLElement,
+  cssPropertiesToCopy: string[] = []
+): WatAnimParams {
   if (!destWp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
   let params = {
-    ...resizeToWaypointAnimParams(destWp, wayfinder),
+    ...resizeToWaypointAnimParams(destWp, wayfinder, cssPropertiesToCopy),
     ...transformToWaypointAnimParams(destWp, wayfinder),
+    ...copyWaypointCssAnimParams(destWp, wayfinder, cssPropertiesToCopy),
   };
 
   if (destWp.loggingEnabled) {
@@ -82,13 +89,46 @@ export function sendToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElemen
  * animating width and height can be expensive. if you must animate between different-sized waypoints,
  * consider finding a good instant to set the dimensions once
  */
-export function resizeToWaypointAnimParams(destWp: Waypoint, _wayfinder: HTMLElement): WatAnimParams {
+export function resizeToWaypointAnimParams(
+  destWp: Waypoint,
+  _wayfinder: HTMLElement,
+  cssPropertiesToCopy: string[]
+): WatAnimParams {
   if (!destWp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
   let wpOffsetRect = getOffsetRectOfElement(destWp.element);
-  return { width: wpOffsetRect.width + "px", height: wpOffsetRect.height + "px" };
+  let wpComputedStyle = window.getComputedStyle(destWp.element);
+  let width = wpOffsetRect.width;
+  let height = wpOffsetRect.height;
+
+  // check which border widths are being copied which need to be removed from the traveler size
+  let removeAll = cssPropertiesToCopy.includes("border") || cssPropertiesToCopy.includes("border-width");
+  let removeLeft = false;
+  let removeRight = false;
+  let removeTop = false;
+  let removeBottom = false;
+  if (!removeAll) {
+    removeLeft = cssPropertiesToCopy.includes("border-left") || cssPropertiesToCopy.includes("border-left-width");
+    removeRight = cssPropertiesToCopy.includes("border-right") || cssPropertiesToCopy.includes("border-right-width");
+    removeTop = cssPropertiesToCopy.includes("border-top") || cssPropertiesToCopy.includes("border-top-width");
+    removeBottom = cssPropertiesToCopy.includes("border-bottom") || cssPropertiesToCopy.includes("border-bottom-width");
+  }
+  if (removeAll || removeLeft) {
+    width -= Number.parseFloat(wpComputedStyle.borderLeftWidth.split('p')[0]);
+  }
+  if (removeAll || removeRight) {
+    width -= Number.parseFloat(wpComputedStyle.borderRightWidth.split('p')[0]);
+  }
+  if (removeAll || removeTop) {
+    height -= Number.parseFloat(wpComputedStyle.borderTopWidth.split('p')[0]);
+  }
+  if (removeAll || removeBottom) {
+    height -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split('p')[0]);
+  }
+
+  return { width: width + "px", height: height + "px" };
 }
 
 /**
@@ -196,6 +236,43 @@ function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLE
   }
 
   return elementList;
+}
+
+// prettier-ignore
+let cssPropertiesCopyBlacklist = ["all", "position", "width", "height", "transform", "transform-origin",
+                                  "perspective", "perspective-origin" ];
+
+export function copyWaypointCssAnimParams(
+  destWp: Waypoint,
+  _wayfinder: HTMLElement,
+  cssPropertiesToCopy: string[]
+): WatAnimParams {
+  if (!destWp.element) {
+    throw new Error("Destination waypoint has no element.");
+  }
+
+  let params: WatAnimParams = {};
+  let wpComputedStyle = window.getComputedStyle(destWp.element);
+
+  cssPropertiesToCopy.forEach((propName) => {
+    if (cssPropertiesCopyBlacklist.includes(propName)) {
+      return;
+    }
+    let propValue = wpComputedStyle.getPropertyValue(propName);
+    params[convertCssNametoParamName(propName)] = propValue;
+  });
+  return params;
+}
+
+function convertCssNametoParamName(cssPropertyName: string): string {
+  let segments = cssPropertyName.split("-");
+  let capSegments: string[] = [];
+  segments.forEach((seg, i) => {
+    if (i > 0) seg = seg.charAt(0).toUpperCase() + seg.slice(1);
+    capSegments.push(seg);
+  });
+  let paramName = capSegments.join("");
+  return paramName;
 }
 
 /** logging */
