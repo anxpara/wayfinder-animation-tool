@@ -154,6 +154,14 @@ setup();
 
 Wayfinder's simplicity makes it easy to use however you'd like. In addition, several optional features and scss mixins are provided that add extra power and also take care of common headaches.
 
+### Css copying
+
+* Most css properties can be copied directly from the waypoint to the traveler using an optional 3rd parameter. A small example:
+
+```typescript
+sendToWaypointAnimParams(waypoint, wayfinder, ['font-size', 'border-width', 'border-style', 'color']);
+```
+
 ### Bonus scss mixins
 
 * Optional mixins can be found in wayfinder.scss (see file for full documentation)...
