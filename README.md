@@ -77,8 +77,15 @@ SCSS
   width: 18.8em;
   height: 18.8em;
   padding: 0.63em;
-  border: dashed 0.2em; // travelers' content divs should match any border widths on waypoints.
-  // outline: dashed 0.2em; // outlines don't affect size or position, so they don't need to match
+  
+  /* there are 2 ways to match borders:
+  *  1. seen here, have the traveler's child's size & border-width match the
+  *     waypoint's size & border-width. square-card is used for both in this example
+  *  2. use wayfinder's css copy feature to copy the waypoint's border-width
+  *     directly to the traveler element (and optionally border-style and
+  *     border-color)
+  */
+  border: dashed 0.2em;
 }
 
 .potion-shop,
