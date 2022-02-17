@@ -193,7 +193,7 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
     mat4.multiply(accumulatedTransform, offsetMatrix, accumulatedTransform);
 
     // flatten transform onto xy plane if not preserving 3d
-    if (!shouldElementPreserve3d(el, wayfinder)) {
+    if (!shouldElementPreserve3d(el)) {
       accumulatedTransform[2] = 0;
       accumulatedTransform[6] = 0;
       accumulatedTransform[10] = 1;
@@ -208,18 +208,9 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
   return { matrix3d: convertMat4ToCssTransformString(accumulatedTransform) };
 }
 
-function shouldElementPreserve3d(element: HTMLElement, wayfinder: HTMLElement): boolean {
-  let wayfinderParent = wayfinder.parentElement;
+function shouldElementPreserve3d(element: HTMLElement): boolean {
   let currentParent = element!.parentElement;
-
-  while (currentParent && !currentParent.isSameNode(wayfinderParent)) {
-    if (getComputedStyle(currentParent).transformStyle == "preserve-3d") {
-      return true;
-    }
-    currentParent = currentParent!.parentElement;
-  }
-
-  return false;
+  return currentParent ? getComputedStyle(currentParent).transformStyle == "preserve-3d" : false;
 }
 
 function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLElement): HTMLElement[] {

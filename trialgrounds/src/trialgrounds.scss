@@ -279,22 +279,22 @@ body {
 
 .countering-3d-rotates-container {
   @include offset-container;
-  transform: rotateY(30deg);
+  transform: rotateY(45deg);
 }
 
 .countering-3d-rotates-waypoint {
-  transform: rotateY(-30deg);
+  transform: rotateY(-45deg);
 }
 
 .countering-preserve3d-rotates-container {
   @include offset-container;
-  transform: rotateY(30deg);
+  transform: rotateY(45deg);
   transform-style: preserve-3d;
   margin-bottom: 1.5em;
 }
 
 .countering-preserve3d-rotates-waypoint {
-  transform: rotateY(-30deg);
+  transform: rotateY(-45deg);
 }
 
 .nested-3d-complicated-container {
@@ -360,6 +360,39 @@ body {
   width: 1.75em;
   height: 3.5em;
   border: slateblue dotted;
+}
+
+.double-preserve3d-root {
+  @include offset-container;
+  transform: rotateY(65deg);
+  transform-style: preserve-3d;
+}
+
+.double-preserve3d-container {
+  @include offset-container;
+  transform: rotateY(253deg);
+  margin: 0;
+  transform-style: preserve-3d;
+}
+
+.double-preserve3d-waypoint {
+  transform: rotateY(25deg);
+}
+
+.revert-preserve3d-root {
+  @include offset-container;
+  transform: rotateY(65deg);
+  transform-style: preserve-3d;
+}
+
+.revert-preserve3d-container {
+  @include offset-container;
+  transform: rotateY(253deg);
+  margin: 0;
+}
+
+.revert-preserve3d-waypoint {
+  transform: rotateY(25deg);
 }
 
 // COPY

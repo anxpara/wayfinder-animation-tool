@@ -19,10 +19,10 @@ const standaloneWaypointNames: string[] = ['control', 'absolute', 'size', 'relat
 const nestedWaypointNames: string[] = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
                                        'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
                                        'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
-                                       'scroll', 'sticky',];
+                                       'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d'];
 // prettier-ignore
 const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align', 'copy-font-size'];
-let hardcodedWaypointNames: string[] = ["sticky"];
+let hardcodedWaypointNames: string[] = ["sticky", "double-preserve3d", "revert-preserve3d"];
 let hardcodedTravelerNames: string[] = [];
 let waypointsByName = new Map<string, Waypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
