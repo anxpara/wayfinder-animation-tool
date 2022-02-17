@@ -1,6 +1,6 @@
 {
   "name": "wayfinder-animation-tool",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Animate the web intuitively",
   "main": "dist/cjs/wayfinder.js",
   "module": "dist/es/wayfinder.js",
