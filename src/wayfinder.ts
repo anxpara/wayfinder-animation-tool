@@ -103,7 +103,7 @@ export function resizeToWaypointAnimParams(
   let width = wpOffsetRect.width;
   let height = wpOffsetRect.height;
 
-  // check which border widths are being copied which need to be removed from the traveler size
+  // check which border widths are being copied which need to be removed from the traveler's size
   let removeAll = cssPropertiesToCopy.includes("border") || cssPropertiesToCopy.includes("border-width");
   let removeLeft = false;
   let removeRight = false;
@@ -116,16 +116,16 @@ export function resizeToWaypointAnimParams(
     removeBottom = cssPropertiesToCopy.includes("border-bottom") || cssPropertiesToCopy.includes("border-bottom-width");
   }
   if (removeAll || removeLeft) {
-    width -= Number.parseFloat(wpComputedStyle.borderLeftWidth.split('p')[0]);
+    width -= Number.parseFloat(wpComputedStyle.borderLeftWidth.split("p")[0]);
   }
   if (removeAll || removeRight) {
-    width -= Number.parseFloat(wpComputedStyle.borderRightWidth.split('p')[0]);
+    width -= Number.parseFloat(wpComputedStyle.borderRightWidth.split("p")[0]);
   }
   if (removeAll || removeTop) {
-    height -= Number.parseFloat(wpComputedStyle.borderTopWidth.split('p')[0]);
+    height -= Number.parseFloat(wpComputedStyle.borderTopWidth.split("p")[0]);
   }
   if (removeAll || removeBottom) {
-    height -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split('p')[0]);
+    height -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split("p")[0]);
   }
 
   return { width: width + "px", height: height + "px" };
@@ -259,7 +259,11 @@ export function copyWaypointCssAnimParams(
       return;
     }
     let propValue = wpComputedStyle.getPropertyValue(propName);
-    params[convertCssNametoParamName(propName)] = propValue;
+    if (propValue != "") {
+      params[convertCssNametoParamName(propName)] = propValue;
+    } else {
+      console.warn("Wayfinder: " + propName + " is most likely not a valid css property name, skipping");
+    }
   });
   return params;
 }
