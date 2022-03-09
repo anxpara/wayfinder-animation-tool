@@ -76,7 +76,7 @@ export function sendToWaypointAnimParams(
   };
 
   if (destWp.loggingEnabled) {
-    logSendResults(destWp, wayfinder, params);
+    logSendResults(destWp, wayfinder, cssPropertiesToCopy, params);
   }
 
   return params;
@@ -277,13 +277,19 @@ export class SendResultsLogData<StashType = any> {
   waypoint!: Waypoint<StashType>;
   waypointComputedStyle!: CSSStyleDeclaration;
   wayfinderElement!: HTMLElement;
+  cssPropertiesCopied!: string[];
   animParamResults!: WatAnimParams;
 }
 
 export type SendResultsLogger<StashType = any> = (resultsLogData: SendResultsLogData<StashType>) => void;
 
-function logSendResults(destWp: Waypoint, wayfinder: HTMLElement, animParamResults: WatAnimParams): void {
-  const resultsLogData = makeSendResultsLogData(destWp, wayfinder, animParamResults);
+function logSendResults(
+  destWp: Waypoint,
+  wayfinder: HTMLElement,
+  cssPropertiesCopied: string[],
+  animParamResults: WatAnimParams
+): void {
+  const resultsLogData = makeSendResultsLogData(destWp, wayfinder, cssPropertiesCopied, animParamResults);
   if (destWp.customSendResultsLogger) {
     destWp.customSendResultsLogger(resultsLogData);
   } else {
@@ -294,6 +300,7 @@ function logSendResults(destWp: Waypoint, wayfinder: HTMLElement, animParamResul
 function makeSendResultsLogData(
   destWp: Waypoint,
   wayfinder: HTMLElement,
+  cssPropertiesCopied: string[],
   animParamResults: WatAnimParams
 ): SendResultsLogData<Waypoint> {
   if (!destWp.element) {
@@ -305,6 +312,7 @@ function makeSendResultsLogData(
     waypoint: destWp,
     waypointComputedStyle: window.getComputedStyle(destWp.element),
     wayfinderElement: wayfinder,
+    cssPropertiesCopied,
     animParamResults,
   };
 }
