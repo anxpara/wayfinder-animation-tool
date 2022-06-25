@@ -78,12 +78,14 @@ SCSS
   height: 18.8em;
   padding: 0.63em;
   
-  /* there are 2 ways to match borders:
-  *  1. seen here, have the traveler's child's size & border-width match the
-  *     waypoint's size & border-width. square-card is used for both in this example
-  *  2. use wayfinder's css copy feature to copy the waypoint's border-width
-  *     directly to the traveler element (and optionally border-style and
-  *     border-color)
+  /* there are 3 ways to match traveler and waypoint border widths (or full border styling):
+  *  1. if the border is defined by the waypoint's lone child, then match the
+  *     traveler's child's size and border-width to those of the waypoint's child 
+  *  2. if the border is defined by the waypoint itself, then match the traveler's
+  *     child's size & border-width to those of the waypoint. (seen here, square-card 
+  *     is used for both)
+  *  3. use wayfinder's css copy feature to copy the waypoint's border-width (or border) directly
+  *     to the traveler element (and optionally border-style and border-color)
   */
   border: dashed 0.2em;
 }
@@ -156,10 +158,14 @@ Wayfinder's simplicity makes it easy to use however you'd like. In addition, sev
 
 ### Css copying
 
-* Most css properties can be copied directly from the waypoint to the traveler using an optional 3rd parameter. A small example:
+* Most css properties can be copied directly from the waypoint to the traveler using an optional 3rd parameter. Some properties can't be animated and are only valid for anime.set(). Some properties may cause large performance hits if copied and animated, e.g. properties that change the layout. Small examples:
 
 ```typescript
-sendToWaypointAnimParams(waypoint, wayfinder, ['font-size', 'border-width', 'border-style', 'color']);
+// match to waypoint1's font-size and border when setting traveler1
+anime.set(traveler1Id, { ...sendToWaypointAnimParams(waypoint1, wayfinder, ['font-size', 'border']) });
+
+// match to waypoint2's color when animating traveler1
+anime({ targets: traveler1Id, ...sendToWaypointAnimParams(waypoint2, wayfinder, ['color', 'border-color']) });
 ```
 
 ### Bonus scss mixins
