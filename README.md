@@ -40,7 +40,7 @@ WAT is written in Typescript because TS is superior, although TS compiles down t
 2. Add an invisible wayfinder div at a common ancestor of those waypoints using provided mixin. If using 3d transforms, then add an additional mixin to fix an ancient bug in safari
 3. Add traveler divs to the wayfinder using provided mixin. The traveler divs are generally only wrappers for actual content
 4. Load elements into Typescript or Javascript and create respective waypoint objects
-5. Call sendToWaypointAnimParams(waypoint, wayfinder) to get all the parameters necessary to animate travelers to a waypoint
+5. Call sendToWaypointAnimParams(waypoint, wayfinderElement) to get all the parameters necessary to animate travelers to a waypoint
 6. Plug the parameters straight into an AnimeJS animation function using the spread operator
 7. Animate and tinker
 
