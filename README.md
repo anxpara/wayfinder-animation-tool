@@ -163,10 +163,10 @@ Wayfinder's simplicity makes it easy to use however you'd like, Wayfinder tries 
 
 ```typescript
 // match to waypoint1's font-size and border when setting traveler1
-anime.set(traveler1Id, { ...sendToWaypointAnimParams(waypoint1, wayfinder, ['font-size', 'border']) });
+anime.set(traveler1Id, { ...sendToWaypointAnimParams(waypoint1, wayfinderElement, ['font-size', 'border']) });
 
 // match to waypoint2's color when animating traveler1
-anime({ targets: traveler1Id, ...sendToWaypointAnimParams(waypoint2, wayfinder, ['color', 'border-color']) });
+anime({ targets: traveler1Id, ...sendToWaypointAnimParams(waypoint2, wayfinderElement, ['color', 'border-color']) });
 ```
 
 ### Bonus scss mixins
@@ -206,7 +206,7 @@ let expanderWp: Waypoint<ColorSquareStash> = {
 function summonColorSquareToWaypoint(destWp: Waypoint<ColorSquareStash>): void {
   anime({
     targets: '.color-square-traveler',
-    ...sendToWaypointAnimParams(destWp, wayfinder),
+    ...sendToWaypointAnimParams(destWp, wayfinderElement),
     duration: durationMs,
     easing: 'easeOutQuint',
 
