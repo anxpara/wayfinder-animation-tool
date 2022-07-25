@@ -57,8 +57,8 @@ export type Waypoint<StashType = any> = {
 };
 
 /**
- * returns all animation parameters needed to resize, move, and transform a traveler to the waypoint,
- * and copies any desired css properties
+ * returns all animation parameters needed to resize, move, and transform a traveler to the waypoint.
+ * also copies any desired css properties
  */
 export function sendToWaypointAnimParams(
   destWp: Waypoint,
@@ -83,11 +83,15 @@ export function sendToWaypointAnimParams(
 }
 
 /**
- * by convention, travelers must match the destination waypoint's width and height in order to
- * preserve a center origin on the traveler. this restriction might be removed eventually
+ * returns the computed width and height params in em. if any border widths are being copied,
+ * then the computed width and height will exclude those widths. if px is desired, extract
+ * the number and multiply by the element's font-size
  *
- * animating width and height can be expensive. if you must animate between different-sized waypoints,
- * consider finding a good instant to set the dimensions once
+ * note: by convention, travelers must match the destination waypoint's width and height in order to
+ * preserve a center origin on the traveler. this convention might be removed eventually
+ *
+ * note: animating width and height can be expensive. if you must animate between different-sized
+ * waypoints, consider finding a good instant to set the dimensions once
  */
 export function resizeToWaypointAnimParams(
   destWp: Waypoint,
@@ -100,10 +104,11 @@ export function resizeToWaypointAnimParams(
 
   let wpOffsetRect = getOffsetRectOfElement(destWp.element);
   let wpComputedStyle = window.getComputedStyle(destWp.element);
+  let fontSize = Number.parseFloat(wpComputedStyle.fontSize.split("p")[0]);
   let width = wpOffsetRect.width;
   let height = wpOffsetRect.height;
 
-  // check which border widths are being copied which need to be removed from the traveler's size
+  // check which border widths are being copied; subtract them from the traveler's size
   let removeAll = cssPropertiesToCopy.includes("border") || cssPropertiesToCopy.includes("border-width");
   let removeLeft = false;
   let removeRight = false;
@@ -128,7 +133,7 @@ export function resizeToWaypointAnimParams(
     height -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split("p")[0]);
   }
 
-  return { width: width + "px", height: height + "px" };
+  return { width: width / fontSize + "em", height: height / fontSize + "em" };
 }
 
 /**
@@ -231,8 +236,14 @@ function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLE
 
 // prettier-ignore
 let cssPropertiesCopyBlacklist = ["all", "position", "width", "height", "transform", "transform-origin",
-                                  "perspective", "perspective-origin" ];
+                                  "perspective", "perspective-origin"];
 
+/**
+ * returns the requested css properties according to the waypoint's computed style
+ * -some properties may not be in their specified units
+ * -some properties can't be animated
+ * -some properties may cause performance hits if animated, e.g. properties that change the layout
+ */
 export function copyWaypointCssAnimParams(
   destWp: Waypoint,
   _wayfinder: HTMLElement,
@@ -247,14 +258,15 @@ export function copyWaypointCssAnimParams(
 
   cssPropertiesToCopy.forEach((propName) => {
     if (cssPropertiesCopyBlacklist.includes(propName)) {
+      console.warn("Wayfinder: " + propName + " is blacklisted from being copied");
       return;
     }
     let propValue = wpComputedStyle.getPropertyValue(propName);
-    if (propValue != "") {
-      params[convertCssNametoParamName(propName)] = propValue;
-    } else {
+    if (propValue == "") {
       console.warn("Wayfinder: " + propName + " is most likely not a valid css property name, skipping");
+      return;
     }
+    params[convertCssNametoParamName(propName)] = propValue;
   });
   return params;
 }
