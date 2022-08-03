@@ -1,6 +1,6 @@
 {
   "name": "wayfinder-animation-tool",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Animate the web intuitively",
   "main": "dist/cjs/wayfinder.js",
   "module": "dist/es/wayfinder.js",
@@ -19,7 +19,11 @@
     "type": "git",
     "url": "git+https://github.com/anxpara/wayfinder-animation-tool.git"
   },
-  "keywords": ["animejs", "waypoint", "traveler"],
+  "keywords": [
+    "animejs",
+    "waypoint",
+    "traveler"
+  ],
   "author": "anxpara anxpara@gmail.com",
   "license": "MIT",
   "bugs": {
