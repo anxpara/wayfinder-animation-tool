@@ -38,6 +38,10 @@ body {
   font-size: initial;
 }
 
+.template {
+  @include template;
+}
+
 .trial-grounds {
   font-size: 1.75em;
   margin: 0.5em;
@@ -188,7 +192,7 @@ body {
   color: gold;
 }
 
-// NESTED
+// NESTED WAYPOINT
 
 .nested-trialgrounds {
   position: relative;
@@ -443,4 +447,47 @@ body {
   @include test-waypoint;
 
   font-size: 1.2em;
+}
+
+// NESTED WAYFINDER
+
+.nested-wayfinder-hub {
+  margin-bottom: 1em;
+  width: 11em;
+  height: 8em;
+  border: solid 0.1em lightseagreen;
+}
+
+.nested-wayfinder-container {
+  position: relative;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: fit-content;
+  border: solid 0.3em royalblue;
+}
+
+.nested-wayfinder-waypoint {
+  @include test-waypoint;
+}
+
+.nested-wayfinder {
+  @include wat.wayfinder;
+}
+
+.nest-wf-in-scroll-hub {
+  width: 4.7em;
+  height: 3.2em;
+  padding-right: 6.25em;
+  padding-bottom: 6.25em;
+  overflow: scroll;
+}
+
+.nest-in-font-size-waypoint {
+  /* in a lot of scenarios safari can't handle borders in em,
+  since--once converted to px--safari can't handle non-integer
+  border values. the borders will just disappear.
+  afaik, there's no way to round on the fly,
+  so my recommendation is to always use px for borders.
+  todo: convert remaining test borders to px */
+  border-width: 6px;
 }

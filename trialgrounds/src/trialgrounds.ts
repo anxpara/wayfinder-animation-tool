@@ -10,18 +10,23 @@ let nestedWaypointContainerTemplate: HTMLElement | null = null;
 let copyTrialgrounds: HTMLDivElement | null = null;
 let copyWayfinderElement: HTMLDivElement | null = null;
 let copyWaypointTemplate: HTMLElement | null = null;
+let nestedWayfinderTrialgrounds: HTMLDivElement | null = null;
+let nestedWayfinderHubTemplate: HTMLElement | null = null;
 let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
 const standaloneWaypointNames: string[] = ['control', 'absolute', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
                                            'rotate-3d', 'post-translate-down', 'post-rotate', 'overflowing-content', 'x-clipping'];
 // prettier-ignore
-const nestedWaypointNames: string[] = ['nested-control', 'nested-absolute', 'nested-offset', 'nested-relative',
+const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-absolute', 'nested-offset', 'nested-relative',
                                        'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
                                        'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
                                        'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d'];
 // prettier-ignore
 const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align', 'copy-font-size'];
+// prettier-ignore
+const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-font-size'];
+
 let hardcodedWaypointNames: string[] = ["sticky", "double-preserve3d", "revert-preserve3d"];
 let hardcodedTravelerNames: string[] = [];
 let waypointsByName = new Map<string, Waypoint>();
@@ -43,12 +48,11 @@ cssCopyLists.set("copy-font-size", ["font-size", "border-style", "border-width"]
 
 export function init() {
   loadElements();
-  spawnStandaloneWaypoints();
-  spawnNestedWaypoints();
-  spawnCopyWaypoints();
+  spawnWaypoints();
   loadWaypoints();
   spawnTravelers();
   setTravelers();
+  startAnimatedTests();
 }
 
 function loadElements(): void {
@@ -64,7 +68,17 @@ function loadElements(): void {
   copyWaypointTemplate = document.getElementById("copy-waypoint-template")!;
   copyWayfinderElement = document.getElementById("copy-wayfinder")! as HTMLDivElement;
 
+  nestedWayfinderTrialgrounds = document.getElementById("nested-wayfinder-trialgrounds")! as HTMLDivElement;
+  nestedWayfinderHubTemplate = document.getElementById("nested-wayfinder-hub-template")!;
+
   testTravelerTemplate = document.getElementById("t-test-traveler-template")!;
+}
+
+function spawnWaypoints(): void {
+  spawnStandaloneWaypoints();
+  spawnNestedWaypoints();
+  spawnCopyWaypoints();
+  spawnNestedWayfinders();
 }
 
 function spawnStandaloneWaypoints(): void {
@@ -112,6 +126,16 @@ function spawnNestedWaypoints(): void {
       class: "nested-waypoint " + name + "-waypoint",
     });
   });
+
+  if (nestedWaypointNames.includes("scroll")) {
+    let scrollContainer = document.getElementById("scroll-container")! as HTMLDivElement;
+    scrollContainer.scrollBy(70, 50);
+  }
+
+  if (nestedWaypointNames.includes("sticky")) {
+    let stickyRootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
+    stickyRootContainer.scrollBy(0, 200);
+  }
 }
 
 function spawnCopyWaypoints(): void {
@@ -136,46 +160,67 @@ function spawnCopyWaypoints(): void {
   });
 }
 
+function spawnNestedWayfinders(): void {
+  nestedWayfinderWaypointNames.reverse();
+  nestedWayfinderWaypointNames.forEach((name) => {
+    if (hardcodedWaypointNames.includes(name)) {
+      return;
+    }
+
+    // hub
+    let nestedWfHub = nestedWayfinderHubTemplate!.cloneNode(true) as HTMLElement;
+    nestedWayfinderTrialgrounds!.prepend(nestedWfHub);
+    nestedWfHub.id = name + "-hub";
+    anime.set("#" + name + "-hub", {
+      display: "block",
+      class: "nested-wayfinder-hub " + name + "-hub",
+    });
+
+    // container
+    let nestedContainer = nestedWfHub.firstElementChild!;
+    nestedContainer.id = name + "-container";
+
+    // waypoint
+    let nestedWaypoint = nestedContainer.firstElementChild!;
+    nestedWaypoint.id = "wp-" + name;
+    nestedWaypoint.firstElementChild!.innerHTML = name;
+    anime.set("#wp-" + name, {
+      display: "block",
+      class: "nested-wayfinder-waypoint " + name + "-waypoint",
+    });
+
+    // wayfinder
+    let nestedWayfinder = nestedContainer.children[1]!;
+    nestedWayfinder.id = "wf-" + name;
+  });
+}
+
 function loadWaypoints(): void {
   standaloneWaypointNames.forEach((name) => {
-    let wp = {
-      name,
-      element: document.getElementById("wp-" + name)!,
-      stash: { wf: standaloneWayfinderElement },
-      loggingEnabled: true,
-    };
-    waypointsByName.set(name, wp);
+    loadWaypoint(name, standaloneWayfinderElement!);
   });
 
   nestedWaypointNames.forEach((name) => {
-    let wp = {
-      name,
-      element: document.getElementById("wp-" + name)!,
-      stash: { wf: nestedWayfinderElement },
-      loggingEnabled: true,
-    };
-    waypointsByName.set(name, wp);
+    loadWaypoint(name, nestedWayfinderElement!);
   });
 
   copyWaypointNames.forEach((name) => {
-    let wp = {
-      name,
-      element: document.getElementById("wp-" + name)!,
-      stash: { wf: copyWayfinderElement },
-      loggingEnabled: true,
-    };
-    waypointsByName.set(name, wp);
+    loadWaypoint(name, copyWayfinderElement!);
   });
 
-  if (nestedWaypointNames.includes("scroll")) {
-    let scrollContainer = document.getElementById("scroll-container")! as HTMLDivElement;
-    scrollContainer.scrollBy(70, 50);
-  }
+  nestedWayfinderWaypointNames.forEach((name) => {
+    loadWaypoint(name, document.getElementById("wf-" + name)!);
+  });
+}
 
-  if (nestedWaypointNames.includes("sticky")) {
-    let stickyRootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
-    stickyRootContainer.scrollBy(0, 200);
-  }
+function loadWaypoint(name: string, wayfinder: HTMLElement): void {
+  let wp = {
+    name,
+    element: document.getElementById("wp-" + name)!,
+    stash: { wf: wayfinder },
+    loggingEnabled: true,
+  };
+  waypointsByName.set(name, wp);
 }
 
 function spawnTravelers(): void {
@@ -243,6 +288,17 @@ function animateTravelers(): void {
       easing: "spring(1, 100, 10, 0)",
       ...sendTestTravelerToWpParams(wp),
     });
+  });
+}
+
+function startAnimatedTests(): void {
+  anime({
+    targets: "#nest-in-font-size-container",
+    duration: 4000,
+    easing: "linear",
+    loop: true,
+    direction: "alternate",
+    fontSize: "0.4em",
   });
 }
 
