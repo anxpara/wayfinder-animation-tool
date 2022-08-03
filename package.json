@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/anxpara/wayfinder-animation-tool.git"
   },
-  "keywords": [],
+  "keywords": ["animejs", "waypoint", "traveler"],
   "author": "anxpara anxpara@gmail.com",
   "license": "MIT",
   "bugs": {
