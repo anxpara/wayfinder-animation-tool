@@ -26,6 +26,7 @@ import {
  * which means AnimeJs' translation/scale/etc. params are still available for relative effects
  */
 export type WatAnimParams = {
+  fontSize?: string;
   width?: string;
   height?: string;
   matrix3d?: string;
@@ -83,32 +84,29 @@ export function sendToWaypointAnimParams(
 }
 
 /**
- * returns the computed width and height params in em. if any border widths are being copied,
- * then the computed width and height will exclude those widths. if px is desired, extract
- * the number and multiply by the element's font-size
+ * returns the font-size, width, and height params in em. if any border widths are being copied,
+ * then the width and height will exclude those widths. if px values are desired, then parse all
+ * values and multiply the width and height by the font-size
  *
  * note: by convention, travelers must match the destination waypoint's width and height in order to
  * preserve a center origin on the traveler. this convention might be removed eventually
  *
- * note: animating width and height can be expensive. if you must animate between different-sized
- * waypoints, consider finding a good instant to set the dimensions once
+ * note: animating font-size, width, or height can be expensive. if you must animate between
+ * different-sized waypoints, consider finding a good instant to set the dimensions once
  */
 export function resizeToWaypointAnimParams(
   destWp: Waypoint,
-  _wayfinder: HTMLElement,
+  wayfinder: HTMLElement,
   cssPropertiesToCopy: string[]
 ): WatAnimParams {
   if (!destWp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
-  let wpOffsetRect = getOffsetRectOfElement(destWp.element);
   let wpComputedStyle = window.getComputedStyle(destWp.element);
-  let fontSize = Number.parseFloat(wpComputedStyle.fontSize.split("p")[0]);
-  let width = wpOffsetRect.width;
-  let height = wpOffsetRect.height;
+  let wfComputedStyle = window.getComputedStyle(wayfinder);
 
-  // check which border widths are being copied; subtract them from the traveler's size
+  // check which border widths will be copied
   let removeAll = cssPropertiesToCopy.includes("border") || cssPropertiesToCopy.includes("border-width");
   let removeLeft = false;
   let removeRight = false;
@@ -120,20 +118,36 @@ export function resizeToWaypointAnimParams(
     removeTop = cssPropertiesToCopy.includes("border-top") || cssPropertiesToCopy.includes("border-top-width");
     removeBottom = cssPropertiesToCopy.includes("border-bottom") || cssPropertiesToCopy.includes("border-bottom-width");
   }
+
+  // calculate dimensions, excluding any border widths that will be copied
+  let wpOffsetRect = getOffsetRectOfElement(destWp.element);
+  let wpWidthPx = wpOffsetRect.width;
+  let wpHeightPx = wpOffsetRect.height;
   if (removeAll || removeLeft) {
-    width -= Number.parseFloat(wpComputedStyle.borderLeftWidth.split("p")[0]);
+    wpWidthPx -= Number.parseFloat(wpComputedStyle.borderLeftWidth.split("p")[0]);
   }
   if (removeAll || removeRight) {
-    width -= Number.parseFloat(wpComputedStyle.borderRightWidth.split("p")[0]);
+    wpWidthPx -= Number.parseFloat(wpComputedStyle.borderRightWidth.split("p")[0]);
   }
   if (removeAll || removeTop) {
-    height -= Number.parseFloat(wpComputedStyle.borderTopWidth.split("p")[0]);
+    wpHeightPx -= Number.parseFloat(wpComputedStyle.borderTopWidth.split("p")[0]);
   }
   if (removeAll || removeBottom) {
-    height -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split("p")[0]);
+    wpHeightPx -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split("p")[0]);
   }
 
-  return { width: width / fontSize + "em", height: height / fontSize + "em" };
+  let wpFontSizePx = Number.parseFloat(wpComputedStyle.fontSize.split("p")[0]);
+  let wfFontSizePx = Number.parseFloat(wfComputedStyle.fontSize.split("p")[0]);
+
+  // bake in the difference in font-size between the waypoint and wayfinder
+  let fontSize = wpFontSizePx / wfFontSizePx + "em";
+
+  // calculate dimensions in em. the traveler's font-size is now analogous to the
+  // waypoint's font-size, so no special conversion is needed
+  let width = wpWidthPx / wpFontSizePx + "em";
+  let height = wpHeightPx / wpFontSizePx + "em";
+
+  return { fontSize, width, height };
 }
 
 /**
@@ -235,14 +249,15 @@ function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLE
 }
 
 // prettier-ignore
-let cssPropertiesCopyBlacklist = ["all", "position", "width", "height", "transform", "transform-origin",
+let cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "height", "transform", "transform-origin",
                                   "perspective", "perspective-origin"];
 
 /**
- * returns the requested css properties according to the waypoint's computed style
- * -some properties may not be in their specified units
+ * returns the requested css properties according to the waypoint's computed style. names are
+ * converted to camel case
+ * -some properties might not be in their specified units
  * -some properties can't be animated
- * -some properties may cause performance hits if animated, e.g. properties that change the layout
+ * -some properties might cause performance hits if animated, e.g. properties that change the layout
  */
 export function copyWaypointCssAnimParams(
   destWp: Waypoint,
@@ -266,12 +281,12 @@ export function copyWaypointCssAnimParams(
       console.warn("Wayfinder: " + propName + " is most likely not a valid css property name, skipping");
       return;
     }
-    params[convertCssNametoParamName(propName)] = propValue;
+    params[convertPropNametoCamelCase(propName)] = propValue;
   });
   return params;
 }
 
-function convertCssNametoParamName(cssPropertyName: string): string {
+function convertPropNametoCamelCase(cssPropertyName: string): string {
   let segments = cssPropertyName.split("-");
   let capSegments: string[] = [];
   segments.forEach((seg, i) => {

@@ -23,7 +23,7 @@ const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-absolute', '
                                        'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
                                        'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d'];
 // prettier-ignore
-const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align', 'copy-font-size'];
+const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align'];
 // prettier-ignore
 const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-font-size'];
 
@@ -44,7 +44,6 @@ cssCopyLists.set("copy-border-per-side", [
 ]);
 cssCopyLists.set("copy-border-box-sizing", ["border-style", "border-width"]);
 cssCopyLists.set("copy-text-align", ["text-align", "border-style", "border-width"]);
-cssCopyLists.set("copy-font-size", ["font-size", "border-style", "border-width"]);
 
 export function init() {
   loadElements();

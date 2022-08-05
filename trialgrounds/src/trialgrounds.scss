@@ -443,12 +443,6 @@ body {
   text-align: center;
 }
 
-.copy-font-size-waypoint {
-  @include test-waypoint;
-
-  font-size: 1.2em;
-}
-
 // NESTED WAYFINDER
 
 .nested-wayfinder-hub {
