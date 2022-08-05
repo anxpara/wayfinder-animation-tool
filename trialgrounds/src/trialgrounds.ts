@@ -15,10 +15,10 @@ let nestedWayfinderHubTemplate: HTMLElement | null = null;
 let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
-const standaloneWaypointNames: string[] = ['control', 'absolute', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
+const standaloneWaypointNames: string[] = ['control', 'absolute', 'font-size', 'font-size-rem', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
                                            'rotate-3d', 'post-translate-down', 'post-rotate', 'overflowing-content', 'x-clipping'];
 // prettier-ignore
-const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-absolute', 'nested-offset', 'nested-relative',
+const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-absolute',  'nested-font-size', 'nested-font-size-rem', 'nested-rem-reset', 'nested-offset','nested-relative',
                                        'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
                                        'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
                                        'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d'];

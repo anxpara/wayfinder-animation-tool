@@ -109,6 +109,16 @@ body {
   @include test-waypoint;
 }
 
+.font-size-waypoint {
+  @include test-waypoint;
+  font-size: 0.9em;
+}
+
+.font-size-rem-waypoint {
+  @include test-waypoint;
+  font-size: 1.5rem;
+}
+
 .absolute-waypoint {
   @include test-waypoint;
   position: absolute;
@@ -221,6 +231,33 @@ body {
   right: 1em;
   top: 1em;
   margin: 0;
+}
+
+.nested-font-size-container {
+  margin-top: 1.07em;
+  font-size: 1.05em;
+}
+
+.nested-font-size-waypoint {
+  font-size: 1.05em;
+}
+
+.nested-font-size-rem-container {
+  margin-top: 1.07em;
+  font-size: 1.2rem;
+}
+
+.nested-font-size-rem-waypoint {
+  font-size: 1.1em;
+}
+
+.nested-rem-reset-container {
+  margin-top: 1.07em;
+  font-size: 1.1em;
+}
+
+.nested-rem-reset-waypoint {
+  font-size: 1.32rem;
 }
 
 .nested-offset-container {
