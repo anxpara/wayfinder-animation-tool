@@ -1,4 +1,5 @@
 cd ..
+npm run prepublish
 npm link
 cd trialgrounds
 npm link wayfinder-animation-tool
