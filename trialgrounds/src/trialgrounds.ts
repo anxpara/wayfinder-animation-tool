@@ -4,14 +4,18 @@ import { sendToWaypointAnimParams, Waypoint } from "wayfinder-animation-tool";
 let standaloneTrialgrounds: HTMLDivElement | null = null;
 let standaloneWayfinderElement: HTMLDivElement | null = null;
 let standaloneWaypointTemplate: HTMLElement | null = null;
+
 let nestedTrialgrounds: HTMLDivElement | null = null;
 let nestedWayfinderElement: HTMLDivElement | null = null;
 let nestedWaypointContainerTemplate: HTMLElement | null = null;
+
 let copyTrialgrounds: HTMLDivElement | null = null;
 let copyWayfinderElement: HTMLDivElement | null = null;
 let copyWaypointTemplate: HTMLElement | null = null;
+
 let nestedWayfinderTrialgrounds: HTMLDivElement | null = null;
 let nestedWayfinderHubTemplate: HTMLElement | null = null;
+
 let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
@@ -60,21 +64,21 @@ export function init() {
 
 function loadElements(): void {
   standaloneTrialgrounds = document.getElementById("standalone-trialgrounds")! as HTMLDivElement;
-  standaloneWaypointTemplate = document.getElementById("standalone-waypoint-template")!;
+  standaloneWaypointTemplate = document.getElementById("standalone-waypoint--template")!;
   standaloneWayfinderElement = document.getElementById("standalone-wayfinder")! as HTMLDivElement;
 
   nestedTrialgrounds = document.getElementById("nested-trialgrounds")! as HTMLDivElement;
-  nestedWaypointContainerTemplate = document.getElementById("nested-container-template")!;
+  nestedWaypointContainerTemplate = document.getElementById("nested-container--template")!;
   nestedWayfinderElement = document.getElementById("nested-wayfinder")! as HTMLDivElement;
 
   copyTrialgrounds = document.getElementById("copy-trialgrounds")! as HTMLDivElement;
-  copyWaypointTemplate = document.getElementById("copy-waypoint-template")!;
+  copyWaypointTemplate = document.getElementById("copy-waypoint--template")!;
   copyWayfinderElement = document.getElementById("copy-wayfinder")! as HTMLDivElement;
 
   nestedWayfinderTrialgrounds = document.getElementById("nested-wayfinder-trialgrounds")! as HTMLDivElement;
-  nestedWayfinderHubTemplate = document.getElementById("nested-wayfinder-hub-template")!;
+  nestedWayfinderHubTemplate = document.getElementById("nested-wayfinder-hub--template")!;
 
-  testTravelerTemplate = document.getElementById("t-test-traveler-template")!;
+  testTravelerTemplate = document.getElementById("t-test-traveler--template")!;
 }
 
 function spawnWaypoints(): void {
@@ -295,7 +299,7 @@ export function showAllTravelers(): void {
   anime.set(".test-traveler", {
     display: "block",
   });
-  anime.set("#t-test-traveler-template", {
+  anime.set("#t-test-traveler--template", {
     display: "none",
   });
 }

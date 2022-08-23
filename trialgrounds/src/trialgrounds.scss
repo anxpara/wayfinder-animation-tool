@@ -1,9 +1,5 @@
 @use "../node_modules/wayfinder-animation-tool/dist/wayfinder.scss" as wat;
 
-@mixin template {
-  display: none;
-}
-
 @mixin card {
   padding: 0.3em;
 }
@@ -39,7 +35,7 @@ body {
 }
 
 .template {
-  @include template;
+  display: none;
 }
 
 .trialgrounds {
@@ -49,13 +45,8 @@ body {
   border: dotted 3px;
 }
 
-.waypoint-template {
-  @include template;
-}
-
 .test-traveler {
   @include wat.traveler;
-  @include template;
   color: lime;
 }
 
@@ -185,10 +176,6 @@ body {
 
 .nested-trialgrounds {
   position: relative;
-}
-
-.nested-container-template {
-  @include template;
 }
 
 .nested-waypoint {

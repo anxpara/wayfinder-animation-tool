@@ -9,7 +9,7 @@
 <body>
   <!-- standalone tests-->
   <div id="standalone-trialgrounds" class="trialgrounds standalone-trialgrounds">
-    <div id="standalone-waypoint-template" class="waypoint-template">
+    <div id="standalone-waypoint--template" class="template">
       <div class="fail-content">standalone wp</div>
     </div>
 
@@ -18,8 +18,8 @@
 
   <!-- nested waypoint tests -->
   <div id="nested-trialgrounds" class="trialgrounds nested-trialgrounds">
-    <div id="nested-container-template" class="nested-container nested-container-template">
-      <div id="wp-nested-waypoint-template" class="nested-waypoint waypoint-template">
+    <div id="nested-container--template" class="nested-container template">
+      <div id="wp-nested-waypoint--template" class="nested-waypoint template">
         <div class="fail-content">nested wp</div>
       </div>
     </div>
@@ -55,7 +55,7 @@
 
   <!-- css copy tests -->
   <div id="copy-trialgrounds" class="trialgrounds copy-trialgrounds">
-    <div id="copy-waypoint-template" class="waypoint-template">
+    <div id="copy-waypoint--template" class="template">
       <div class="fail-content">copy wp</div>
     </div>
 
@@ -64,7 +64,7 @@
 
   <!-- nested wayfinder tests -->
   <div id="nested-wayfinder-trialgrounds" class="trialgrounds">
-    <div id="nested-wayfinder-hub-template" class="nested-wayfinder-hub template">
+    <div id="nested-wayfinder-hub--template" class="nested-wayfinder-hub template">
       <div class="nested-wayfinder-container">
         <div id="wp-nest-in-font-size" class="nested-wayfinder-waypoint">
           <div class="fail-content">nested wf wp</div>
@@ -74,6 +74,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- templates -->
+  <div id="t-test-traveler--template" class="test-traveler template">
+    <div class="pass-content">test traveler</div>
   </div>
 
   <!-- controller -->
@@ -111,10 +116,5 @@
         log perf
       </div>
     </div>
-  </div>
-
-  <!-- templates -->
-  <div id="t-test-traveler-template" class="test-traveler">
-    <div class="pass-content">test traveler</div>
   </div>
 </body>
