@@ -103,12 +103,12 @@ function spawnStandaloneWaypoints(): void {
 
     let testWaypoint = standaloneWaypointTemplate!.cloneNode(true) as HTMLElement;
     testWaypoint.id = name + "-waypoint";
+    testWaypoint.className = testWaypoint.id;
     testWaypoint.firstElementChild!.innerHTML = name;
 
     standaloneTrialgrounds!.prepend(testWaypoint);
     anime.set(testWaypoint, {
       display: "block",
-      class: testWaypoint.id,
     });
   });
 }
@@ -125,18 +125,18 @@ function spawnNestedWaypoints(): void {
 
     // container
     testContainer.id = name + "-container";
+    testContainer.classList.add(testContainer.id);
     anime.set(testContainer, {
       display: "block",
-      class: "nested-container " + testContainer.id,
     });
-
+    
     // waypoint
     let nestedWaypoint = testContainer.firstElementChild!;
     nestedWaypoint.id = name + "-waypoint";
+    nestedWaypoint.classList.add(nestedWaypoint.id);
     nestedWaypoint.firstElementChild!.innerHTML = name;
     anime.set(nestedWaypoint, {
       display: "block",
-      class: "nested-waypoint " + nestedWaypoint.id,
     });
   });
 
@@ -164,11 +164,11 @@ function spawnCopyWaypoints(): void {
     let text = name;
     if (name == "copy-bg") text += " failed";
     testWaypoint.firstElementChild!.innerHTML = text;
+    testWaypoint.className = testWaypoint.id;
 
     copyTrialgrounds!.prepend(testWaypoint);
     anime.set(testWaypoint, {
       display: "block",
-      class: testWaypoint.id,
     });
   });
 }
@@ -184,9 +184,9 @@ function spawnNestedWayfinders(): void {
     let nestedWfHub = nestedWayfinderHubTemplate!.cloneNode(true) as HTMLElement;
     nestedWayfinderTrialgrounds!.prepend(nestedWfHub);
     nestedWfHub.id = name + "-hub";
+    nestedWfHub.classList.add(nestedWfHub.id);
     anime.set(nestedWfHub, {
       display: "block",
-      class: "nested-wf-hub " + nestedWfHub.id,
     });
 
     // container
@@ -196,10 +196,10 @@ function spawnNestedWayfinders(): void {
     // waypoint
     let nestedWaypoint = nestedContainer.firstElementChild!;
     nestedWaypoint.id = name + "-waypoint";
+    nestedWaypoint.classList.add(nestedWaypoint.id);
     nestedWaypoint.firstElementChild!.innerHTML = name;
     anime.set(nestedWaypoint, {
       display: "block",
-      class: "nested-wf-waypoint " + nestedWaypoint.id,
     });
 
     // wayfinder
