@@ -499,14 +499,15 @@ body {
   right: 1em;
   top: 47%;
 
-  width: 2em;
-  height: 2em;
+  width: 0em;
+  height: 0em;
 
-  transform: rotateZ(90deg) translateZ(100em);
+  transform: rotateZ(90deg) translateZ(120em);
   justify-content: center;
 }
 
 .controller-row {
+  font-size: clamp(0.4em, 1em, 4vh);
   min-width: 19em;
 }
 
