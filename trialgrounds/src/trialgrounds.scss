@@ -532,3 +532,16 @@ body {
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
 }
+
+.bug-report-button {
+  margin-left: 0.6em;
+  border: none;
+  padding: 0;
+
+  a {
+    img {
+      height: 2.2em;
+      transform: rotate(-90deg);
+    }
+  }
+}
