@@ -1,6 +1,12 @@
 import anime from "animejs";
 import { sendToWaypointAnimParams, Waypoint } from "wayfinder-animation-tool";
 
+class TestStash {
+  wf: HTMLElement | null = null;
+  t: HTMLElement | null = null;
+}
+type TestWaypoint = Waypoint<TestStash>;
+
 let standaloneTrialgrounds: HTMLDivElement | null = null;
 let standaloneWayfinderElement: HTMLDivElement | null = null;
 let standaloneWaypointTemplate: HTMLElement | null = null;
@@ -33,8 +39,6 @@ const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-fo
 
 let hardcodedWaypointNames: string[] = ["sticky", "double-preserve3d", "revert-preserve3d"];
 let hardcodedTravelerNames: string[] = [];
-let waypointsByName = new Map<string, Waypoint>();
-let autoplayInterval: NodeJS.Timeout | null = null;
 
 const cssCopyLists = new Map<string, string[]>();
 cssCopyLists.set("copy-bg", ["background-color", "border-style", "border-width"]);
@@ -49,6 +53,8 @@ cssCopyLists.set("copy-border-per-side", [
 cssCopyLists.set("copy-border-box-sizing", ["border-style", "border-width"]);
 cssCopyLists.set("copy-text-align", ["text-align", "border-style", "border-width"]);
 
+let waypointsByName = new Map<string, TestWaypoint>();
+let autoplayInterval: NodeJS.Timeout | null = null;
 let perfLoggingEnabled = false;
 let loggingEnabled = true && !perfLoggingEnabled;
 
@@ -222,10 +228,10 @@ function loadWaypoints(): void {
 }
 
 function loadWaypoint(name: string, wayfinder: HTMLElement): void {
-  let wp = {
+  let wp: TestWaypoint = {
     name,
     element: document.getElementById(name + "-waypoint")!,
-    stash: { wf: wayfinder },
+    stash: { wf: wayfinder, t: null },
     loggingEnabled,
   };
   waypointsByName.set(name, wp);
@@ -240,17 +246,17 @@ function spawnTravelers(): void {
     testTraveler.id = wp.name + "-traveler";
     testTraveler.classList.add(testTraveler.id);
     testTraveler.firstElementChild!.innerHTML = wp.name;
-    wp.stash!.wf.appendChild(testTraveler);
+    wp.stash!.wf!.appendChild(testTraveler);
     wp.stash!.t = testTraveler;
   });
 }
 
-function sendTestTravelerToWpParams(wp: Waypoint): any {
+function sendTestTravelerToWpParams(wp: TestWaypoint): any {
   let cssCopyProperties = cssCopyLists.get(wp.name) || ["border-style", "border-width"];
   wp.loggingEnabled = loggingEnabled && !perfLoggingEnabled;
 
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--start");
-  let params = sendToWaypointAnimParams(wp, wp.stash!.wf, cssCopyProperties);
+  let params = sendToWaypointAnimParams(wp, wp.stash!.wf!, cssCopyProperties);
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--end");
 
   performance.measure(
