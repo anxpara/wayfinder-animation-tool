@@ -50,7 +50,7 @@ export function init() {
   spawnWaypoints();
   loadWaypoints();
   spawnTravelers();
-  setTravelers();
+  setAllTravelers();
   startAnimatedTests();
 }
 
@@ -271,7 +271,7 @@ function sendTestTravelerToWpParams(wp: Waypoint): any {
   };
 }
 
-function setTravelers(): void {
+function setAllTravelers(): void {
   waypointsByName.forEach((wp) => {
     anime.set("#t-test-traveler-" + wp.name, {
       ...sendTestTravelerToWpParams(wp),
@@ -322,7 +322,7 @@ export function show(): void {
 
 export function set(): void {
   stopAuto();
-  setTravelers();
+  setAllTravelers();
   animateButton("#set-button");
 }
 
