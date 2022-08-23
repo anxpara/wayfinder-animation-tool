@@ -45,6 +45,9 @@ cssCopyLists.set("copy-border-per-side", [
 cssCopyLists.set("copy-border-box-sizing", ["border-style", "border-width"]);
 cssCopyLists.set("copy-text-align", ["text-align", "border-style", "border-width"]);
 
+let perfLoggingEnabled = true;
+let loggingEnabled = true && !perfLoggingEnabled;
+
 export function init() {
   loadElements();
   spawnWaypoints();
@@ -217,7 +220,7 @@ function loadWaypoint(name: string, wayfinder: HTMLElement): void {
     name,
     element: document.getElementById("wp-" + name)!,
     stash: { wf: wayfinder },
-    loggingEnabled: true,
+    loggingEnabled,
   };
   waypointsByName.set(name, wp);
 }
@@ -237,7 +240,17 @@ function spawnTravelers(): void {
 
 function sendTestTravelerToWpParams(wp: Waypoint): any {
   let cssCopyProperties = cssCopyLists.get(wp.name) || ["border-style", "border-width"];
+  wp.loggingEnabled = loggingEnabled && !perfLoggingEnabled;
+
+  performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--start");
   let params = sendToWaypointAnimParams(wp, wp.stash!.wf, cssCopyProperties);
+  performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--end");
+
+  performance.measure(
+    "wayfinder.sendToWaypointAnimParams--" + wp.name,
+    "wayfinder.sendToWaypointAnimParams--" + wp.name + "--start",
+    "wayfinder.sendToWaypointAnimParams--" + wp.name + "--end"
+  );
 
   let translateX = "0";
   let translateY = "0";
@@ -272,22 +285,46 @@ function sendTestTravelerToWpParams(wp: Waypoint): any {
 }
 
 function setAllTravelers(): void {
+  startCumulativePerf("setAllTravelers");
+
   waypointsByName.forEach((wp) => {
+    let params = sendTestTravelerToWpParams(wp);
+
+    performance.mark("anime.set--" + wp.name + "--start");
     anime.set("#t-test-traveler-" + wp.name, {
-      ...sendTestTravelerToWpParams(wp),
+      ...params,
     });
+    performance.mark("anime.set--" + wp.name + "--end");
+
+    performance.measure(
+      "anime.set--" + wp.name,
+      "anime.set--" + wp.name + "--start",
+      "anime.set--" + wp.name + "--end"
+    );
   });
+
+  endCumulativePerf("setAllTravelers");
 }
 
-function animateTravelers(): void {
+function animateAllTravelers(): void {
+  startCumulativePerf("animateAllTravelers");
+
   waypointsByName.forEach((wp) => {
+    let params = sendTestTravelerToWpParams(wp);
+
+    performance.mark("anime--" + wp.name + "--start");
     anime({
       targets: "#t-test-traveler-" + wp.name,
       duration: 300,
       easing: "spring(1, 100, 10, 0)",
-      ...sendTestTravelerToWpParams(wp),
+      ...params,
     });
+    performance.mark("anime--" + wp.name + "--end");
+
+    performance.measure("anime--" + wp.name, "anime--" + wp.name + "--start", "anime--" + wp.name + "--end");
   });
+
+  endCumulativePerf("animateAllTravelers");
 }
 
 function startAnimatedTests(): void {
@@ -299,6 +336,51 @@ function startAnimatedTests(): void {
     direction: "alternate",
     fontSize: "0.4em",
   });
+}
+
+// PERFORMANCE PROFILING
+
+function startCumulativePerf(name: string): void {
+  if (perfLoggingEnabled) {
+    console.log("Profiling cumulative perf for " + name + "...");
+    console.log(
+      "Note: this does not measure the performance of actual animations, but rather the overhead on top of anime.set() or anime(). Wayfinder is not involved in actually animating elements."
+    );
+    console.log("Also Note: no effort has been put into optimizing Trialgrounds or Wayfinder yet.");
+  }
+
+  performance.clearMarks();
+  performance.clearMeasures();
+
+  performance.mark(name + "--start");
+}
+
+function endCumulativePerf(name: string): void {
+  performance.mark(name + "--end");
+  performance.measure(name, name + "--start", name + "--end");
+
+  let watEntries = performance
+    .getEntries()
+    .filter((entry) => entry.entryType == "measure" && entry.name.includes("wayfinder"));
+  let animeEntries = performance
+    .getEntries()
+    .filter((entry) => entry.entryType == "measure" && entry.name.includes("anime"));
+
+  let total = performance.getEntriesByName(name)[0].duration;
+  let watTotal = watEntries.map((entry) => entry.duration).reduce((a, b) => a + b);
+  let animeTotal = animeEntries.map((entry) => entry.duration).reduce((a, b) => a + b);
+
+  if (perfLoggingEnabled) {
+    console.log(
+      "Cumulative total for " + name + ": " + total.toFixed(2) + "ms " + "for " + watEntries.length + " travelers"
+    );
+    console.log("wayfinder total: " + watTotal.toFixed(2) + "ms, " + ((watTotal / total) * 100).toFixed(1) + "%");
+    console.log("anime total: " + animeTotal.toFixed(2) + "ms, " + ((animeTotal / total) * 100).toFixed(1) + "%");
+    console.log("-----");
+  }
+
+  performance.clearMarks();
+  performance.clearMeasures();
 }
 
 // CONTROLS
