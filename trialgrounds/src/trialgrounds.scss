@@ -13,7 +13,7 @@
   width: 7em;
   height: 5em;
   color: crimson;
-  border: dotted 0.2em;
+  border: dotted 6px;
 }
 
 @mixin offset-container {
@@ -46,7 +46,7 @@ body {
   font-size: 1.75em;
   margin: 0.5em;
   color: purple;
-  border: dotted 0.1em;
+  border: dotted 3px;
 }
 
 .waypoint-template {
@@ -200,7 +200,7 @@ body {
   width: -moz-fit-content;
   width: fit-content;
   height: fit-content;
-  border: solid 0.3em;
+  border: solid 9px;
   color: lightseagreen;
 }
 
@@ -430,17 +430,17 @@ body {
 .copy-border-waypoint {
   @include test-waypoint;
 
-  border: solid 0.4em;
+  border: solid 12px;
 }
 
 .copy-border-per-side-waypoint {
   @include test-waypoint;
 
   border-style: solid;
-  border-left-width: 0.4em;
-  border-right-width: 0.2em;
-  border-top-width: 0.1em;
-  border-bottom-width: 0.3em;
+  border-left-width: 12px;
+  border-right-width: 6px;
+  border-top-width: 3px;
+  border-bottom-width: 9px;
 }
 
 .copy-border-box-sizing-waypoint {
@@ -449,7 +449,7 @@ body {
   width: 8em;
   height: 6em;
 
-  border: solid 0.4em;
+  border: solid 12px;
   box-sizing: border-box;
 }
 
@@ -465,7 +465,7 @@ body {
   margin-bottom: 1em;
   width: 11em;
   height: 8em;
-  border: solid 0.1em lightseagreen;
+  border: solid 3px lightseagreen;
 }
 
 .nested-wayfinder-container {
@@ -473,7 +473,7 @@ body {
   width: -moz-fit-content;
   width: fit-content;
   height: fit-content;
-  border: solid 0.3em royalblue;
+  border: solid 9px royalblue;
 }
 
 .nested-wayfinder-waypoint {
@@ -514,7 +514,7 @@ body {
 
   width: 2em;
   height: 2em;
-  
+
   transform: rotateZ(90deg) translateZ(100em);
   justify-content: center;
 }
