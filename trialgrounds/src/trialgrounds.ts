@@ -75,10 +75,10 @@ function loadElements(): void {
   copyWaypointTemplate = document.getElementById("copy-waypoint--template")!;
   copyWayfinderElement = document.getElementById("copy-wayfinder")! as HTMLDivElement;
 
-  nestedWayfinderTrialgrounds = document.getElementById("nested-wayfinder-trialgrounds")! as HTMLDivElement;
-  nestedWayfinderHubTemplate = document.getElementById("nested-wayfinder-hub--template")!;
+  nestedWayfinderTrialgrounds = document.getElementById("nested-wf-trialgrounds")! as HTMLDivElement;
+  nestedWayfinderHubTemplate = document.getElementById("nested-wf-hub--template")!;
 
-  testTravelerTemplate = document.getElementById("t-test-traveler--template")!;
+  testTravelerTemplate = document.getElementById("test-traveler--template")!;
 }
 
 function spawnWaypoints(): void {
@@ -96,13 +96,13 @@ function spawnStandaloneWaypoints(): void {
     }
 
     let testWaypoint = standaloneWaypointTemplate!.cloneNode(true) as HTMLElement;
-    testWaypoint.id = "wp-" + name;
+    testWaypoint.id = name + "-waypoint";
     testWaypoint.firstElementChild!.innerHTML = name;
 
     standaloneTrialgrounds!.prepend(testWaypoint);
-    anime.set("#wp-" + name, {
+    anime.set(testWaypoint, {
       display: "block",
-      class: name + "-waypoint",
+      class: testWaypoint.id,
     });
   });
 }
@@ -119,18 +119,18 @@ function spawnNestedWaypoints(): void {
 
     // container
     testContainer.id = name + "-container";
-    anime.set("#" + name + "-container", {
+    anime.set(testContainer, {
       display: "block",
-      class: "nested-container " + name + "-container",
+      class: "nested-container " + testContainer.id,
     });
 
     // waypoint
     let nestedWaypoint = testContainer.firstElementChild!;
-    nestedWaypoint.id = "wp-" + name;
+    nestedWaypoint.id = name + "-waypoint";
     nestedWaypoint.firstElementChild!.innerHTML = name;
-    anime.set("#wp-" + name, {
+    anime.set(nestedWaypoint, {
       display: "block",
-      class: "nested-waypoint " + name + "-waypoint",
+      class: "nested-waypoint " + nestedWaypoint.id,
     });
   });
 
@@ -153,16 +153,16 @@ function spawnCopyWaypoints(): void {
     }
 
     let testWaypoint = copyWaypointTemplate!.cloneNode(true) as HTMLElement;
-    testWaypoint.id = "wp-" + name;
+    testWaypoint.id = name + "-waypoint";
 
     let text = name;
     if (name == "copy-bg") text += " failed";
     testWaypoint.firstElementChild!.innerHTML = text;
 
     copyTrialgrounds!.prepend(testWaypoint);
-    anime.set("#wp-" + name, {
+    anime.set(testWaypoint, {
       display: "block",
-      class: name + "-waypoint",
+      class: testWaypoint.id,
     });
   });
 }
@@ -178,9 +178,9 @@ function spawnNestedWayfinders(): void {
     let nestedWfHub = nestedWayfinderHubTemplate!.cloneNode(true) as HTMLElement;
     nestedWayfinderTrialgrounds!.prepend(nestedWfHub);
     nestedWfHub.id = name + "-hub";
-    anime.set("#" + name + "-hub", {
+    anime.set(nestedWfHub, {
       display: "block",
-      class: "nested-wayfinder-hub " + name + "-hub",
+      class: "nested-wf-hub " + nestedWfHub.id,
     });
 
     // container
@@ -189,16 +189,16 @@ function spawnNestedWayfinders(): void {
 
     // waypoint
     let nestedWaypoint = nestedContainer.firstElementChild!;
-    nestedWaypoint.id = "wp-" + name;
+    nestedWaypoint.id = name + "-waypoint";
     nestedWaypoint.firstElementChild!.innerHTML = name;
-    anime.set("#wp-" + name, {
+    anime.set(nestedWaypoint, {
       display: "block",
-      class: "nested-wayfinder-waypoint " + name + "-waypoint",
+      class: "nested-wf-waypoint " + nestedWaypoint.id,
     });
 
     // wayfinder
     let nestedWayfinder = nestedContainer.children[1]!;
-    nestedWayfinder.id = "wf-" + name;
+    nestedWayfinder.id = name + "-wayfinder";
   });
 }
 
@@ -216,14 +216,15 @@ function loadWaypoints(): void {
   });
 
   nestedWayfinderWaypointNames.forEach((name) => {
-    loadWaypoint(name, document.getElementById("wf-" + name)!);
+    let nestedWayfinder = document.getElementById(name + "-wayfinder")!;
+    loadWaypoint(name, nestedWayfinder);
   });
 }
 
 function loadWaypoint(name: string, wayfinder: HTMLElement): void {
   let wp = {
     name,
-    element: document.getElementById("wp-" + name)!,
+    element: document.getElementById(name + "-waypoint")!,
     stash: { wf: wayfinder },
     loggingEnabled,
   };
@@ -236,10 +237,11 @@ function spawnTravelers(): void {
       return;
     }
     let testTraveler = testTravelerTemplate!.cloneNode(true) as HTMLElement;
-    testTraveler.id = "t-test-traveler-" + wp.name;
-    testTraveler.classList.add(wp.name + "-traveler");
+    testTraveler.id = wp.name + "-traveler";
+    testTraveler.classList.add(testTraveler.id);
     testTraveler.firstElementChild!.innerHTML = wp.name;
     wp.stash!.wf.appendChild(testTraveler);
+    wp.stash!.t = testTraveler;
   });
 }
 
@@ -299,7 +301,7 @@ export function showAllTravelers(): void {
   anime.set(".test-traveler", {
     display: "block",
   });
-  anime.set("#t-test-traveler--template", {
+  anime.set("#test-traveler--template", {
     display: "none",
   });
 }
@@ -311,7 +313,7 @@ function setAllTravelers(): void {
     let params = sendTestTravelerToWpParams(wp);
 
     performance.mark("anime.set--" + wp.name + "--start");
-    anime.set("#t-test-traveler-" + wp.name, {
+    anime.set(wp.stash!.t!, {
       ...params,
     });
     performance.mark("anime.set--" + wp.name + "--end");
@@ -334,7 +336,7 @@ function animateAllTravelers(): void {
 
     performance.mark("anime--" + wp.name + "--start");
     anime({
-      targets: "#t-test-traveler-" + wp.name,
+      targets: wp.stash!.t!,
       duration: 300,
       easing: "spring(1, 100, 10, 0)",
       ...params,

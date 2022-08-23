@@ -448,14 +448,14 @@ body {
 
 // NESTED WAYFINDER
 
-.nested-wayfinder-hub {
+.nested-wf-hub {
   margin-bottom: 1em;
   width: 11em;
   height: 8em;
   border: solid 3px lightseagreen;
 }
 
-.nested-wayfinder-container {
+.nested-wf-container {
   position: relative;
   width: -moz-fit-content;
   width: fit-content;
@@ -463,7 +463,7 @@ body {
   border: solid 9px royalblue;
 }
 
-.nested-wayfinder-waypoint {
+.nested-wf-waypoint {
   @include test-waypoint;
 }
 
