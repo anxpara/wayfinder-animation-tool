@@ -93,6 +93,11 @@ body {
   color: seagreen;
   background-color: rgba(28, 0, 69, 0.5);
   text-align: center;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 // STANDALONE
