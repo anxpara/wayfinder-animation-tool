@@ -37,12 +37,13 @@ const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-
 // prettier-ignore
 const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-font-size'];
 
-let hardcodedWaypointNames: string[] = ["sticky", "double-preserve3d", "revert-preserve3d"];
-let hardcodedTravelerNames: string[] = [];
+const hardcodedWaypointNames: string[] = ["sticky", "double-preserve3d", "revert-preserve3d"];
+const hardcodedTravelerNames: string[] = [];
 
+const defaultCssCopyList = ["border-style", "border-width"];
 const cssCopyLists = new Map<string, string[]>();
-cssCopyLists.set("copy-bg", ["background-color", "border-style", "border-width"]);
-cssCopyLists.set("copy-border", ["border-style", "border-width"]);
+cssCopyLists.set("copy-bg", ["background-color", ...defaultCssCopyList]);
+cssCopyLists.set("copy-border", defaultCssCopyList);
 cssCopyLists.set("copy-border-per-side", [
   "border-style",
   "border-left-width",
@@ -50,10 +51,10 @@ cssCopyLists.set("copy-border-per-side", [
   "border-top-width",
   "border-bottom-width",
 ]);
-cssCopyLists.set("copy-border-box-sizing", ["border-style", "border-width"]);
-cssCopyLists.set("copy-text-align", ["text-align", "border-style", "border-width"]);
+cssCopyLists.set("copy-border-box-sizing", defaultCssCopyList);
+cssCopyLists.set("copy-text-align", ["text-align", ...defaultCssCopyList]);
 
-let waypointsByName = new Map<string, TestWaypoint>();
+const waypointsByName = new Map<string, TestWaypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
 let perfLoggingEnabled = false;
 let loggingEnabled = true && !perfLoggingEnabled;
@@ -252,11 +253,11 @@ function spawnTravelers(): void {
 }
 
 function sendTestTravelerToWpParams(wp: TestWaypoint): any {
-  let cssCopyProperties = cssCopyLists.get(wp.name) || ["border-style", "border-width"];
+  let cssPropsToCopy = cssCopyLists.get(wp.name) || defaultCssCopyList;
   wp.loggingEnabled = loggingEnabled && !perfLoggingEnabled;
 
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--start");
-  let params = sendToWaypointAnimParams(wp, wp.stash!.wf!, cssCopyProperties);
+  let params = sendToWaypointAnimParams(wp, wp.stash!.wf!, cssPropsToCopy);
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--end");
 
   performance.measure(
