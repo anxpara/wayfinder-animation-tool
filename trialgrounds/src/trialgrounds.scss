@@ -74,32 +74,6 @@ body {
   @include wat.wayfinder--safari-3d-clipping-bug--translatez;
 }
 
-// CONTROLLER
-
-.controller {
-  font-size: 1.75em;
-  position: fixed;
-  right: -0.1em;
-  top: 20%;
-  transform: translateZ(100em);
-}
-
-.controller-button {
-  @include wat.clickable--mobile-friendly;
-  margin: 1.5em 0;
-  border: solid 0.1em;
-  padding: 0.4em;
-  transform: rotateZ(90deg);
-  color: seagreen;
-  background-color: rgba(28, 0, 69, 0.5);
-  text-align: center;
-
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
-}
-
 // STANDALONE
 
 .standalone-trialgrounds {
@@ -526,4 +500,47 @@ body {
   so my recommendation is to always use px for borders.
   todo: convert remaining test borders to px */
   border-width: 6px;
+}
+
+// CONTROLLER
+
+.controller {
+  display: flex;
+  font-size: 1.45em;
+
+  position: fixed;
+  right: 1em;
+  top: 47%;
+
+  width: 2em;
+  height: 2em;
+  
+  transform: rotateZ(90deg) translateZ(100em);
+  justify-content: center;
+}
+
+.controller-row {
+  min-width: 19em;
+}
+
+.row-2 {
+  position: absolute;
+  transform: translateX(1em) translateY(2.2em);
+}
+
+.controller-button {
+  @include wat.clickable--mobile-friendly;
+  float: left;
+  margin-left: 0.4em;
+  border: solid 0.1em;
+  padding: 0.2em 0.5em;
+
+  color: seagreen;
+  background-color: rgba(28, 0, 69, 0.5);
+  text-align: center;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }

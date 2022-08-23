@@ -78,15 +78,38 @@
 
   <!-- controller -->
   <div id="controller" class="controller">
-    <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="trialgrounds.hide()">
-      hide
+    <div class="controller-row row-1">
+      <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="trialgrounds.hide()">
+        hide
+      </div>
+      <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="trialgrounds.show()">
+        show
+      </div>
+      <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="trialgrounds.set()">set</div>
+      <div id="anim-button" class="controller-button" onclick="trialgrounds.anim()" (touch)="trialgrounds.anim()">
+        anim
+      </div>
+      <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="trialgrounds.auto()">
+        auto
+      </div>
     </div>
-    <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="trialgrounds.show()">
-      show
-    </div>
-    <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="trialgrounds.set()">set</div>
-    <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="trialgrounds.auto()">
-      auto
+    <div class="controller-row row-2">
+      <div
+        id="log-button"
+        class="controller-button"
+        onclick="trialgrounds.toggleLogging()"
+        (touch)="trialgrounds.toggleLogging()"
+      >
+        log results
+      </div>
+      <div
+        id="log-perf-button"
+        class="controller-button"
+        onclick="trialgrounds.togglePerfLogging()"
+        (touch)="trialgrounds.togglePerfLogging()"
+      >
+        log perf
+      </div>
     </div>
   </div>
 

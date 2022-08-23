@@ -45,7 +45,7 @@ cssCopyLists.set("copy-border-per-side", [
 cssCopyLists.set("copy-border-box-sizing", ["border-style", "border-width"]);
 cssCopyLists.set("copy-text-align", ["text-align", "border-style", "border-width"]);
 
-let perfLoggingEnabled = true;
+let perfLoggingEnabled = false;
 let loggingEnabled = true && !perfLoggingEnabled;
 
 export function init() {
@@ -55,6 +55,7 @@ export function init() {
   spawnTravelers();
   setAllTravelers();
   startAnimatedTests();
+  initController();
 }
 
 function loadElements(): void {
@@ -284,6 +285,21 @@ function sendTestTravelerToWpParams(wp: Waypoint): any {
   };
 }
 
+export function hideAllTravelers(): void {
+  anime.set(".test-traveler", {
+    display: "none",
+  });
+}
+
+export function showAllTravelers(): void {
+  anime.set(".test-traveler", {
+    display: "block",
+  });
+  anime.set("#t-test-traveler-template", {
+    display: "none",
+  });
+}
+
 function setAllTravelers(): void {
   startCumulativePerf("setAllTravelers");
 
@@ -383,65 +399,97 @@ function endCumulativePerf(name: string): void {
   performance.clearMeasures();
 }
 
-// CONTROLS
+// CONTROLLER
+
+function initController(): void {
+  if (perfLoggingEnabled) {
+    anime.set("#log-perf-button", { scale: "0.9" });
+  } else if (loggingEnabled) {
+    anime.set("#log-button", { scale: "0.9" });
+  }
+}
 
 export function hide(): void {
-  anime.set(".test-traveler", {
-    display: "none",
-  });
+  stopAuto();
+  hideAllTravelers();
+
   animateButton("#hide-button");
 }
 
 export function show(): void {
-  anime.set(".test-traveler", {
-    display: "block",
-  });
-  anime.set("#t-test-traveler-template", {
-    display: "none",
-  });
+  showAllTravelers();
   animateButton("#show-button");
 }
 
 export function set(): void {
   stopAuto();
+  showAllTravelers();
   setAllTravelers();
   animateButton("#set-button");
+}
+
+export function anim(): void {
+  stopAuto();
+  showAllTravelers();
+  animateAllTravelers();
+  animateButton("#anim-button");
 }
 
 export function auto(): void {
   if (autoplayInterval) {
     stopAuto();
   } else {
+    showAllTravelers();
     autoplayInterval = setInterval(() => {
-      animateTravelers();
+      animateAllTravelers();
     }, 200);
-    animateButton("#auto-button");
+    animateButton("#auto-button", true);
+  }
+}
+
+export function toggleLogging(): void {
+  loggingEnabled = !loggingEnabled;
+  if (loggingEnabled) {
+    animateButton("#log-button", true);
+    if (perfLoggingEnabled) {
+      togglePerfLogging();
+    }
+  } else {
+    animateButton("#log-button", true, "1.0");
+  }
+}
+
+export function togglePerfLogging(): void {
+  perfLoggingEnabled = !perfLoggingEnabled;
+  if (perfLoggingEnabled) {
+    animateButton("#log-perf-button", true);
+    if (loggingEnabled) {
+      toggleLogging();
+    }
+  } else {
+    animateButton("#log-perf-button", true, "1.0");
   }
 }
 
 function stopAuto(): void {
   clearTimeout(autoplayInterval!);
   autoplayInterval = null;
-  animateButton("#auto-button", "1.0");
+  animateButton("#auto-button", true, "1.0");
 }
 
-function animateButton(target: string, scale: string = "0.9"): void {
+function animateButton(target: string, toggle = false, scale = "0.9"): void {
   let loop = 1;
   let duration = 100;
-  if (target == "#auto-button") {
+  if (toggle) {
     loop = 0;
     duration = 200;
   }
 
-  anime.set(target, {
-    rotateZ: "90deg",
-  });
   anime({
     targets: target,
     duration,
     easing: "easeOutQuad",
     scale,
-    rotateZ: "90deg",
     loop,
     direction: "alternate",
   });
