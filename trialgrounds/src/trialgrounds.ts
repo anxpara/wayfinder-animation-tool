@@ -396,8 +396,24 @@ function endCumulativePerf(name: string): void {
     console.log(
       "Cumulative total for " + name + ": " + total.toFixed(2) + "ms " + "for " + watEntries.length + " travelers"
     );
-    console.log("wayfinder total: " + watTotal.toFixed(2) + "ms, " + ((watTotal / total) * 100).toFixed(1) + "%");
-    console.log("anime total: " + animeTotal.toFixed(2) + "ms, " + ((animeTotal / total) * 100).toFixed(1) + "%");
+    console.log(
+      "wayfinder total: " +
+        watTotal.toFixed(2) +
+        "ms, " +
+        ((watTotal / total) * 100).toFixed(1) +
+        "%, " +
+        (watTotal / watEntries.length).toFixed(3) +
+        "ms avg"
+    );
+    console.log(
+      "anime total: " +
+        animeTotal.toFixed(2) +
+        "ms, " +
+        ((animeTotal / total) * 100).toFixed(1) +
+        "%, " +
+        (animeTotal / watEntries.length).toFixed(3) +
+        "ms avg"
+    );
     console.log("-----");
   }
 
