@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf build",
     "build": "bash build.bsh",
-    "start": "bash build.bsh && node build/index.js",
+    "start": "bash build.bsh && PORT=8000 node build/index.js",
     "startbg": "pm2 --name wayfinder-trialgrounds start npm -- run start"
   },
   "keywords": [],

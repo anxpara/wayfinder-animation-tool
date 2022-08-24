@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT;
 
 app.get("/trialgrounds", function (req, res) {
   res.sendFile(path.join(__dirname, "../build/trialgrounds.html"));
@@ -17,5 +17,5 @@ app.get("/trialgrounds/trialgrounds.js", function (req, res) {
 });
 
 app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+  console.log(`⚡️[Trialgrounds]: Server is running at https://localhost:${PORT}`);
 });
