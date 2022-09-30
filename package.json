@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "prepublish": "bash prepublish.bsh"
+    "prepublish": "bash prepublish.bsh",
+    "watch": "pm2 start pm2.config.js --only wayfinder-watcher"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
   "homepage": "https://github.com/anxpara/wayfinder-animation-tool#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "pm2": "^5.2.0",
     "rollup": "^2.77.0",
     "rollup-plugin-dts": "^4.2.2",
     "sass": "^1.54.0",
