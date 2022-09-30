@@ -1,0 +1,7 @@
+mkdir -p build
+
+cp src/trialgrounds.html build/trialgrounds.html
+
+sass src/trialgrounds.scss build/trialgrounds.css --no-source-map
+
+rollup src/trialgrounds.ts --file build/trialgrounds.js --name trialgrounds --format umd --plugin ./node_modules/@rollup/plugin-node-resolve --plugin ./node_modules/@rollup/plugin-typescript

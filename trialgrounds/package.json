@@ -5,9 +5,12 @@
   "main": "index.ts",
   "scripts": {
     "clean": "rm -rf build",
+    "link": "bash link.bsh",
     "build": "bash build.bsh",
-    "start": "bash build.bsh && PORT=8000 node build/index.js",
-    "startbg": "pm2 --name wayfinder-trialgrounds start npm -- run start"
+    "publish": "bash publish.bsh",
+    "start": "npm run build && PORT=8000 node build/index.js",
+    "startbg": "npm run link && npm run publish && pm2 start pm2.config.js --only trialgrounds",
+    "watch": "pm2 start pm2.config.js --only trialgrounds-watcher"
   },
   "keywords": [],
   "author": "",
