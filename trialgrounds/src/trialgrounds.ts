@@ -57,9 +57,10 @@ cssCopyLists.set("copy-text-align", ["text-align", ...defaultCssCopyList]);
 const waypointsByName = new Map<string, TestWaypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
 let perfLoggingEnabled = false;
-let loggingEnabled = true && !perfLoggingEnabled;
+let resultsLoggingEnabled = true && !perfLoggingEnabled;
 
 export function init() {
+  parseQueryParams();
   loadElements();
   spawnWaypoints();
   loadWaypoints();
@@ -67,6 +68,18 @@ export function init() {
   setAllTravelers();
   startAnimatedTests();
   initController();
+}
+
+function parseQueryParams() {
+  const queryParams = new URLSearchParams(window.location.search);
+  let loggingParam = queryParams.get('logging');
+  if (loggingParam == 'results') {
+    resultsLoggingEnabled = true;
+    perfLoggingEnabled = false;
+  } else if (loggingParam == 'perf') {
+    perfLoggingEnabled = true;
+    resultsLoggingEnabled = false;
+  }
 }
 
 function loadElements(): void {
@@ -233,7 +246,7 @@ function loadWaypoint(name: string, wayfinder: HTMLElement): void {
     name,
     element: document.getElementById(name + "-waypoint")!,
     stash: { wf: wayfinder, t: null },
-    loggingEnabled,
+    loggingEnabled: resultsLoggingEnabled,
   };
   waypointsByName.set(name, wp);
 }
@@ -254,7 +267,7 @@ function spawnTravelers(): void {
 
 function sendTestTravelerToWpParams(wp: TestWaypoint): any {
   let cssPropsToCopy = cssCopyLists.get(wp.name) || defaultCssCopyList;
-  wp.loggingEnabled = loggingEnabled && !perfLoggingEnabled;
+  wp.loggingEnabled = resultsLoggingEnabled && !perfLoggingEnabled;
 
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--start");
   let params = sendToWaypointAnimParams(wp, wp.stash!.wf!, cssPropsToCopy);
@@ -433,7 +446,7 @@ function endCumulativePerf(name: string): void {
 function initController(): void {
   if (perfLoggingEnabled) {
     anime.set("#log-perf-button", { scale: "0.9" });
-  } else if (loggingEnabled) {
+  } else if (resultsLoggingEnabled) {
     anime.set("#log-button", { scale: "0.9" });
   }
 }
@@ -477,8 +490,8 @@ export function auto(): void {
 }
 
 export function toggleLogging(): void {
-  loggingEnabled = !loggingEnabled;
-  if (loggingEnabled) {
+  resultsLoggingEnabled = !resultsLoggingEnabled;
+  if (resultsLoggingEnabled) {
     animateButton("#log-button", true);
     if (perfLoggingEnabled) {
       togglePerfLogging();
@@ -492,7 +505,7 @@ export function togglePerfLogging(): void {
   perfLoggingEnabled = !perfLoggingEnabled;
   if (perfLoggingEnabled) {
     animateButton("#log-perf-button", true);
-    if (loggingEnabled) {
+    if (resultsLoggingEnabled) {
       toggleLogging();
     }
   } else {
