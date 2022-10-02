@@ -10,20 +10,38 @@ export function getOffsetRectOfElement(element: HTMLElement): DOMRect {
   return new DOMRect(element.offsetLeft, element.offsetTop, element.offsetWidth, element.offsetHeight);
 }
 
+/**
+ * https://drafts.csswg.org/cssom-view/#dom-htmlelement-offsetparent
+ *
+ * mobile Safari has a bug where the offsets of absolute divs in transformed, static divs
+ * aren't relative to the given offsetParent, but rather the direct parent. this also
+ * happens if the parent isn't transformed, but "will-change: transform" is set
+ *
+ * ---
+ *
+ * it would be great if
+ * 1. HTMLElement had a directOffset property added as a standard
+ * 2. Safari would provide the correct offset or offsetParent for absolute divs in transformed divs
+ */
 export function getOffsetFromDirectParent(element: HTMLElement): DOMRect {
+  let style = getComputedStyle(element);
   let directParent = element.parentElement;
   let offsetParent = element.offsetParent;
   let offsetRect = getOffsetRectOfElement(element);
-  
-  // browser has included the direct parent's offset in the element's offset, so remove it
-  if (directParent && offsetParent != directParent && offsetParent == directParent.offsetParent) {
-    let offsetOfDirectParent = getOffsetRectOfElement(directParent);
-    offsetRect.x -= offsetOfDirectParent.x;
-    offsetRect.y -= offsetOfDirectParent.y;
-  } else if (directParent) {
-    let parentStyle = window.getComputedStyle(directParent);
-    offsetRect.x += Number.parseFloat(parentStyle.borderLeftWidth);
-    offsetRect.y += Number.parseFloat(parentStyle.borderTopWidth);
+
+  let isMobileSafari = /webkit.*mobile/i.test(navigator.userAgent); // checking userAgent string is not ideal
+  let isOffsetRelativeToDirectParent = isMobileSafari && style.position == "absolute";
+  let isDirectParentOffsetIncluded =
+    !isOffsetRelativeToDirectParent && directParent && offsetParent == directParent.offsetParent;
+
+  if (isDirectParentOffsetIncluded) {
+    let directParentOffset = getOffsetRectOfElement(directParent!);
+    offsetRect.x -= directParentOffset.x;
+    offsetRect.y -= directParentOffset.y;
+  } else if (offsetParent) {
+    let offsetParentStyle = window.getComputedStyle(offsetParent);
+    offsetRect.x += Number.parseFloat(offsetParentStyle.borderLeftWidth);
+    offsetRect.y += Number.parseFloat(offsetParentStyle.borderTopWidth);
   }
 
   return offsetRect;
