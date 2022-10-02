@@ -26,12 +26,13 @@ let testTravelerTemplate: HTMLElement | null = null;
 
 // prettier-ignore
 const standaloneWaypointNames: string[] = ['control', 'absolute', 'font-size', 'font-size-rem', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
-                                           'rotate-3d', 'post-translate-down', 'post-rotate', 'overflowing-content', 'x-clipping'];
+                                           'rotate-3d', 'post-translate-down', 'post-rotate', 'overflowing-content', 'x-clipping',];
 // prettier-ignore
-const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-absolute',  'nested-font-size', 'nested-font-size-rem', 'nested-rem-reset', 'nested-offset','nested-relative',
-                                       'nested-rotates-0', 'nested-rotates-center', 'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates',
-                                       'countering-3d-rotates', 'countering-preserve3d-rotates', 'nested-3d-complicated',  'nested-preserve3d-complicated',
-                                       'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d'];
+const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-in-absolute',  'nested-font-size', 'nested-font-size-rem', 'nested-rem-reset', 'nested-padding',
+                                       'nested-in-relative', 'nested-relative-in-static', 'nested-relative-in-relative', 'nested-relative-in-transformed',
+                                       'nested-absolute-in-relative', 'nested-absolute-in-transform', 'nested-absolute-in-will-transform', 'nested-rotates-0', 'nested-rotates-center',
+                                       'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates', 'countering-3d-rotates', 'countering-preserve3d-rotates',
+                                       'nested-3d-complicated', 'nested-preserve3d-complicated', 'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d',];
 // prettier-ignore
 const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align'];
 // prettier-ignore
@@ -72,11 +73,11 @@ export function init() {
 
 function parseQueryParams() {
   const queryParams = new URLSearchParams(window.location.search);
-  let loggingParam = queryParams.get('logging');
-  if (loggingParam == 'results') {
+  let loggingParam = queryParams.get("logging");
+  if (loggingParam == "results") {
     resultsLoggingEnabled = true;
     perfLoggingEnabled = false;
-  } else if (loggingParam == 'perf') {
+  } else if (loggingParam == "perf") {
     perfLoggingEnabled = true;
     resultsLoggingEnabled = false;
   }
@@ -143,7 +144,7 @@ function spawnNestedWaypoints(): void {
     anime.set(testContainer, {
       display: "block",
     });
-    
+
     // waypoint
     let nestedWaypoint = testContainer.firstElementChild!;
     nestedWaypoint.id = name + "-waypoint";
