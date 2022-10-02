@@ -303,6 +303,10 @@ export class SendResultsLogData<StashType = any> {
   waypointName!: string;
   waypoint!: Waypoint<StashType>;
   waypointComputedStyle!: CSSStyleDeclaration;
+  directParent!: HTMLElement | null;
+  directOffsetRect!: DOMRect;
+  offsetParent!: Element | null;
+  offsetRect!: DOMRect;
   wayfinderElement!: HTMLElement;
   cssPropertiesCopied!: string[];
   animParamResults!: WatAnimParams;
@@ -338,6 +342,10 @@ function makeSendResultsLogData(
     waypointName: destWp.name,
     waypoint: destWp,
     waypointComputedStyle: window.getComputedStyle(destWp.element),
+    directParent: destWp.element.parentElement,
+    directOffsetRect: getOffsetFromDirectParent(destWp.element),
+    offsetParent: destWp.element.offsetParent,
+    offsetRect: getOffsetRectOfElement(destWp.element),
     wayfinderElement: wayfinder,
     cssPropertiesCopied,
     animParamResults,
