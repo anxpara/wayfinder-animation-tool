@@ -32,13 +32,13 @@ const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-in-absolute'
                                        'nested-in-relative', 'nested-relative-in-static', 'nested-relative-in-relative', 'nested-relative-in-transformed',
                                        'nested-absolute-in-relative', 'nested-absolute-in-transform', 'nested-absolute-in-will-transform', 'nested-rotates-0', 'nested-rotates-center',
                                        'nested-diff-origin-control', 'diff-origin-rotate', 'diff-origin-rotates', 'countering-3d-rotates', 'countering-preserve3d-rotates',
-                                       'nested-3d-complicated', 'nested-preserve3d-complicated', 'scroll', 'sticky', 'double-preserve3d', 'revert-preserve3d',];
+                                       'nested-3d-complicated', 'nested-preserve3d-complicated', 'scroll', 'absolute-in-scrolled', 'sticky', 'absolute-in-stickied', 'double-preserve3d', 'revert-preserve3d',];
 // prettier-ignore
 const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align'];
 // prettier-ignore
 const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-font-size'];
 
-const hardcodedWaypointNames: string[] = ["sticky", "double-preserve3d", "revert-preserve3d"];
+const hardcodedWaypointNames: string[] = ["absolute-in-scrolled", "sticky", "absolute-in-stickied", "double-preserve3d", "revert-preserve3d"];
 const hardcodedTravelerNames: string[] = [];
 
 const defaultCssCopyList = ["border-style", "border-width"];
@@ -160,9 +160,19 @@ function spawnNestedWaypoints(): void {
     scrollContainer.scrollBy(70, 50);
   }
 
+  if (nestedWaypointNames.includes("absolute-in-scrolled")) {
+    let scrollContainer = document.getElementById("scroll-container2")! as HTMLDivElement;
+    scrollContainer.scrollBy(200, 120);
+  }
+
   if (nestedWaypointNames.includes("sticky")) {
-    let stickyRootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
-    stickyRootContainer.scrollBy(0, 200);
+    let rootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
+    rootContainer.scrollBy(0, 200);
+  }
+
+  if (nestedWaypointNames.includes("absolute-in-stickied")) {
+    let rootContainer = document.getElementById("absolute-in-stickied-root")! as HTMLDivElement;
+    rootContainer.scrollBy(200, 200);
   }
 }
 

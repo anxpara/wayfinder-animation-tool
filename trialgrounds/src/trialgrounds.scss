@@ -423,6 +423,20 @@ body {
   }
 }
 
+.absolute-in-scrolled-container {
+  position: relative;
+  width: 8em;
+  height: 5em;
+}
+
+.absolute-in-scrolled-waypoint {
+  position: absolute;
+  bottom: 0.3em;
+  right: 0.3em;
+  width: 6em;
+  height: 3em;
+}
+
 .sticky-root {
   @include offset-container;
   position: relative;
@@ -439,6 +453,20 @@ body {
   left: 0;
   top: 0;
   border-width: 0;
+}
+
+.absolute-in-stickied-container {
+  position: relative;
+  width: 8em;
+  height: 5em;
+}
+
+.absolute-in-stickied-waypoint {
+  position: absolute;
+  bottom: 0.3em;
+  right: 0.3em;
+  width: 6em;
+  height: 3em;
 }
 
 .spacer {
