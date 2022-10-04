@@ -3,7 +3,7 @@
   <font size="5">Wayfinder Animation Tool</font>
 </h1>
 <h3 align="center"> BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h3>
-<h4 align="center"> Demos: <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash</a> | <a href="https://codepen.io/anxpara/pen/poWQEOG" target="_blank">Conduit</a> | <a href="https://codepen.io/anxpara/pen/dyVVbqg" target="_blank">Trialgrounds</a> </h4>
+<h4 align="center"> Demos: <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash</a> | <a href="https://codepen.io/anxpara/pen/poWQEOG" target="_blank">Conduit</a> | <a href="https://wayfinderanimationtool.com/trialgrounds" target="_blank">Trialgrounds</a> </h4>
 
 <div align="center"><img width="460px" src="https://i.imgur.com/cy7xfUo.gif"></div>
 </br>
@@ -27,10 +27,10 @@ Wayfinder is a light-weight animation tool for JS/Typescript that projects eleme
 
 #### All support is greatly appreciated, here are some ways you can help out:
 
-* Help beta test by making cool animations and sites. I'm curious to see what people make, and what ways people find to use WAT
-* Join the WAT discord: <a href="https://discord.gg/qTpEwE8q6k">https://discord.gg/qTpEwE8q6k</a>
+* Help beta test by making cool animations and sites
+* Join the WAT <a href="https://discord.gg/qTpEwE8q6k">discord</a>
 * Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
-* Submit PRs if you'd like to contribute to the project
-* Donate to my Ko-fi: <a href="https://ko-fi.com/anxpara">https://ko-fi.com/anxpara</a>
+* Submit PRs
+* Donate to my <a href="https://ko-fi.com/anxpara">Ko-fi</a>
 
 <!-- prettier-ignore-end -->
