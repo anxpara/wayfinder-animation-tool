@@ -9,84 +9,100 @@ import {
 } from "./css-utils";
 
 /**
- * WatAnimParams is a subset of AnimeJs' AnimeParams, which means integration with
- * AnimeJs is as simple as using the object spread operator:
+ * WatParams are the parameters needed to set or animate a traveler in
+ * a wayfinder element to match a waypoint. WatParams can be thought of as
+ * the projection of a waypoint onto the wayfinder
  *
- *  anime({
- *    targets: '#traveler',
- *    ...sendToWaypointAnimParams(waypoint, wayfinderElement)
- *  });
+ * WatParams are acquired via projectWpToWayfinder(), the primary interface of
+ * Wayfinder Animation Tool, and can be used with any JS/TS animation library
  *
- * however, none of these parameters are unique to AnimeJs, and would still be useful
- * with other animation libraries, albeit some extra integration work may be needed
+ * any computed css properties requested via projectWpToWayfinder() are also
+ * included
  *
- * --
+ * ---
  *
- * wayfinder bakes all translations and relative positionings into the matrix3d param,
- * which means AnimeJs' translation/scale/etc. params are still available for relative effects
+ * if using AnimeJs, integration is as simple as using the spread operator:
+ *
+ *   anime({
+ *     targets: '#travelerId',
+ *     ...projectWpToWayfinder(waypoint, wayfinderElement)
+ *   });
+ *
+ * ---
+ *
+ * if using Motion One, WatParams.matrix3d must be converted to transform:
+ *
+ *   const params = projectWpToWayfinder(waypoint, wayfinderElement);
+ *   animate('#travelerId', {
+ *       ...params,
+ *       transform: "matrix3d(" + params.matrix3d + ")",
+ *   });
  */
-export type WatAnimParams = {
+export type WatParams = {
   fontSize?: string;
   width?: string;
   height?: string;
   matrix3d?: string;
-  [AnyCopiedCssProperty: string]: any;
+  [AnyComputedCssPropertyCopied: string]: any;
 };
 
 /**
- * a Waypoint represents any element you want to send travelers to. to animate
- * something quick and dirty you can do...
- *
- *   sendToWaypointAnimParams({name: 'myWp', element: myWpElement}, wayfinderElement);
+ * a Waypoint represents any element you intend to send travelers to
  *
  * stash: use the stash however you want, or just ignore it. can be a very useful
  * mechanism for storing additional params/characteristics in each waypoint for
  * when it's time to send a traveler there
  *
- * loggingEnabled: enables a default logger that prints a SendResultsLogData
- * object each time sendToWaypointAnimParams is called
+ * enableLogging: enables a default logger that prints a WatResultsLogData
+ * object each time projectWpToWayfinder is called
  *
- * customSendResultsLogger: if you want to replace the default logging, then
- * provide a callback
+ * customLogger: if you want to replace the default logger, then provide a
+ * callback that takes the WatResultsLogData
  */
 export type Waypoint<StashType = any> = {
   name: string;
   element?: HTMLElement;
   stash?: StashType;
-  loggingEnabled?: boolean;
-  customSendResultsLogger?: SendResultsLogger<Waypoint<StashType>>;
+  enableLogging?: boolean;
+  customLogger?: WatResultsLogger<Waypoint<StashType>>;
 };
 
 /**
- * returns all animation parameters needed to resize, move, and transform a traveler to the waypoint.
- * also copies any desired css properties
+ * returns all parameters needed to resize and transform a traveler in the given
+ * wayfinder to the waypoint. copies any desired computed css properties
+ *
+ * this is the primary interface of Wayfinder Animation Tool
+ * 
+ * note: copyWpSize, computeTransformFromWpToWayfinder, and copyComputedCssFromWp
+ * are exported for cases where you're certain you need to optimize by skipping 
+ * the computation of particular params. prefer projectWpToWayfinder
  */
-export function sendToWaypointAnimParams(
-  destWp: Waypoint,
+export function projectWpToWayfinder(
+  wp: Waypoint,
   wayfinder: HTMLElement,
-  cssPropertiesToCopy: string[] = []
-): WatAnimParams {
-  if (!destWp.element) {
+  computedCssPropsToCopy: string[] = []
+): WatParams {
+  if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
   let params = {
-    ...resizeToWaypointAnimParams(destWp, wayfinder, cssPropertiesToCopy),
-    ...transformToWaypointAnimParams(destWp, wayfinder),
-    ...copyWaypointCssAnimParams(destWp, wayfinder, cssPropertiesToCopy),
+    ...copyWpSize(wp, wayfinder, computedCssPropsToCopy),
+    ...computeTransformFromWpToWayfinder(wp, wayfinder),
+    ...copyComputedCssFromWp(wp, wayfinder, computedCssPropsToCopy),
   };
 
-  if (destWp.loggingEnabled) {
-    logSendResults(destWp, wayfinder, cssPropertiesToCopy, params);
+  if (wp.enableLogging) {
+    logWatResults(wp, wayfinder, computedCssPropsToCopy, params);
   }
 
   return params;
 }
 
 /**
- * returns the font-size, width, and height params in em. if any border widths are being copied,
- * then the width and height will exclude those widths. if px values are desired, then parse all
- * values and multiply the width and height by the font-size
+ * returns the waypoint's font-size, width, and height params in em. if any border widths are
+ * being copied, then the width and height will exclude those widths. if pixel values are desired,
+ * then parse all values and multiply the width and height by the font-size
  *
  * note: by convention, travelers must match the destination waypoint's width and height in order to
  * preserve a center origin on the traveler. this convention might be removed eventually
@@ -94,33 +110,31 @@ export function sendToWaypointAnimParams(
  * note: animating font-size, width, or height can be expensive. if you must animate between
  * different-sized waypoints, consider finding a good instant to set the dimensions once
  */
-export function resizeToWaypointAnimParams(
-  destWp: Waypoint,
-  wayfinder: HTMLElement,
-  cssPropertiesToCopy: string[]
-): WatAnimParams {
-  if (!destWp.element) {
+export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssPropsToCopy: string[]): WatParams {
+  if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
-  let wpComputedStyle = window.getComputedStyle(destWp.element);
+  let wpComputedStyle = window.getComputedStyle(wp.element);
   let wfComputedStyle = window.getComputedStyle(wayfinder);
 
   // check which border widths will be copied
-  let removeAll = cssPropertiesToCopy.includes("border") || cssPropertiesToCopy.includes("border-width");
+  let removeAll = computedCssPropsToCopy.includes("border") || computedCssPropsToCopy.includes("border-width");
   let removeLeft = false;
   let removeRight = false;
   let removeTop = false;
   let removeBottom = false;
   if (!removeAll) {
-    removeLeft = cssPropertiesToCopy.includes("border-left") || cssPropertiesToCopy.includes("border-left-width");
-    removeRight = cssPropertiesToCopy.includes("border-right") || cssPropertiesToCopy.includes("border-right-width");
-    removeTop = cssPropertiesToCopy.includes("border-top") || cssPropertiesToCopy.includes("border-top-width");
-    removeBottom = cssPropertiesToCopy.includes("border-bottom") || cssPropertiesToCopy.includes("border-bottom-width");
+    removeLeft = computedCssPropsToCopy.includes("border-left") || computedCssPropsToCopy.includes("border-left-width");
+    removeRight =
+      computedCssPropsToCopy.includes("border-right") || computedCssPropsToCopy.includes("border-right-width");
+    removeTop = computedCssPropsToCopy.includes("border-top") || computedCssPropsToCopy.includes("border-top-width");
+    removeBottom =
+      computedCssPropsToCopy.includes("border-bottom") || computedCssPropsToCopy.includes("border-bottom-width");
   }
 
   // calculate dimensions, excluding any border widths that will be copied
-  let wpOffsetRect = getOffsetRectOfElement(destWp.element);
+  let wpOffsetRect = getOffsetRectOfElement(wp.element);
   let wpWidthPx = wpOffsetRect.width;
   let wpHeightPx = wpOffsetRect.height;
   if (removeAll || removeLeft) {
@@ -157,12 +171,12 @@ export function resizeToWaypointAnimParams(
  *
  * https://www.w3.org/TR/css-transforms-2
  */
-export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLElement): WatAnimParams {
-  if (!destWp.element) {
+export function computeTransformFromWpToWayfinder(wp: Waypoint, wayfinder: HTMLElement): WatParams {
+  if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
-  let elementsDownToWp = getElementsFromWayfinderToWaypoint(destWp, wayfinder);
+  let elementsDownToWp = getElementsFromWayfinderToWp(wp, wayfinder);
   if (!elementsDownToWp) {
     throw new Error("Couldn't find the given wayfinder div within any of the waypoint's ancestors.");
   }
@@ -173,7 +187,7 @@ export function transformToWaypointAnimParams(destWp: Waypoint, wayfinder: HTMLE
   // shift the frame of reference to the traveler's transform origin
   // (by convention, this matches the waypoint's center, might eventually add an option to provide the
   // traveler's transform origin directly)
-  let travelerCenter = getCenterOfElement(destWp.element);
+  let travelerCenter = getCenterOfElement(wp.element);
   let travelerCenterMatrix = mat4.create();
   mat4.fromTranslation(travelerCenterMatrix, travelerCenter);
   mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
@@ -232,10 +246,10 @@ function shouldElementPreserve3d(element: HTMLElement): boolean {
   return currentParent ? getComputedStyle(currentParent).transformStyle == "preserve-3d" : false;
 }
 
-function getElementsFromWayfinderToWaypoint(waypoint: Waypoint, wayfinder: HTMLElement): HTMLElement[] {
+function getElementsFromWayfinderToWp(wp: Waypoint, wayfinder: HTMLElement): HTMLElement[] {
   let wayfinderParent = wayfinder.parentElement;
-  let currentParent = waypoint.element!.parentElement;
-  let elementList: HTMLElement[] = [waypoint.element!];
+  let currentParent = wp.element!.parentElement;
+  let elementList: HTMLElement[] = [wp.element!];
 
   while (currentParent && !currentParent.isSameNode(wayfinderParent)) {
     elementList.push(currentParent);
@@ -259,19 +273,19 @@ let cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "heig
  * -some properties can't be animated
  * -some properties might cause performance hits if animated, e.g. properties that change the layout
  */
-export function copyWaypointCssAnimParams(
-  destWp: Waypoint,
+export function copyComputedCssFromWp(
+  wp: Waypoint,
   _wayfinder: HTMLElement,
-  cssPropertiesToCopy: string[]
-): WatAnimParams {
-  if (!destWp.element) {
+  computedCssPropsToCopy: string[]
+): WatParams {
+  if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
-  let params: WatAnimParams = {};
-  let wpComputedStyle = window.getComputedStyle(destWp.element);
+  let params: WatParams = {};
+  let wpComputedStyle = window.getComputedStyle(wp.element);
 
-  cssPropertiesToCopy.forEach((propName) => {
+  computedCssPropsToCopy.forEach((propName) => {
     if (cssPropertiesCopyBlacklist.includes(propName)) {
       console.warn("Wayfinder: " + propName + " is blacklisted from being copied");
       return;
@@ -299,7 +313,7 @@ function convertPropNametoCamelCase(cssPropertyName: string): string {
 
 /** logging */
 
-export class SendResultsLogData<StashType = any> {
+export class WatResultsLogData<StashType = any> {
   waypointName!: string;
   waypoint!: Waypoint<StashType>;
   waypointComputedStyle!: CSSStyleDeclaration;
@@ -307,47 +321,47 @@ export class SendResultsLogData<StashType = any> {
   directOffsetRect!: DOMRect;
   offsetParent!: Element | null;
   offsetRect!: DOMRect;
-  wayfinderElement!: HTMLElement;
-  cssPropertiesCopied!: string[];
-  animParamResults!: WatAnimParams;
+  wayfinder!: HTMLElement;
+  computedCssPropsToCopy!: string[];
+  watParamResults!: WatParams;
 }
 
-export type SendResultsLogger<StashType = any> = (resultsLogData: SendResultsLogData<StashType>) => void;
+export type WatResultsLogger<StashType = any> = (resultsLogData: WatResultsLogData<StashType>) => void;
 
-function logSendResults(
-  destWp: Waypoint,
+function logWatResults(
+  wp: Waypoint,
   wayfinder: HTMLElement,
-  cssPropertiesCopied: string[],
-  animParamResults: WatAnimParams
+  computedCssPropsToCopy: string[],
+  watParamResults: WatParams
 ): void {
-  const resultsLogData = makeSendResultsLogData(destWp, wayfinder, cssPropertiesCopied, animParamResults);
-  if (destWp.customSendResultsLogger) {
-    destWp.customSendResultsLogger(resultsLogData);
+  const resultsLogData = makeWatResultsLogData(wp, wayfinder, computedCssPropsToCopy, watParamResults);
+  if (wp.customLogger) {
+    wp.customLogger(resultsLogData);
   } else {
     console.log(resultsLogData);
   }
 }
 
-function makeSendResultsLogData(
-  destWp: Waypoint,
+function makeWatResultsLogData(
+  wp: Waypoint,
   wayfinder: HTMLElement,
-  cssPropertiesCopied: string[],
-  animParamResults: WatAnimParams
-): SendResultsLogData<Waypoint> {
-  if (!destWp.element) {
+  computedCssPropsToCopy: string[],
+  watParamResults: WatParams
+): WatResultsLogData<Waypoint> {
+  if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
 
   return {
-    waypointName: destWp.name,
-    waypoint: destWp,
-    waypointComputedStyle: window.getComputedStyle(destWp.element),
-    directParent: destWp.element.parentElement,
-    directOffsetRect: getOffsetFromDirectParent(destWp.element),
-    offsetParent: destWp.element.offsetParent,
-    offsetRect: getOffsetRectOfElement(destWp.element),
-    wayfinderElement: wayfinder,
-    cssPropertiesCopied,
-    animParamResults,
+    waypointName: wp.name,
+    waypoint: wp,
+    waypointComputedStyle: window.getComputedStyle(wp.element),
+    directParent: wp.element.parentElement,
+    directOffsetRect: getOffsetFromDirectParent(wp.element),
+    offsetParent: wp.element.offsetParent,
+    offsetRect: getOffsetRectOfElement(wp.element),
+    wayfinder,
+    computedCssPropsToCopy,
+    watParamResults,
   };
 }

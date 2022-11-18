@@ -1,5 +1,5 @@
 import anime from "animejs";
-import { sendToWaypointAnimParams, Waypoint } from "wayfinder-animation-tool";
+import { projectWpToWayfinder, Waypoint } from "wayfinder-animation-tool";
 
 class TestStash {
   wf: HTMLElement | null = null;
@@ -57,8 +57,8 @@ cssCopyLists.set("copy-text-align", ["text-align", ...defaultCssCopyList]);
 
 const waypointsByName = new Map<string, TestWaypoint>();
 let autoplayInterval: NodeJS.Timeout | null = null;
-let perfLoggingEnabled = false;
-let resultsLoggingEnabled = true && !perfLoggingEnabled;
+let enablePerfLogging = false;
+let enableResultsLogging = true && !enablePerfLogging;
 
 export function init() {
   parseQueryParams();
@@ -75,11 +75,11 @@ function parseQueryParams() {
   const queryParams = new URLSearchParams(window.location.search);
   let loggingParam = queryParams.get("logging");
   if (loggingParam == "results") {
-    resultsLoggingEnabled = true;
-    perfLoggingEnabled = false;
+    enableResultsLogging = true;
+    enablePerfLogging = false;
   } else if (loggingParam == "perf") {
-    perfLoggingEnabled = true;
-    resultsLoggingEnabled = false;
+    enablePerfLogging = true;
+    enableResultsLogging = false;
   }
 }
 
@@ -257,7 +257,7 @@ function loadWaypoint(name: string, wayfinder: HTMLElement): void {
     name,
     element: document.getElementById(name + "-waypoint")!,
     stash: { wf: wayfinder, t: null },
-    loggingEnabled: resultsLoggingEnabled,
+    enableLogging: enableResultsLogging,
   };
   waypointsByName.set(name, wp);
 }
@@ -278,10 +278,10 @@ function spawnTravelers(): void {
 
 function sendTestTravelerToWpParams(wp: TestWaypoint): any {
   let cssPropsToCopy = cssCopyLists.get(wp.name) || defaultCssCopyList;
-  wp.loggingEnabled = resultsLoggingEnabled && !perfLoggingEnabled;
+  wp.enableLogging = enableResultsLogging && !enablePerfLogging;
 
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--start");
-  let params = sendToWaypointAnimParams(wp, wp.stash!.wf!, cssPropsToCopy);
+  let params = projectWpToWayfinder(wp, wp.stash!.wf!, cssPropsToCopy);
   performance.mark("wayfinder.sendToWaypointAnimParams--" + wp.name + "--end");
 
   performance.measure(
@@ -394,7 +394,7 @@ function startAnimatedTests(): void {
 // PERFORMANCE PROFILING
 
 function startCumulativePerf(name: string): void {
-  if (perfLoggingEnabled) {
+  if (enablePerfLogging) {
     console.log("Profiling cumulative perf for " + name + "...");
     console.log(
       "Note: this does not measure the performance of actual animations, but rather the overhead on top of anime.set() or anime(). Wayfinder is not involved in actually animating elements."
@@ -423,7 +423,7 @@ function endCumulativePerf(name: string): void {
   let watTotal = watEntries.map((entry) => entry.duration).reduce((a, b) => a + b);
   let animeTotal = animeEntries.map((entry) => entry.duration).reduce((a, b) => a + b);
 
-  if (perfLoggingEnabled) {
+  if (enablePerfLogging) {
     console.log(
       "Cumulative total for " + name + ": " + total.toFixed(2) + "ms " + "for " + watEntries.length + " travelers"
     );
@@ -455,9 +455,9 @@ function endCumulativePerf(name: string): void {
 // CONTROLLER
 
 function initController(): void {
-  if (perfLoggingEnabled) {
+  if (enablePerfLogging) {
     anime.set("#log-perf-button", { scale: "0.9" });
-  } else if (resultsLoggingEnabled) {
+  } else if (enableResultsLogging) {
     anime.set("#log-button", { scale: "0.9" });
   }
 }
@@ -501,10 +501,10 @@ export function auto(): void {
 }
 
 export function toggleLogging(): void {
-  resultsLoggingEnabled = !resultsLoggingEnabled;
-  if (resultsLoggingEnabled) {
+  enableResultsLogging = !enableResultsLogging;
+  if (enableResultsLogging) {
     animateButton("#log-button", true);
-    if (perfLoggingEnabled) {
+    if (enablePerfLogging) {
       togglePerfLogging();
     }
   } else {
@@ -513,10 +513,10 @@ export function toggleLogging(): void {
 }
 
 export function togglePerfLogging(): void {
-  perfLoggingEnabled = !perfLoggingEnabled;
-  if (perfLoggingEnabled) {
+  enablePerfLogging = !enablePerfLogging;
+  if (enablePerfLogging) {
     animateButton("#log-perf-button", true);
-    if (resultsLoggingEnabled) {
+    if (enableResultsLogging) {
       toggleLogging();
     }
   } else {
