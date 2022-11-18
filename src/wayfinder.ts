@@ -51,9 +51,11 @@ export type WatParams = {
 /**
  * a Waypoint represents any element you intend to send travelers to
  *
- * stash: use the stash however you want, or just ignore it. can be a very useful
- * mechanism for storing additional params/characteristics in each waypoint for
- * when it's time to send a traveler there
+ * stash: the stash is yours to put whatever you want in it, or to ignore.
+ * can be a useful mechanism for storing additional params/characteristics
+ * in each waypoint for when it's time to send a traveler there. if working in
+ * typescript, the default stash type is 'unknown', which means a type must be
+ * provided to use it (e.g. Waypoint<MyStashType>)
  *
  * enableLogging: enables a default logger that prints a WatResultsLogData
  * object each time projectWpToWayfinder is called
@@ -61,12 +63,12 @@ export type WatParams = {
  * customLogger: if you want to replace the default logger, then provide a
  * callback that takes the WatResultsLogData
  */
-export type Waypoint<StashType = any> = {
+export type Waypoint<StashType = unknown> = {
   name: string;
   element?: HTMLElement;
   stash?: StashType;
   enableLogging?: boolean;
-  customLogger?: WatResultsLogger<Waypoint<StashType>>;
+  customLogger?: WatResultsLogger;
 };
 
 /**

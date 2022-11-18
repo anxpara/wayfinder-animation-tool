@@ -1,9 +1,9 @@
 import { getOffsetFromDirectParent, getOffsetRectOfElement } from "./css-utils";
 import { WatParams, Waypoint } from "./wayfinder";
 
-export class WatResultsLogData<StashType = any> {
+export class WatResultsLogData {
   waypointName!: string;
-  waypoint!: Waypoint<StashType>;
+  waypoint!: Waypoint<unknown>;
   waypointComputedStyle!: CSSStyleDeclaration;
   directParent!: HTMLElement | null;
   directOffsetRect!: DOMRect;
@@ -14,7 +14,11 @@ export class WatResultsLogData<StashType = any> {
   watParamResults!: WatParams;
 }
 
-export type WatResultsLogger<StashType = any> = (resultsLogData: WatResultsLogData<StashType>) => void;
+/**
+ * custom loggers should cast or type-narrow the stash if accessing it,
+ * since the stash is type 'unknown' in the log data
+ */
+export type WatResultsLogger = (resultsLogData: WatResultsLogData) => void;
 
 export function logWatResults(
   wp: Waypoint,
@@ -35,7 +39,7 @@ function makeWatResultsLogData(
   wayfinder: HTMLElement,
   computedCssPropsToCopy: string[],
   watParamResults: WatParams
-): WatResultsLogData<Waypoint> {
+): WatResultsLogData {
   if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
