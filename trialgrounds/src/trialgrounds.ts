@@ -1,5 +1,5 @@
 import anime from "animejs";
-import { projectWpToWayfinder, Waypoint } from "wayfinder-animation-tool";
+import { projectWpToWayfinder, Waypoint, WatResultsLogData, WatResultsLogger } from "wayfinder-animation-tool";
 
 class TestStash {
   wf: HTMLElement | null = null;
@@ -37,7 +37,7 @@ const nestedWaypointNames: string[] = ['nested-wp-control', 'nested-in-absolute'
 const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-side', 'copy-border-box-sizing', 'copy-text-align'];
 // prettier-ignore
 const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-font-size'];
-
+// prettier-ignore
 const hardcodedWaypointNames: string[] = ["absolute-in-scrolled", "sticky", "absolute-in-stickied", "double-preserve3d", "revert-preserve3d"];
 const hardcodedTravelerNames: string[] = [];
 
@@ -252,12 +252,17 @@ function loadWaypoints(): void {
   });
 }
 
+const customLogger: WatResultsLogger = (data: WatResultsLogData) => {
+  console.log(data);
+};
+
 function loadWaypoint(name: string, wayfinder: HTMLElement): void {
   let wp: TestWaypoint = {
     name,
     element: document.getElementById(name + "-waypoint")!,
     stash: { wf: wayfinder, t: null },
     enableLogging: enableResultsLogging,
+    customLogger,
   };
   waypointsByName.set(name, wp);
 }
