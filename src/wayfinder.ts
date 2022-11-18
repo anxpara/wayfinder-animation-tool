@@ -15,11 +15,13 @@ export { WatResultsLogger, WatResultsLogData } from "./logging";
  * a wayfinder element to match a waypoint. WatParams can be thought of as
  * the projection of a waypoint onto the wayfinder
  *
- * WatParams are acquired via projectWpToWayfinder(), the primary interface of
- * Wayfinder Animation Tool, and can be used with any JS/TS animation library
+ * WatParams are acquired via projectWpToWayfinder()--the primary interface of
+ * Wayfinder Animation Tool--and can be used with any JS/TS animation library
  *
- * any computed css properties requested via projectWpToWayfinder() are also
- * included
+ * any computed css properties requested via projectWpToWayfinder's optional
+ * computedCssPropsToCopy arg are also included. if computedCssPropsToCopy
+ * contains 'transform', then the matrix3d param is returned via the transform
+ * param instead
  *
  * ---
  *
@@ -32,12 +34,10 @@ export { WatResultsLogger, WatResultsLogData } from "./logging";
  *
  * ---
  *
- * if using Motion One, WatParams.matrix3d must be converted to transform:
+ * if using Motion One, request matrix3d be returned via the transform param:
  *
- *   const params = projectWpToWayfinder(waypoint, wayfinderElement);
  *   animate('#travelerId', {
- *       ...params,
- *       transform: "matrix3d(" + params.matrix3d + ")",
+ *       ...projectWpToWayfinder(waypoint, wayfinderElement, ['transform'])
  *   });
  */
 export type WatParams = {
@@ -80,6 +80,9 @@ export type Waypoint<StashType = unknown> = {
  * note: copyWpSize, computeTransformFromWpToWayfinder, and copyComputedCssFromWp
  * are exported for cases where you're certain you need to optimize by skipping
  * the computation of particular params. prefer projectWpToWayfinder
+ * 
+ * note: if computedCssPropsToCopy includes "transform", then the matrix3d param
+ * is returned via the transform param instead (useful for Motion One integration)
  */
 export function projectWpToWayfinder(
   wp: Waypoint,
@@ -92,7 +95,7 @@ export function projectWpToWayfinder(
 
   const params = {
     ...copyWpSize(wp, wayfinder, computedCssPropsToCopy),
-    ...computeTransformFromWpToWayfinder(wp, wayfinder),
+    ...computeTransformFromWpToWayfinder(wp, wayfinder, computedCssPropsToCopy),
     ...copyComputedCssFromWp(wp, wayfinder, computedCssPropsToCopy),
   };
 
@@ -172,10 +175,17 @@ export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssProp
  * builds a transform matrix that projects the waypoint onto the wayfinder
  *  -supports 'transform-style: preserve-3d;'
  *  -doesn't currently support 'perspective: *;'
+ * 
+ * if computedCssPropsToCopy includes "transform", then the the matrix3d param is
+ * returned via the transform param instead (useful for Motion One integration)
  *
  * https://www.w3.org/TR/css-transforms-2
  */
-export function computeTransformFromWpToWayfinder(wp: Waypoint, wayfinder: HTMLElement): WatParams {
+export function computeTransformFromWpToWayfinder(
+  wp: Waypoint,
+  wayfinder: HTMLElement,
+  computedCssPropsToCopy: string[]
+): WatParams {
   if (!wp.element) {
     throw new Error("Destination waypoint has no element.");
   }
@@ -242,7 +252,16 @@ export function computeTransformFromWpToWayfinder(wp: Waypoint, wayfinder: HTMLE
   mat4.invert(travelerCenterMatrix, travelerCenterMatrix);
   mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
 
-  return { matrix3d: convertMat4ToCssTransformString(accumulatedTransform) };
+  const matrix3d = convertMat4ToCssTransformString(accumulatedTransform);
+  const params: WatParams = { matrix3d };
+
+  // if transform is included in the css copy list, then return the matrix via transform instead
+  if (computedCssPropsToCopy.includes("transform")) {
+    params.transform = `matrix3d(${matrix3d})`;
+    delete params.matrix3d;
+  }
+
+  return params;
 }
 
 function shouldElementPreserve3d(element: HTMLElement): boolean {
@@ -267,7 +286,7 @@ function getElementsFromWayfinderToWp(wp: Waypoint, wayfinder: HTMLElement): HTM
 }
 
 // prettier-ignore
-const cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "height", "transform", "transform-origin",
+const cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "height", "transform-origin",
                                     "perspective", "perspective-origin"];
 
 /**
@@ -290,6 +309,11 @@ export function copyComputedCssFromWp(
   const wpComputedStyle = window.getComputedStyle(wp.element);
 
   computedCssPropsToCopy.forEach((propName) => {
+    // transform is handled by computeTransformFromWpToWayfinder
+    if (propName === "transform") {
+      return;
+    }
+    // ignore blacklisted properties
     if (cssPropertiesCopyBlacklist.includes(propName)) {
       console.warn("Wayfinder: " + propName + " is blacklisted from being copied");
       return;
