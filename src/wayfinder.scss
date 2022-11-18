@@ -1,10 +1,19 @@
-/** REQUIRED MIXINS */
+/** REQUIRED MIXINS 
+*   1. wayfinder
+*   2. traveler
+*/
 
 /**
-* the wayfinder div must be removed from the page's flow, and its origin must be (0, 0). width and
-* height don't matter unless clipping is desired, see optional mixins below
+* wayfinder elements provide a common ground for travelers to move around in
 *
-* the wayfinder div should generally be placed at the end of the div it's in, for z-index purposes
+* this mixin preps the wayfinder to be in a valid location for travelers to use as a common
+* anchor point, and prevents the wayfinder or its children from colliding or interacting with
+* its parent or siblings
+*
+* note: width and height don't matter unless 'overflow: hidden' clipping is desired, see optional
+* mixins below
+*
+* note: the wayfinder div is usually placed at the end of the div it's in, for z-index purposes
 */
 @mixin wayfinder {
   visibility: hidden;
@@ -18,12 +27,23 @@
   @include wayfinder;
 }
 
-/** traveler divs should generally be used only as wrappers for actual content */
+/** 
+* traveler divs should be placed in wayfinder divs, and can be used as wrappers for actual content,
+* or as visual effects
+*
+* this mixin preps the traveler to receive WatParams and position itself within the wayfinder
+*
+* note: a traveler in a wayfinder is always in a valid state, even mid-way through an animation.
+* thus, travelers can have new destinations set without worrying about where exactly they happen to be
+* 
+* note: placing travelers outside of wayfinders perhaps could be made to work, but is unsupported for the
+* forseeable future
+*/
 @mixin traveler {
   visibility: visible;
   position: absolute;
 
-  // transform origin must not be changed from the default (center center)
+  // transform origin must not be changed from the default (center center), for now
   transform-origin: center center;
 
   // animation optimization, can prevent artifacts that occur in specific situations
@@ -34,39 +54,34 @@
   @include traveler;
 }
 
-/** BROWSER BUG WORKAROUNDS */
+/** BROWSER BUG WORKAROUNDS
+*   1. wayfinder--safari-3d-clipping-bug--translatez
+*/
 
 /**
 * safari 3d stacking/clipping bug
 *
-* note: required for 3d waypoints
-* 
-* you can ignore this mixin if you'll only be using 2d transforms, or if you're certain
-* you'll never have 3d elements stacked on or behind other elements. a common sign that
-* you've run into this problem is if only half of an element is being rendered, like it
-* was sliced in half at some angle
-*
-* -----
-*
-* unfortunately, there's an ancient bug that apple has left in safari/webkit that breaks the
-* rendering of stacked, 3d-transformed elements
+* the point of this mixin is to notify users of an ancient bug that apple has left in
+* safari/webkit that can break the rendering of stacked + 3d-transformed elements,
+* as well as suggest a quick hack solution
 * 
 * TLDR: in safari, elements with 3d transforms will completely ignore z-indices and stacking
 * contexts, and will potentially clip through elements in front of or behind them. if you
-* want to stack 3d elements, then you'll need to use z-axis translations as a fallback for
-* z-indices to avoid clipping
+* want to stack 3d travelers on 3d waypoints, then this mixin will quickly and hackily
+* separate them by 99em
 * 
-* this workaround translates the wayfinder div up the z-axis away from its siblings by an
-* arbitrary unit of 99em. to layer other siblings in front of the wayfinder, use
-* translateZ(100em) or higher.
+* ---
+*
+* note: only using 2d transforms? you can ignore this mixin 
+*
+* note: a common sign that you've run into this problem is if only half of an element is being
+* rendered, like it was sliced in half at some angle
 * 
 * note: translateZ(99em) is arbitrary and can still be broken with a 3d transform of the right
 * magnitude. this workaround is more of a suggestion. there may be other solutions to this
-* problem, but there's no way to force safari to respect z-indices
+* problem, but there's no way to force safari to respect z-indices, afaik
 *
-* note: you might still need to use z-indices for other browsers
-*
-* thanks apple :|
+* apple/webkit, please fix z-index
 */
 @mixin wayfinder--safari-3d-clipping-bug--translatez {
   transform: translateZ(99em);
@@ -75,24 +90,30 @@
   @include wayfinder--safari-3d-clipping-bug--translatez;
 }
 
-/** OPTIONAL MIXINS */
+/** OPTIONAL MIXINS
+*   1. wayfinder--clip-to-nearest-positioned-ancestor
+*   2. body--enable-clipping-to-page-width
+*   3. body--enable-clipping-to-content-width
+*   4. transformed-element--enable-pass-through-of-pointer-events
+*   5. clickable--mobile-friendly
+*
+* CLIPPING AND DISABLE MOBILE X-SCROLL MIXINS
+*
+* TLDR: to achieve a proper 'overflow-x: hidden' effect on the wayfinder, I've found that it's
+* best to enable both x and y clipping and make sure that the height of the container doesn't get
+* in the way
+*
+* these mixins enable clipping on the wayfinder, set the wayfinder's size to its nearest
+* positioned ancestor, and then prep the body to fit to either the viewport or the content
+*
+* note: the main reason I made these mixins was to remove horizontal scrolling on
+* mobile if travelers extended past the edge of the screen. the way the standard implemented
+* 'overflow-x: hidden' sucks and there aren't any other simple ways to get width-only clipping, afaik
+*/
 
-/** CLIPPING AND DISABLE MOBILE X-SCROLL MIXINS
-*
-* note: the original reason I made these clipping mixins was to remove horizontal scrolling on
-* mobile if travelers extended past the edge of the screen The way the standard implemented
-* 'overflow-x: hidden' sucks and there aren't any other simple ways to get width-only clipping.
-* instead, I've found it's best to enable full clipping and just make sure that the height of
-* the container doesn't get in the way
-* 
-* in order for the wayfinder to clip at the edge of the screen, it needs to fill the body's
-* width. this is not the default behavior, since the wayfinder is 'positioned.' A positioned
-* element with width and height set to 100% will fill its most recent *positioned* ancestor
-*
-* a couple mixin options are provided below to prep the body element for wayfinder clipping
-* 
-* of course, if you want to clip to something other than the actual page then you don't have
-* to use those particular mixins, although the technique will probably be the same
+/**
+* useful for disabling unwanted x-scroll on mobile. can be used in combination with one of the
+* body mixins below. 
 */
 @mixin wayfinder--clip-to-nearest-positioned-ancestor {
   width: 100%;
@@ -107,7 +128,7 @@
 * extremely useful for avoiding x-scroll and annoying hiccups from touch input and scrolling on mobile
 * https://www.freecodecamp.org/news/html-page-width-height/
 *
-* IMPORTANT: you must use the following meta tag to set the viewport width for mobile devices:
+* IMPORTANT: you must use the following standard meta tag to set the viewport width for mobile devices:
 *   <head>
 *     <meta name="viewport" content="width=device-width, initial-scale=1">
 *   </head>
@@ -127,9 +148,10 @@
 }
 
 /** 
-* useful in case you still want horizontal scroll, but you don't want travelers to add extra
-* width beyond the content keep in mind that the body won't consider absolutely positioned
-* children as content
+* useful in case you still want content to scroll horizontally, but you don't want travelers to add extra
+* scroll beyond the content
+*
+* note: 'min-width: fit-content' doesn't consider absolutely positioned children as content
 */
 @mixin body--enable-clipping-to-content-width {
   @include body--enable-clipping-to-page-width;
@@ -140,13 +162,13 @@
   @include body--enable-clipping-to-content-width;
 }
 
-/** MISC. MIXINS */
-
 /**
-* allow mouse input to pass through a transformed element to elements behind it,
-* while preserving mouse input for the children of the element
+* transforming an element adds pointer-events to it, even if it's transparent
 *
-* $pointer-events-of-children: set the pointer-events for all children of the element.
+* this mixin allows mouse input to pass through a transformed element to elements behind it,
+* while setting the pointer-events property for all its children
+*
+* $pointer-events-of-children: provide the pointer-events value for all children of the element
 *   (default value is all)
 */
 @mixin transformed-element--enable-pass-through-of-pointer-events($pointer-events-of-children: all) {
@@ -160,8 +182,12 @@
 }
 
 /** 
-* add click cursor on desktop while avoiding annoying mobile click style on some browsers
-* haven't tested this broadly
+* setting the cursor to pointer sometimes adds an annoying auto-highlighting feature on certain mobile browsers
+*
+* this mixin adds the click cursor on desktop while avoiding that feature. this mixin doesn't disable selection
+* pointer-events
+*
+* note: haven't tested this broadly
 */
 @mixin clickable--mobile-friendly {
   cursor: pointer;
@@ -172,9 +198,13 @@
   @include clickable--mobile-friendly;
 }
 
-/** BONUS STYLING MIXINS */
+/** NAMEPLATE STYLE MIXINS
+*   1. waypoint-nameplate
+*   2. waypoint-floating-nameplate
+*   3. waypoint-floating-nameplate-shadow
+*/
 
-/** nice h2 nameplate to label waypoints clearly */
+/** nameplate to label waypoints or whatever */
 @mixin waypoint-nameplate {
   position: absolute;
 
@@ -203,15 +233,15 @@
 
   z-index: 2;
 
-  color: lightseagreen;
-  background: #181a1b;
+  color: rgb(32, 178, 170);
+  background: rgb(24, 26, 27);
   border-style: dashed;
 }
 .waypoint-floating-nameplate {
   @include waypoint-floating-nameplate;
 }
 
-/** gives a layered look to a floating nameplate, good for z-index layer visualization */
+/** gives a layered look to a floating nameplate */
 @mixin waypoint-floating-nameplate-shadow {
   @include waypoint-nameplate;
 
