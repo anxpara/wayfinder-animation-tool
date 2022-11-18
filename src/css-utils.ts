@@ -24,22 +24,24 @@ export function getOffsetRectOfElement(element: HTMLElement): DOMRect {
  * 2. Safari would provide the correct offset or offsetParent for absolute divs in transformed divs
  */
 export function getOffsetFromDirectParent(element: HTMLElement): DOMRect {
-  let style = getComputedStyle(element);
-  let directParent = element.parentElement;
-  let offsetParent = element.offsetParent;
-  let offsetRect = getOffsetRectOfElement(element);
+  const style = getComputedStyle(element);
+  const directParent = element.parentElement;
+  const offsetParent = element.offsetParent;
+  const offsetRect = getOffsetRectOfElement(element);
 
-  let isMobileSafari = /webkit.*mobile/i.test(navigator.userAgent); // checking userAgent string is not ideal
-  let isOffsetRelativeToDirectParent = isMobileSafari && style.position == "absolute";
-  let isDirectParentOffsetIncluded =
-    !isOffsetRelativeToDirectParent && directParent && offsetParent == directParent.offsetParent;
+  // determine if parent's offset needs to be removed from element's
+  const isMobileWebkit = /webkit.*mobile/i.test(navigator.userAgent); // checking userAgent string is not ideal
+  const isOffsetRelativeToDirectParent = isMobileWebkit && style.position === "absolute";
+  const isDirectParentOffsetIncluded =
+    !isOffsetRelativeToDirectParent && directParent && offsetParent === directParent.offsetParent;
 
   if (isDirectParentOffsetIncluded) {
-    let directParentOffset = getOffsetRectOfElement(directParent!);
+    const directParentOffset = getOffsetRectOfElement(directParent!);
     offsetRect.x -= directParentOffset.x;
     offsetRect.y -= directParentOffset.y;
   } else if (offsetParent) {
-    let offsetParentStyle = window.getComputedStyle(offsetParent);
+    // if element offset doesn't include parent's, then offset from parent's border must be added
+    const offsetParentStyle = window.getComputedStyle(offsetParent);
     offsetRect.x += Number.parseFloat(offsetParentStyle.borderLeftWidth);
     offsetRect.y += Number.parseFloat(offsetParentStyle.borderTopWidth);
   }
@@ -52,8 +54,8 @@ export function getCenterOfElement(element: HTMLElement): vec3 {
 }
 
 export function getTransformOriginOfElement(element: HTMLElement): vec3 {
-  let originString = window.getComputedStyle(element).transformOrigin;
-  let coords = originString.split(" ").map((str) => Number.parseFloat(str));
+  const originString = window.getComputedStyle(element).transformOrigin;
+  const coords = originString.split(" ").map((str) => Number.parseFloat(str));
   return vec3.fromValues(coords[0], coords[1], coords.length > 2 ? coords[2] : 0);
 }
 
@@ -69,14 +71,16 @@ Object.freeze(identityMatrix3d);
 export function get3dTransformMatrixOfElement(element: HTMLElement): mat4 {
   let cssTransformArray = convertCssTransformToArray(window.getComputedStyle(element).transform);
 
+  // default to identity matrix if none set
   if (!cssTransformArray) {
-    let transformMatrix = mat4.create();
+    const transformMatrix = mat4.create();
     mat4.identity(transformMatrix);
     return transformMatrix;
   }
 
-  if (cssTransformArray.length == 6) {
-    let transformCopy = [...cssTransformArray];
+  // convert 2d matrix to 3d
+  if (cssTransformArray.length === 6) {
+    const transformCopy = [...cssTransformArray];
     cssTransformArray = [...identityMatrix3d];
     cssTransformArray[0] = transformCopy[0];
     cssTransformArray[1] = transformCopy[1];
@@ -90,7 +94,7 @@ export function get3dTransformMatrixOfElement(element: HTMLElement): mat4 {
 }
 
 function convertCssTransformToArray(transform: string): string[] | null {
-  if (transform == "none") {
+  if (transform === "none") {
     return null;
   }
 
@@ -100,7 +104,7 @@ function convertCssTransformToArray(transform: string): string[] | null {
 }
 
 function convertCssTransformArrayToMat4(cssMatrix: string[]): mat4 {
-  let floats = cssMatrix.map((str) => parseFloat(str));
+  const floats = cssMatrix.map((str) => parseFloat(str));
 
   // prettier-ignore
   return mat4.fromValues(

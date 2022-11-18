@@ -72,9 +72,9 @@ export type Waypoint<StashType = any> = {
  * wayfinder to the waypoint. copies any desired computed css properties
  *
  * this is the primary interface of Wayfinder Animation Tool
- * 
+ *
  * note: copyWpSize, computeTransformFromWpToWayfinder, and copyComputedCssFromWp
- * are exported for cases where you're certain you need to optimize by skipping 
+ * are exported for cases where you're certain you need to optimize by skipping
  * the computation of particular params. prefer projectWpToWayfinder
  */
 export function projectWpToWayfinder(
@@ -86,7 +86,7 @@ export function projectWpToWayfinder(
     throw new Error("Destination waypoint has no element.");
   }
 
-  let params = {
+  const params = {
     ...copyWpSize(wp, wayfinder, computedCssPropsToCopy),
     ...computeTransformFromWpToWayfinder(wp, wayfinder),
     ...copyComputedCssFromWp(wp, wayfinder, computedCssPropsToCopy),
@@ -115,11 +115,11 @@ export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssProp
     throw new Error("Destination waypoint has no element.");
   }
 
-  let wpComputedStyle = window.getComputedStyle(wp.element);
-  let wfComputedStyle = window.getComputedStyle(wayfinder);
+  const wpComputedStyle = window.getComputedStyle(wp.element);
+  const wfComputedStyle = window.getComputedStyle(wayfinder);
 
   // check which border widths will be copied
-  let removeAll = computedCssPropsToCopy.includes("border") || computedCssPropsToCopy.includes("border-width");
+  const removeAll = computedCssPropsToCopy.includes("border") || computedCssPropsToCopy.includes("border-width");
   let removeLeft = false;
   let removeRight = false;
   let removeTop = false;
@@ -134,7 +134,7 @@ export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssProp
   }
 
   // calculate dimensions, excluding any border widths that will be copied
-  let wpOffsetRect = getOffsetRectOfElement(wp.element);
+  const wpOffsetRect = getOffsetRectOfElement(wp.element);
   let wpWidthPx = wpOffsetRect.width;
   let wpHeightPx = wpOffsetRect.height;
   if (removeAll || removeLeft) {
@@ -150,16 +150,16 @@ export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssProp
     wpHeightPx -= Number.parseFloat(wpComputedStyle.borderBottomWidth.split("p")[0]);
   }
 
-  let wpFontSizePx = Number.parseFloat(wpComputedStyle.fontSize.split("p")[0]);
-  let wfFontSizePx = Number.parseFloat(wfComputedStyle.fontSize.split("p")[0]);
+  const wpFontSizePx = Number.parseFloat(wpComputedStyle.fontSize.split("p")[0]);
+  const wfFontSizePx = Number.parseFloat(wfComputedStyle.fontSize.split("p")[0]);
 
   // bake in the difference in font-size between the waypoint and wayfinder
-  let fontSize = wpFontSizePx / wfFontSizePx + "em";
+  const fontSize = wpFontSizePx / wfFontSizePx + "em";
 
   // calculate dimensions in em. the traveler's font-size is now analogous to the
   // waypoint's font-size, so no special conversion is needed
-  let width = wpWidthPx / wpFontSizePx + "em";
-  let height = wpHeightPx / wpFontSizePx + "em";
+  const width = wpWidthPx / wpFontSizePx + "em";
+  const height = wpHeightPx / wpFontSizePx + "em";
 
   return { fontSize, width, height };
 }
@@ -176,36 +176,36 @@ export function computeTransformFromWpToWayfinder(wp: Waypoint, wayfinder: HTMLE
     throw new Error("Destination waypoint has no element.");
   }
 
-  let elementsDownToWp = getElementsFromWayfinderToWp(wp, wayfinder);
+  const elementsDownToWp = getElementsFromWayfinderToWp(wp, wayfinder);
   if (!elementsDownToWp) {
     throw new Error("Couldn't find the given wayfinder div within any of the waypoint's ancestors.");
   }
 
-  let accumulatedTransform = mat4.create();
+  const accumulatedTransform = mat4.create();
   mat4.identity(accumulatedTransform);
 
   // shift the frame of reference to the traveler's transform origin
   // (by convention, this matches the waypoint's center, might eventually add an option to provide the
   // traveler's transform origin directly)
-  let travelerCenter = getCenterOfElement(wp.element);
-  let travelerCenterMatrix = mat4.create();
+  const travelerCenter = getCenterOfElement(wp.element);
+  const travelerCenterMatrix = mat4.create();
   mat4.fromTranslation(travelerCenterMatrix, travelerCenter);
   mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
 
   elementsDownToWp.forEach((el, i) => {
-    if (el.style.position == "fixed") {
+    if (el.style.position === "fixed") {
       throw new Error("Fixed position is not supported on waypoints, nor any elements between them and the wayfinder.");
     }
 
     // apply the element's transform-origin
-    let transformOrigin = getTransformOriginOfElement(el);
-    let originMatrix = mat4.create();
+    const transformOrigin = getTransformOriginOfElement(el);
+    const originMatrix = mat4.create();
     mat4.fromTranslation(originMatrix, transformOrigin);
     mat4.invert(originMatrix, originMatrix);
     mat4.multiply(accumulatedTransform, originMatrix, accumulatedTransform);
 
     // pre-multiply the combined transform with the current element's transform
-    let currentTransform = get3dTransformMatrixOfElement(el);
+    const currentTransform = get3dTransformMatrixOfElement(el);
     mat4.multiply(accumulatedTransform, currentTransform, accumulatedTransform);
 
     // remove the transform-origin
@@ -215,13 +215,13 @@ export function computeTransformFromWpToWayfinder(wp: Waypoint, wayfinder: HTMLE
     // translate by the element's offset from its direct parent
     let offsetRect = getOffsetFromDirectParent(el);
     // if element is the root, then use its normal offset rect instead
-    if (i == elementsDownToWp.length - 1) {
+    if (i === elementsDownToWp.length - 1) {
       offsetRect = getOffsetRectOfElement(el);
     }
     offsetRect.x -= el.scrollLeft;
     offsetRect.y -= el.scrollTop;
-    let offsetVec = vec3.fromValues(offsetRect.left, offsetRect.top, 0);
-    let offsetMatrix = mat4.create();
+    const offsetVec = vec3.fromValues(offsetRect.left, offsetRect.top, 0);
+    const offsetMatrix = mat4.create();
     mat4.fromTranslation(offsetMatrix, offsetVec);
     mat4.multiply(accumulatedTransform, offsetMatrix, accumulatedTransform);
 
@@ -242,14 +242,14 @@ export function computeTransformFromWpToWayfinder(wp: Waypoint, wayfinder: HTMLE
 }
 
 function shouldElementPreserve3d(element: HTMLElement): boolean {
-  let currentParent = element!.parentElement;
-  return currentParent ? getComputedStyle(currentParent).transformStyle == "preserve-3d" : false;
+  const currentParent = element!.parentElement;
+  return currentParent ? getComputedStyle(currentParent).transformStyle === "preserve-3d" : false;
 }
 
 function getElementsFromWayfinderToWp(wp: Waypoint, wayfinder: HTMLElement): HTMLElement[] {
-  let wayfinderParent = wayfinder.parentElement;
+  const wayfinderParent = wayfinder.parentElement;
   let currentParent = wp.element!.parentElement;
-  let elementList: HTMLElement[] = [wp.element!];
+  const elementList: HTMLElement[] = [wp.element!];
 
   while (currentParent && !currentParent.isSameNode(wayfinderParent)) {
     elementList.push(currentParent);
@@ -263,8 +263,8 @@ function getElementsFromWayfinderToWp(wp: Waypoint, wayfinder: HTMLElement): HTM
 }
 
 // prettier-ignore
-let cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "height", "transform", "transform-origin",
-                                  "perspective", "perspective-origin"];
+const cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "height", "transform", "transform-origin",
+                                    "perspective", "perspective-origin"];
 
 /**
  * returns the requested css properties according to the waypoint's computed style. names are
@@ -282,16 +282,16 @@ export function copyComputedCssFromWp(
     throw new Error("Destination waypoint has no element.");
   }
 
-  let params: WatParams = {};
-  let wpComputedStyle = window.getComputedStyle(wp.element);
+  const params: WatParams = {};
+  const wpComputedStyle = window.getComputedStyle(wp.element);
 
   computedCssPropsToCopy.forEach((propName) => {
     if (cssPropertiesCopyBlacklist.includes(propName)) {
       console.warn("Wayfinder: " + propName + " is blacklisted from being copied");
       return;
     }
-    let propValue = wpComputedStyle.getPropertyValue(propName);
-    if (propValue == "") {
+    const propValue = wpComputedStyle.getPropertyValue(propName);
+    if (propValue === "") {
       console.warn("Wayfinder: " + propName + " is most likely not a valid css property name, skipping");
       return;
     }
@@ -301,13 +301,13 @@ export function copyComputedCssFromWp(
 }
 
 function convertPropNametoCamelCase(cssPropertyName: string): string {
-  let segments = cssPropertyName.split("-");
-  let capSegments: string[] = [];
+  const segments = cssPropertyName.split("-");
+  const capSegments: string[] = [];
   segments.forEach((seg, i) => {
     if (i > 0) seg = seg.charAt(0).toUpperCase() + seg.slice(1);
     capSegments.push(seg);
   });
-  let paramName = capSegments.join("");
+  const paramName = capSegments.join("");
   return paramName;
 }
 
