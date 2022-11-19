@@ -21,7 +21,10 @@ export { WatResultsLogger, WatResultsLogData } from "./logging";
  * any computed css properties requested via projectWpToWayfinder's optional
  * computedCssPropsToCopy arg are also included. if computedCssPropsToCopy
  * contains 'transform', then the matrix3d param is returned via the transform
- * param instead
+ * property instead
+ *
+ * for details on computed style, see
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
  *
  * ---
  *
@@ -34,7 +37,7 @@ export { WatResultsLogger, WatResultsLogData } from "./logging";
  *
  * ---
  *
- * if using Motion One, request matrix3d be returned via the transform param:
+ * if using Motion One, request matrix3d be returned via the transform property:
  *
  *   animate('#travelerId', {
  *       ...projectWpToWayfinder(waypoint, wayfinderElement, ['transform'])
@@ -80,9 +83,9 @@ export type Waypoint<StashType = unknown> = {
  * note: copyWpSize, computeTransformFromWpToWayfinder, and copyComputedCssFromWp
  * are exported for cases where you're certain you need to optimize by skipping
  * the computation of particular params. prefer projectWpToWayfinder
- * 
+ *
  * note: if computedCssPropsToCopy includes "transform", then the matrix3d param
- * is returned via the transform param instead (useful for Motion One integration)
+ * is returned via the transform property instead (useful for Motion One integration)
  */
 export function projectWpToWayfinder(
   wp: Waypoint,
@@ -175,9 +178,9 @@ export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssProp
  * builds a transform matrix that projects the waypoint onto the wayfinder
  *  -supports 'transform-style: preserve-3d;'
  *  -doesn't currently support 'perspective: *;'
- * 
+ *
  * if computedCssPropsToCopy includes "transform", then the the matrix3d param is
- * returned via the transform param instead (useful for Motion One integration)
+ * returned via the transform property instead (useful for Motion One integration)
  *
  * https://www.w3.org/TR/css-transforms-2
  */
@@ -292,9 +295,14 @@ const cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "he
 /**
  * returns the requested css properties according to the waypoint's computed style. names are
  * converted to camel case
- * -some properties might not be in their specified units
+ * -computed properties might not be in their specified units
+ * -in some cases, only the longhand names are available (e.g. a multi-color border where the
+ *  different sides can't all be represented by the shorthand 'border' property)
  * -some properties can't be animated
- * -some properties might cause performance hits if animated, e.g. properties that change the layout
+ * -some properties might cause performance hits if animated (e.g. properties that affect the layout)
+ *
+ * for details on computed style, see
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
  */
 export function copyComputedCssFromWp(
   wp: Waypoint,
@@ -315,16 +323,21 @@ export function copyComputedCssFromWp(
     }
     // ignore blacklisted properties
     if (cssPropertiesCopyBlacklist.includes(propName)) {
-      console.warn("Wayfinder: " + propName + " is blacklisted from being copied");
+      console.warn("Wayfinder: " + propName + " is blacklisted from being copied.");
       return;
     }
+
     const propValue = wpComputedStyle.getPropertyValue(propName);
+
+    // skip empty values
     if (propValue === "") {
-      console.warn("Wayfinder: " + propName + " is most likely not a valid css property name, skipping");
+      console.warn("Wayfinder: " + wp.name + "'s " + propName + " property has no value, skipping.");
       return;
     }
+
     params[convertPropNametoCamelCase(propName)] = propValue;
   });
+
   return params;
 }
 
