@@ -32,10 +32,10 @@
   },
   "homepage": "https://github.com/anxpara/wayfinder-animation-tool#readme",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "pm2": "^5.2.0",
-    "rollup": "^2.77.0",
-    "rollup-plugin-dts": "^4.2.2",
+    "rollup": "^3.7.4",
+    "rollup-plugin-dts": "^5.0.0",
     "sass": "^1.54.0",
     "terser": "^5.14.2",
     "ts-node": "^10.9.1",
