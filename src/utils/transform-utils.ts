@@ -1,6 +1,4 @@
-import { glMatrix, mat4, vec3 } from "gl-matrix";
-
-glMatrix.setMatrixArrayType(Array);
+import { mat4, vec3 } from "gl-matrix";
 
 export function getCenterOfElement(element: HTMLElement): vec3 {
   return vec3.fromValues(element.offsetWidth / 2, element.offsetHeight / 2, 0);

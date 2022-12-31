@@ -1,4 +1,4 @@
-import { mat4, vec3 } from "gl-matrix";
+import { glMatrix, mat4, vec3 } from "gl-matrix";
 import { WatParams, Waypoint } from "../wayfinder";
 import { getOffsetFromDirectParent, getOffsetRectOfElement } from "../utils/offset-utils";
 import {
@@ -7,6 +7,7 @@ import {
   get3dTransformMatrixOfElement,
   convertMat4ToCssMatrix3d,
 } from "../utils/transform-utils";
+
 /**
  * builds a transform matrix that projects the waypoint onto the wayfinder
  *  -supports 'transform-style: preserve-3d;'
@@ -30,6 +31,8 @@ export function computeTransformFromWpToWayfinder(
   if (!elementsDownToWp) {
     throw new Error(`Couldn't find the given wayfinder div within any of the waypoint ${wp.name}'s ancestors.`);
   }
+
+  glMatrix.setMatrixArrayType(Array);
 
   const accumulatedTransform = mat4.create();
   mat4.identity(accumulatedTransform);

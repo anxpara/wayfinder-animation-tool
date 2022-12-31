@@ -2,6 +2,7 @@
   "name": "wayfinder-animation-tool",
   "version": "1.2.0",
   "description": "Animate the web intuitively",
+  "sideEffects": false,
   "main": "dist/cjs/wayfinder.js",
   "module": "dist/es/wayfinder.js",
   "umd:main": "dist/umd/wayfinder.min.js",
