@@ -1,14 +1,12 @@
 import { mat4, vec3 } from "gl-matrix";
 import { WatParams, Waypoint } from "../wayfinder";
+import { getOffsetFromDirectParent, getOffsetRectOfElement } from "../utils/offset-utils";
 import {
-  convertMat4ToCssTransformString,
-  get3dTransformMatrixOfElement,
   getCenterOfElement,
-  getOffsetFromDirectParent,
-  getOffsetRectOfElement,
   getTransformOriginOfElement,
-} from "../utils/css-utils";
-
+  get3dTransformMatrixOfElement,
+  convertMat4ToCssMatrix3d,
+} from "../utils/transform-utils";
 /**
  * builds a transform matrix that projects the waypoint onto the wayfinder
  *  -supports 'transform-style: preserve-3d;'
@@ -90,7 +88,7 @@ export function computeTransformFromWpToWayfinder(
   mat4.invert(travelerCenterMatrix, travelerCenterMatrix);
   mat4.multiply(accumulatedTransform, travelerCenterMatrix, accumulatedTransform);
 
-  const matrix3d = convertMat4ToCssTransformString(accumulatedTransform);
+  const matrix3d = convertMat4ToCssMatrix3d(accumulatedTransform);
   const params: WatParams = { matrix3d };
 
   // if transform is included in the css copy list, then return the matrix via transform instead

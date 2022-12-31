@@ -1,5 +1,5 @@
 import { WatParams, Waypoint } from "../wayfinder";
-import { getOffsetRectOfElement } from "../utils/css-utils";
+import { getOffsetRectOfElement } from "../utils/offset-utils";
 
 /**
  * returns the waypoint's font-size, width, and height params in em. if any border widths are
