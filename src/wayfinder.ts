@@ -6,7 +6,7 @@ import {
   getTransformOriginOfElement,
   get3dTransformMatrixOfElement,
   convertMat4ToCssTransformString,
-} from "./css-utils";
+} from "src/utils/css-utils";
 import { logWatResults, WatResultsLogger } from "src/logging/logging";
 export { WatResultsLogger, WatResultsLogData } from "src/logging/logging";
 
