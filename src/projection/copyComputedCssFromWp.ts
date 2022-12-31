@@ -1,4 +1,4 @@
-import { WatParams, Waypoint } from "src/wayfinder";
+import { WatParams, Waypoint } from "../wayfinder";
 
 // prettier-ignore
 const cssPropertiesCopyBlacklist = ["all", "font-size", "position", "width", "height", "transform-origin",

@@ -1,5 +1,5 @@
 import { mat4, vec3 } from "gl-matrix";
-import { WatParams, Waypoint } from "src/wayfinder";
+import { WatParams, Waypoint } from "../wayfinder";
 import {
   convertMat4ToCssTransformString,
   get3dTransformMatrixOfElement,
@@ -7,7 +7,7 @@ import {
   getOffsetFromDirectParent,
   getOffsetRectOfElement,
   getTransformOriginOfElement,
-} from "src/utils/css-utils";
+} from "../utils/css-utils";
 
 /**
  * builds a transform matrix that projects the waypoint onto the wayfinder

@@ -1,12 +1,12 @@
-import { copyWpSize } from "src/projection/copyWpSize";
-import { computeTransformFromWpToWayfinder } from "src/projection/computeTransformFromWpToWayfinder";
-import { copyComputedCssFromWp } from "src/projection/copyComputedCssFromWp";
-import { logWatResults, WatResultsLogger } from "src/logging/logging";
+import { copyWpSize } from "./projection/copyWpSize";
+import { computeTransformFromWpToWayfinder } from "./projection/computeTransformFromWpToWayfinder";
+import { copyComputedCssFromWp } from "./projection/copyComputedCssFromWp";
+import { logWatResults, WatResultsLogger } from "./logging/logging";
 
-export { copyWpSize } from "src/projection/copyWpSize";
-export { computeTransformFromWpToWayfinder } from "src/projection/computeTransformFromWpToWayfinder";
-export { copyComputedCssFromWp } from "src/projection/copyComputedCssFromWp";
-export { WatResultsLogger, WatResultsLogData } from "src/logging/logging";
+export { copyWpSize } from "./projection/copyWpSize";
+export { computeTransformFromWpToWayfinder } from "./projection/computeTransformFromWpToWayfinder";
+export { copyComputedCssFromWp } from "./projection/copyComputedCssFromWp";
+export { WatResultsLogger, WatResultsLogData } from "./logging/logging";
 
 /**
  * WatParams are the parameters needed to set or animate a traveler in
