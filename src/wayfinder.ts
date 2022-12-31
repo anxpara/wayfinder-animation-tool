@@ -7,8 +7,8 @@ import {
   get3dTransformMatrixOfElement,
   convertMat4ToCssTransformString,
 } from "./css-utils";
-import { logWatResults, WatResultsLogger } from "./logging";
-export { WatResultsLogger, WatResultsLogData } from "./logging";
+import { logWatResults, WatResultsLogger } from "src/logging/logging";
+export { WatResultsLogger, WatResultsLogData } from "src/logging/logging";
 
 /**
  * WatParams are the parameters needed to set or animate a traveler in

@@ -1,5 +1,5 @@
-import { getOffsetFromDirectParent, getOffsetRectOfElement } from "./css-utils";
-import { WatParams, Waypoint } from "./wayfinder";
+import { getOffsetFromDirectParent, getOffsetRectOfElement } from "src/utils/css-utils";
+import { WatParams, Waypoint } from "src/wayfinder";
 
 export class WatResultsLogData {
   waypointName!: string;
