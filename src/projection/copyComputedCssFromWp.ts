@@ -22,7 +22,7 @@ export function copyComputedCssFromWp(
   computedCssPropsToCopy: string[]
 ): WatParams {
   if (!wp.element) {
-    throw new Error("Destination waypoint has no element.");
+    throw new Error(`Waypoint ${wp.name} has no element.`);
   }
 
   const params: WatParams = {};
@@ -35,7 +35,7 @@ export function copyComputedCssFromWp(
     }
     // ignore blacklisted properties
     if (cssPropertiesCopyBlacklist.includes(propName)) {
-      console.warn("Wayfinder: " + propName + " is blacklisted from being copied.");
+      console.warn(`Wayfinder: ${propName} is blacklisted from being copied.`);
       return;
     }
 
@@ -43,7 +43,7 @@ export function copyComputedCssFromWp(
 
     // skip empty values
     if (propValue === "") {
-      console.warn("Wayfinder: " + wp.name + "'s " + propName + " property has no value, skipping.");
+      console.warn(`Wayfinder: ${wp.name}'s ${propName} property has no value, skipping.`);
       return;
     }
 

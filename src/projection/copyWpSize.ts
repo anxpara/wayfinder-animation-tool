@@ -14,7 +14,7 @@ import { getOffsetRectOfElement } from "src/utils/css-utils";
  */
 export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssPropsToCopy: string[]): WatParams {
   if (!wp.element) {
-    throw new Error("Destination waypoint has no element.");
+    throw new Error(`Waypoint ${wp.name} has no element.`);
   }
 
   const wpComputedStyle = window.getComputedStyle(wp.element);

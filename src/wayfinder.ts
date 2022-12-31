@@ -91,7 +91,7 @@ export function projectWpToWayfinder(
   computedCssPropsToCopy: string[] = []
 ): WatParams {
   if (!wp.element) {
-    throw new Error("Destination waypoint has no element.");
+    throw new Error(`Waypoint ${wp.name} has no element.`);
   }
 
   const params = {

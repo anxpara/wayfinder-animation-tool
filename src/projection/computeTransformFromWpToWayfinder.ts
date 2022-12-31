@@ -25,12 +25,12 @@ export function computeTransformFromWpToWayfinder(
   computedCssPropsToCopy: string[]
 ): WatParams {
   if (!wp.element) {
-    throw new Error("Destination waypoint has no element.");
+    throw new Error(`Waypoint ${wp.name} has no element.`);
   }
 
   const elementsDownToWp = getElementsFromWayfinderToWp(wp, wayfinder);
   if (!elementsDownToWp) {
-    throw new Error("Couldn't find the given wayfinder div within any of the waypoint's ancestors.");
+    throw new Error(`Couldn't find the given wayfinder div within any of the waypoint ${wp.name}'s ancestors.`);
   }
 
   const accumulatedTransform = mat4.create();
