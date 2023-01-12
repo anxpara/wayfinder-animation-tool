@@ -135,7 +135,9 @@
 */
 @mixin body--enable-clipping-to-page-width {
   position: absolute;
-  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
   min-height: 100vh; // in case the content doesn't fill the whole page height
 
   // these will likely fuck things up if set differently
@@ -155,6 +157,8 @@
 */
 @mixin body--enable-clipping-to-content-width {
   @include body--enable-clipping-to-page-width;
+  left: unset;
+  right: unset;
   min-width: fit-content;
   min-width: -moz-fit-content;
 }
