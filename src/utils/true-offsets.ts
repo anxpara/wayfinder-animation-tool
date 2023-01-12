@@ -91,6 +91,8 @@
  * 4. subPixelOffsetHeight
  */
 
+import { getRenderingEngine } from "./useragent-utils";
+
 // TRUE OFFSETS FOR DESIGNATED OFFSETPARENT
 
 /**
@@ -146,9 +148,8 @@ export function getTrueOffsets(element: HTMLElement): DOMRect {
 function getTrueOffsetsOfFixedElement(element: HTMLElement): DOMRect {
   const offsetRect = getDesignatedOffsets(element);
 
-  const isBlink = /webkit\/537\.36.+chrome\/(?!27)[\w\.]+/i.test(navigator.userAgent);
-  const isWebkit = /webkit\/[\w\.]+/i.test(navigator.userAgent);
-  const engineAddsContainerBorders = isBlink || isWebkit;
+  const engine = getRenderingEngine();
+  const engineAddsContainerBorders = engine === "blink" || engine === "webkit";
   if (!engineAddsContainerBorders) {
     return offsetRect;
   }
@@ -172,7 +173,7 @@ function getOffsetsBeyondBodyContentAddedByBrowser(
   const trueOffsetIsBody = areSameNode(trueOffsetParent, document.body);
   const trueOffsetParentIsRoot = areSameNode(trueOffsetParent, document.documentElement);
   const trueOffsetParentIsViewport = !trueOffsetParent;
-  const isGecko = /rv\:[\w\.]{1,9}\b.+gecko/i.test(navigator.userAgent);
+  const isGecko = getRenderingEngine() === "gecko";
 
   const bodyBorderAddedForBody = trueOffsetIsBody && !isGecko;
   const bodyBorderAddedForRoot = trueOffsetParentIsRoot && !(isGecko && !isChildAbsolute);
@@ -322,10 +323,8 @@ function willBrowserUseAsTrueOffsetParent(element: HTMLElement, isChildAbsolute:
     return true;
   }
 
-  const isBlink = /webkit\/537\.36.+chrome\/(?!27)[\w\.]+/i.test(navigator.userAgent);
-  const isWebkit = /webkit\/[\w\.]+/i.test(navigator.userAgent);
-
-  const browserIgnoresContainingBlock = (isBlink || isWebkit) && !isChildAbsolute;
+  const engine = getRenderingEngine();
+  const browserIgnoresContainingBlock = !isChildAbsolute && (engine === "blink" || engine === "webkit");
   if (browserIgnoresContainingBlock) {
     return false;
   }
