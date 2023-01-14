@@ -1,4 +1,4 @@
-import { getOffsetFromDirectParent, getOffsetRectOfElement } from "../utils/offset-utils";
+import { getOffsetsFromDirectParentOrigin, getIntendedOffsets } from "../utils/true-offsets";
 import { WatParams, Waypoint } from "../wayfinder";
 
 export class WatResultsLogData {
@@ -49,9 +49,9 @@ function makeWatResultsLogData(
     waypoint: wp,
     waypointComputedStyle: window.getComputedStyle(wp.element),
     directParent: wp.element.parentElement,
-    directOffsetRect: getOffsetFromDirectParent(wp.element),
+    directOffsetRect: getOffsetsFromDirectParentOrigin(wp.element),
     offsetParent: wp.element.offsetParent,
-    offsetRect: getOffsetRectOfElement(wp.element),
+    offsetRect: getIntendedOffsets(wp.element),
     wayfinder,
     computedCssPropsToCopy,
     watParamResults,

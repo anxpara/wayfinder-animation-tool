@@ -78,6 +78,11 @@ export type Waypoint<StashType = unknown> = {
  *
  * this is the primary interface of Wayfinder Animation Tool
  *
+ * the wayfinder must either have a fixed position, or be a direct child of one of the following:
+ *  -an ancestor of the waypoint
+ *  -the body
+ *  -a fixed element
+ *
  * note: copyWpSize, computeTransformFromWpToWayfinder, and copyComputedCssFromWp
  * are exported for cases where you're certain you need to optimize by skipping
  * the computation of particular params. prefer projectWpToWayfinder

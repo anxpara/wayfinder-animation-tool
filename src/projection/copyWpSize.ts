@@ -1,5 +1,5 @@
 import { WatParams, Waypoint } from "../wayfinder";
-import { getOffsetRectOfElement } from "../utils/offset-utils";
+import { getIntendedOffsets } from "../utils/true-offsets";
 
 /**
  * returns the waypoint's font-size, width, and height params in em. if any border widths are
@@ -36,7 +36,7 @@ export function copyWpSize(wp: Waypoint, wayfinder: HTMLElement, computedCssProp
   }
 
   // calculate dimensions, excluding any border widths that will be copied
-  const wpOffsetRect = getOffsetRectOfElement(wp.element);
+  const wpOffsetRect = getIntendedOffsets(wp.element);
   let wpWidthPx = wpOffsetRect.width;
   let wpHeightPx = wpOffsetRect.height;
   if (removeAll || removeLeft) {
