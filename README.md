@@ -113,7 +113,7 @@ animate('#knight-traveler', {
 </br>
 </br>
 
-<div align="center"><a href="https://wayfinderanimationtool.com"><img src="https://i.imgur.com/n0pQ2lc.png"/></a></div>
+<div align="center"><a href="https://wayfinderanimationtool.com"><img src="https://i.imgur.com/n0pQ2lc.png" width="250px"/></a></div>
 
 <h1 align="center">Support the development of Wayfinder</h1>
 
