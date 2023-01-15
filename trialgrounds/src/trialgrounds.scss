@@ -595,6 +595,88 @@ body {
   border-width: 6px;
 }
 
+// FIXED-PARENT WAYFINDER
+
+.fixed-trialgrounds {
+  @include wat.transformed-element--enable-pass-through-of-pointer-events;
+
+  font-size: 0.5em;
+
+  position: fixed;
+  top: 3em;
+  left: 31em;
+  width: 16em;
+  transform: translate(-1em, -1em);
+
+  z-index: 1;
+
+  pointer-events: none;
+}
+
+.fixation-container {
+  z-index: 1;
+}
+
+.fixed-parent-wayfinder {
+}
+
+.fixed-parent-control-waypoint {
+  @include test-waypoint;
+}
+
+.fixed-parent-to-fixed-waypoint {
+  @include test-waypoint;
+}
+
+.fixed-parent-to-body-waypoint {
+  @include test-waypoint;
+  color: gold;
+}
+
+// FIXED WAYFINDER
+
+.fixed-wayfinder {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+
+  transform: translate(1em, 1em);
+
+  z-index: 2;
+}
+
+// BODY WAYFINDER
+
+.body-wayfinder {
+  z-index: 2;
+}
+
+// fixed-to-fixed-parent-waypoint
+
+.fixed-to-fixed-parent-waypoint {
+  @include test-waypoint;
+
+  font-size: 0.5em;
+
+  position: fixed;
+  left: 40em;
+  top: 10.35em;
+}
+
+// body-to-fixed-parent-waypoint
+
+.body-to-fixed-parent-waypoint {
+  @include test-waypoint;
+
+  font-size: 0.3em;
+
+  position: absolute;
+  left: 38.1em;
+  top: 17.05em;
+
+  color: gold;
+}
+
 // CONTROLLER
 
 .controller {
@@ -610,6 +692,8 @@ body {
 
   transform: rotateZ(90deg) translateZ(120em);
   justify-content: center;
+
+  z-index: 101;
 }
 
 .controller-row {

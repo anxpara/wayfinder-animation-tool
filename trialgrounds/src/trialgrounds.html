@@ -1,149 +1,180 @@
-<head lang="en">
-  <title>Trialgrounds</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link rel="icon" href="https://i.imgur.com/7zpN3Hf.png" type="image/icon type" />
-  <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="/trialgrounds.css" />
-  <script src="/trialgrounds.js"></script>
-</head>
-<body>
-  <!-- standalone tests-->
-  <div id="standalone-trialgrounds" class="trialgrounds standalone-trialgrounds">
-    <div id="standalone-waypoint--template" class="template">
-      <div class="fail-content">standalone wp</div>
-    </div>
-
-    <div id="standalone-wayfinder" class="wayfinder standalone-wayfinder"></div>
-  </div>
-
-  <!-- nested waypoint tests -->
-  <div id="nested-trialgrounds" class="trialgrounds nested-trialgrounds">
-    <div id="nested-container--template" class="nested-container template">
-      <div id="nested-waypoint--template" class="nested-waypoint template">
-        <div class="fail-content">nested wp</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trialgrounds</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="icon" href="https://i.imgur.com/7zpN3Hf.png" type="image/icon type" />
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/trialgrounds.css" />
+    <script src="/trialgrounds.js"></script>
+  </head>
+  <body>
+    <!-- standalone tests-->
+    <div id="standalone-trialgrounds" class="trialgrounds standalone-trialgrounds">
+      <div id="standalone-waypoint--template" class="template">
+        <div class="fail-content">standalone wp</div>
       </div>
+
+      <!-- body-to-fixed-parent waypoint -->
+      <div id="body-to-fixed-parent-waypoint" class="body-to-fixed-parent-waypoint">
+        <div class="fail-content">body-to-fixed-parent</div>
+      </div>
+
+      <div id="standalone-wayfinder" class="wayfinder standalone-wayfinder"></div>
     </div>
 
-    <div id="scroll-container2" class="nested-container scroll-container">
-      <div id="absolute-in-scrolled-container" class="nested-container absolute-in-scrolled-container">
-        <div id="absolute-in-scrolled-waypoint" class="nested-waypoint absolute-in-scrolled-waypoint">
-          <div class="fail-content">absolute-in-scrolled</div>
+    <!-- nested waypoint tests -->
+    <div id="nested-trialgrounds" class="trialgrounds nested-trialgrounds">
+      <div id="nested-container--template" class="nested-container template">
+        <div id="nested-waypoint--template" class="nested-waypoint template">
+          <div class="fail-content">nested wp</div>
         </div>
       </div>
-    </div>
 
-    <div id="sticky-root" class="nested-container scroll-container sticky-root">
-      <div class="spacer"></div>
-      <div id="sticky-container" class="nested-container sticky-container">
-        <div id="sticky-waypoint" class="nested-waypoint sticky-waypoint">
-          <div class="fail-content">sticky</div>
-        </div>
-      </div>
-      <div class="spacer"></div>
-    </div>
-
-    <div id="absolute-in-stickied-root" class="nested-container scroll-container sticky-root">
-      <div class="spacer"></div>
-      <div id="sticky-container" class="nested-container sticky-container">
-        <div id="absolute-in-stickied-container" class="nested-container absolute-in-stickied-container">
-          <div id="absolute-in-stickied-waypoint" class="nested-waypoint absolute-in-stickied-waypoint">
-            <div class="fail-content">absolute-in-stickied</div>
+      <div id="scroll-container2" class="nested-container scroll-container">
+        <div id="absolute-in-scrolled-container" class="nested-container absolute-in-scrolled-container">
+          <div id="absolute-in-scrolled-waypoint" class="nested-waypoint absolute-in-scrolled-waypoint">
+            <div class="fail-content">absolute-in-scrolled</div>
           </div>
         </div>
       </div>
-      <div class="spacer"></div>
+
+      <div id="sticky-root" class="nested-container scroll-container sticky-root">
+        <div class="spacer"></div>
+        <div id="sticky-container" class="nested-container sticky-container">
+          <div id="sticky-waypoint" class="nested-waypoint sticky-waypoint">
+            <div class="fail-content">sticky</div>
+          </div>
+        </div>
+        <div class="spacer"></div>
+      </div>
+
+      <div id="absolute-in-stickied-root" class="nested-container scroll-container sticky-root">
+        <div class="spacer"></div>
+        <div id="sticky-container" class="nested-container sticky-container">
+          <div id="absolute-in-stickied-container" class="nested-container absolute-in-stickied-container">
+            <div id="absolute-in-stickied-waypoint" class="nested-waypoint absolute-in-stickied-waypoint">
+              <div class="fail-content">absolute-in-stickied</div>
+            </div>
+          </div>
+        </div>
+        <div class="spacer"></div>
+      </div>
+
+      <div id="double-preserve3d-root" class="nested-container double-preserve3d-root">
+        <div id="double-preserve3d-container" class="nested-container double-preserve3d-container">
+          <div id="double-preserve3d-waypoint" class="nested-waypoint double-preserve3d-waypoint">
+            <div class="fail-content">double preserve3d</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="revert-preserve3d-root" class="nested-container revert-preserve3d-root">
+        <div id="revert-preserve3d-container" class="nested-container revert-preserve3d-container">
+          <div id="revert-preserve3d-waypoint" class="nested-waypoint revert-preserve3d-waypoint">
+            <div class="fail-content">revert preserve3d</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="nested-wayfinder" class="wayfinder nested-wayfinder"></div>
     </div>
 
-    <div id="double-preserve3d-root" class="nested-container double-preserve3d-root">
-      <div id="double-preserve3d-container" class="nested-container double-preserve3d-container">
-        <div id="double-preserve3d-waypoint" class="nested-waypoint double-preserve3d-waypoint">
-          <div class="fail-content">double preserve3d</div>
+    <!-- css copy tests -->
+    <div id="copy-trialgrounds" class="trialgrounds copy-trialgrounds">
+      <div id="copy-waypoint--template" class="template">
+        <div class="fail-content">copy wp</div>
+      </div>
+
+      <div id="copy-wayfinder" class="wayfinder copy-wayfinder"></div>
+    </div>
+
+    <!-- nested wayfinder tests -->
+    <div id="nested-wf-trialgrounds" class="trialgrounds">
+      <div id="nested-wf-hub--template" class="nested-wf-hub template">
+        <div class="nested-wf-container">
+          <div id="nest-in-font-size-waypoint" class="nested-wf-waypoint">
+            <div class="fail-content">nested wf wp</div>
+          </div>
+          <div id="nest-in-font-size-wayfinder" class="nested-wayfinder">
+            <div id="nest-in-font-size-traveler" class="test-traveler"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="revert-preserve3d-root" class="nested-container revert-preserve3d-root">
-      <div id="revert-preserve3d-container" class="nested-container revert-preserve3d-container">
-        <div id="revert-preserve3d-waypoint" class="nested-waypoint revert-preserve3d-waypoint">
-          <div class="fail-content">revert preserve3d</div>
+    <!-- fixed parent wayfinder tests-->
+    <div id="fixed-trialgrounds" class="trialgrounds fixed-trialgrounds">
+      <div id="fixed-parent-waypoint--template" class="template">
+        <div class="fail-content">fixed wp</div>
+      </div>
+
+      <div id="fixed-parent-wayfinder" class="wayfinder fixed-parent-wayfinder"></div>
+    </div>
+
+    <!-- body wayfinder -->
+    <div id="body-wayfinder" class="wayfinder body-wayfinder"></div>
+
+    <!-- fixed wayfinder -->
+    <div id="fixed-wayfinder" class="wayfinder fixed-wayfinder"></div>
+
+    <!-- fixed-to-fixed-parent waypoint -->
+    <div id="fixed-to-fixed-parent-waypoint" class="fixed-to-fixed-parent-waypoint">
+      <div class="fail-content">fixed-to-fixed-parent</div>
+    </div>
+
+    <!-- templates -->
+    <div id="test-traveler--template" class="test-traveler template">
+      <div class="pass-content">test traveler</div>
+    </div>
+
+    <!-- controller -->
+    <div id="controller" class="controller">
+      <div class="controller-row row-1">
+        <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="trialgrounds.hide()">
+          hide
+        </div>
+        <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="trialgrounds.show()">
+          show
+        </div>
+        <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="trialgrounds.set()">
+          set
+        </div>
+        <div id="anim-button" class="controller-button" onclick="trialgrounds.anim()" (touch)="trialgrounds.anim()">
+          anim
+        </div>
+        <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="trialgrounds.auto()">
+          auto
+        </div>
+      </div>
+      <div class="controller-row row-2">
+        <div
+          id="log-button"
+          class="controller-button"
+          onclick="trialgrounds.toggleLogging()"
+          (touch)="trialgrounds.toggleLogging()"
+        >
+          log results
+        </div>
+        <div
+          id="log-perf-button"
+          class="controller-button"
+          onclick="trialgrounds.togglePerfLogging()"
+          (touch)="trialgrounds.togglePerfLogging()"
+        >
+          log perf
+        </div>
+        <div class="controller-button bug-report-button">
+          <a
+            href="https://github.com/anxpara/wayfinder-animation-tool/issues/new?assignees=&labels=bug%2C+trialgrounds&template=trialgrounds-bug-report.md&title=%5BBug%5D%5BTrialgrounds%5D"
+            target="_blank"
+            rel="noopener"
+            ><img src="https://i.imgur.com/HrntjEl.png" alt="report bug"
+          /></a>
         </div>
       </div>
     </div>
-
-    <div id="nested-wayfinder" class="wayfinder nested-wayfinder"></div>
-  </div>
-
-  <!-- css copy tests -->
-  <div id="copy-trialgrounds" class="trialgrounds copy-trialgrounds">
-    <div id="copy-waypoint--template" class="template">
-      <div class="fail-content">copy wp</div>
-    </div>
-
-    <div id="copy-wayfinder" class="wayfinder copy-wayfinder"></div>
-  </div>
-
-  <!-- nested wayfinder tests -->
-  <div id="nested-wf-trialgrounds" class="trialgrounds">
-    <div id="nested-wf-hub--template" class="nested-wf-hub template">
-      <div class="nested-wf-container">
-        <div id="nest-in-font-size-waypoint" class="nested-wf-waypoint">
-          <div class="fail-content">nested wf wp</div>
-        </div>
-        <div id="nest-in-font-size-wayfinder" class="nested-wayfinder">
-          <div id="nest-in-font-size-traveler" class="test-traveler"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- templates -->
-  <div id="test-traveler--template" class="test-traveler template">
-    <div class="pass-content">test traveler</div>
-  </div>
-
-  <!-- controller -->
-  <div id="controller" class="controller">
-    <div class="controller-row row-1">
-      <div id="hide-button" class="controller-button" onclick="trialgrounds.hide()" (touch)="trialgrounds.hide()">
-        hide
-      </div>
-      <div id="show-button" class="controller-button" onclick="trialgrounds.show()" (touch)="trialgrounds.show()">
-        show
-      </div>
-      <div id="set-button" class="controller-button" onclick="trialgrounds.set()" (touch)="trialgrounds.set()">set</div>
-      <div id="anim-button" class="controller-button" onclick="trialgrounds.anim()" (touch)="trialgrounds.anim()">
-        anim
-      </div>
-      <div id="auto-button" class="controller-button" onclick="trialgrounds.auto()" (touch)="trialgrounds.auto()">
-        auto
-      </div>
-    </div>
-    <div class="controller-row row-2">
-      <div
-        id="log-button"
-        class="controller-button"
-        onclick="trialgrounds.toggleLogging()"
-        (touch)="trialgrounds.toggleLogging()"
-      >
-        log results
-      </div>
-      <div
-        id="log-perf-button"
-        class="controller-button"
-        onclick="trialgrounds.togglePerfLogging()"
-        (touch)="trialgrounds.togglePerfLogging()"
-      >
-        log perf
-      </div>
-      <div class="controller-button bug-report-button">
-        <a
-          href="https://github.com/anxpara/wayfinder-animation-tool/issues/new?assignees=&labels=bug%2C+trialgrounds&template=trialgrounds-bug-report.md&title=%5BBug%5D%5BTrialgrounds%5D"
-          target="_blank"
-          rel="noopener"
-          ><img src="https://i.imgur.com/HrntjEl.png" alt="report bug"
-        /></a>
-      </div>
-    </div>
-  </div>
-</body>
+  </body>
+</html>

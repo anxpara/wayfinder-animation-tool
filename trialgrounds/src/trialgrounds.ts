@@ -1,28 +1,35 @@
 import anime from "animejs";
 import { projectWpToWayfinder, Waypoint, WatResultsLogData, WatResultsLogger } from "wayfinder-animation-tool";
 
-class TestStash {
-  wf: HTMLElement | null = null;
-  t: HTMLElement | null = null;
-}
+type TestStash = {
+  wf: HTMLElement;
+  t?: HTMLElement;
+};
 type TestWaypoint = Waypoint<TestStash>;
 
-let standaloneTrialgrounds: HTMLDivElement | null = null;
-let standaloneWayfinderElement: HTMLDivElement | null = null;
-let standaloneWaypointTemplate: HTMLElement | null = null;
+let standaloneTrialgrounds: HTMLElement;
+let standaloneWayfinderElement: HTMLElement;
+let standaloneWaypointTemplate: HTMLElement;
 
-let nestedTrialgrounds: HTMLDivElement | null = null;
-let nestedWayfinderElement: HTMLDivElement | null = null;
-let nestedWaypointContainerTemplate: HTMLElement | null = null;
+let nestedTrialgrounds: HTMLElement;
+let nestedWayfinderElement: HTMLElement;
+let nestedWaypointContainerTemplate: HTMLElement;
 
-let copyTrialgrounds: HTMLDivElement | null = null;
-let copyWayfinderElement: HTMLDivElement | null = null;
-let copyWaypointTemplate: HTMLElement | null = null;
+let copyTrialgrounds: HTMLElement;
+let copyWayfinderElement: HTMLElement;
+let copyWaypointTemplate: HTMLElement;
 
-let nestedWayfinderTrialgrounds: HTMLDivElement | null = null;
-let nestedWayfinderHubTemplate: HTMLElement | null = null;
+let nestedWayfinderTrialgrounds: HTMLElement;
+let nestedWayfinderHubTemplate: HTMLElement;
 
-let testTravelerTemplate: HTMLElement | null = null;
+let fixedTrialgrounds: HTMLElement;
+let fixedParentWayfinderElement: HTMLElement;
+let fixedParentWaypointTemplate: HTMLElement;
+let fixedWayfinderElement: HTMLElement;
+
+let bodyWayfinderElement: HTMLElement;
+
+let testTravelerTemplate: HTMLElement;
 
 // prettier-ignore
 const standaloneWaypointNames: string[] = ['control', 'absolute', 'font-size', 'font-size-rem', 'size', 'relative', 'translate', 'rotate-origin-0', 'rotate-origin-mid',
@@ -38,7 +45,10 @@ const copyWaypointNames: string[] = ['copy-bg', 'copy-border', 'copy-border-per-
 // prettier-ignore
 const nestedWayfinderWaypointNames: string[] = ['nest-wf-in-scroll', 'nest-in-font-size'];
 // prettier-ignore
-const hardcodedWaypointNames: string[] = ["absolute-in-scrolled", "sticky", "absolute-in-stickied", "double-preserve3d", "revert-preserve3d"];
+const fixedParentWaypointNames: string[] = ['fixed-parent-control', 'fixed-parent-to-fixed', 'fixed-parent-to-body', 'body-to-fixed-parent', 'fixed-to-fixed-parent'];
+
+// prettier-ignore
+const hardcodedWaypointNames: string[] = ["absolute-in-scrolled", "sticky", "absolute-in-stickied", "double-preserve3d", "revert-preserve3d", "body-to-fixed-parent", 'fixed-to-fixed-parent'];
 const hardcodedTravelerNames: string[] = [];
 
 const defaultCssCopyList = ["border-style", "border-width"];
@@ -63,9 +73,9 @@ let enableResultsLogging = true && !enablePerfLogging;
 export function init() {
   parseQueryParams();
   loadElements();
-  spawnWaypoints();
+  spawnWaypointElements();
   loadWaypoints();
-  spawnTravelers();
+  spawnTravelerElements();
   setAllTravelers();
   startAnimatedTests();
   initController();
@@ -84,29 +94,37 @@ function parseQueryParams() {
 }
 
 function loadElements(): void {
-  standaloneTrialgrounds = document.getElementById("standalone-trialgrounds")! as HTMLDivElement;
+  standaloneTrialgrounds = document.getElementById("standalone-trialgrounds")!;
   standaloneWaypointTemplate = document.getElementById("standalone-waypoint--template")!;
-  standaloneWayfinderElement = document.getElementById("standalone-wayfinder")! as HTMLDivElement;
+  standaloneWayfinderElement = document.getElementById("standalone-wayfinder")!;
 
-  nestedTrialgrounds = document.getElementById("nested-trialgrounds")! as HTMLDivElement;
+  nestedTrialgrounds = document.getElementById("nested-trialgrounds")!;
   nestedWaypointContainerTemplate = document.getElementById("nested-container--template")!;
-  nestedWayfinderElement = document.getElementById("nested-wayfinder")! as HTMLDivElement;
+  nestedWayfinderElement = document.getElementById("nested-wayfinder")!;
 
-  copyTrialgrounds = document.getElementById("copy-trialgrounds")! as HTMLDivElement;
+  copyTrialgrounds = document.getElementById("copy-trialgrounds")!;
   copyWaypointTemplate = document.getElementById("copy-waypoint--template")!;
-  copyWayfinderElement = document.getElementById("copy-wayfinder")! as HTMLDivElement;
+  copyWayfinderElement = document.getElementById("copy-wayfinder")!;
 
-  nestedWayfinderTrialgrounds = document.getElementById("nested-wf-trialgrounds")! as HTMLDivElement;
+  nestedWayfinderTrialgrounds = document.getElementById("nested-wf-trialgrounds")!;
   nestedWayfinderHubTemplate = document.getElementById("nested-wf-hub--template")!;
+
+  fixedTrialgrounds = document.getElementById("fixed-trialgrounds")!;
+  fixedParentWayfinderElement = document.getElementById("fixed-parent-wayfinder")!;
+  fixedParentWaypointTemplate = document.getElementById("fixed-parent-waypoint--template")!;
+  fixedWayfinderElement = document.getElementById("fixed-wayfinder")!;
+
+  bodyWayfinderElement = document.getElementById("body-wayfinder")!;
 
   testTravelerTemplate = document.getElementById("test-traveler--template")!;
 }
 
-function spawnWaypoints(): void {
+function spawnWaypointElements(): void {
   spawnStandaloneWaypoints();
   spawnNestedWaypoints();
   spawnCopyWaypoints();
   spawnNestedWayfinders();
+  spawnFixedParentWaypoints();
 }
 
 function spawnStandaloneWaypoints(): void {
@@ -156,22 +174,22 @@ function spawnNestedWaypoints(): void {
   });
 
   if (nestedWaypointNames.includes("scroll")) {
-    let scrollContainer = document.getElementById("scroll-container")! as HTMLDivElement;
+    let scrollContainer = document.getElementById("scroll-container")!;
     scrollContainer.scrollBy(70, 50);
   }
 
   if (nestedWaypointNames.includes("absolute-in-scrolled")) {
-    let scrollContainer = document.getElementById("scroll-container2")! as HTMLDivElement;
+    let scrollContainer = document.getElementById("scroll-container2")!;
     scrollContainer.scrollBy(200, 120);
   }
 
   if (nestedWaypointNames.includes("sticky")) {
-    let rootContainer = document.getElementById("sticky-root")! as HTMLDivElement;
+    let rootContainer = document.getElementById("sticky-root")!;
     rootContainer.scrollBy(0, 200);
   }
 
   if (nestedWaypointNames.includes("absolute-in-stickied")) {
-    let rootContainer = document.getElementById("absolute-in-stickied-root")! as HTMLDivElement;
+    let rootContainer = document.getElementById("absolute-in-stickied-root")!;
     rootContainer.scrollBy(200, 200);
   }
 }
@@ -233,6 +251,25 @@ function spawnNestedWayfinders(): void {
   });
 }
 
+function spawnFixedParentWaypoints(): void {
+  fixedParentWaypointNames.reverse();
+  fixedParentWaypointNames.forEach((name) => {
+    if (hardcodedWaypointNames.includes(name)) {
+      return;
+    }
+
+    let testWaypoint = fixedParentWaypointTemplate!.cloneNode(true) as HTMLElement;
+    testWaypoint.id = name + "-waypoint";
+    testWaypoint.className = testWaypoint.id;
+    testWaypoint.firstElementChild!.innerHTML = name;
+
+    fixedTrialgrounds!.prepend(testWaypoint);
+    anime.set(testWaypoint, {
+      display: "block",
+    });
+  });
+}
+
 function loadWaypoints(): void {
   standaloneWaypointNames.forEach((name) => {
     loadWaypoint(name, standaloneWayfinderElement!);
@@ -250,6 +287,17 @@ function loadWaypoints(): void {
     let nestedWayfinder = document.getElementById(name + "-wayfinder")!;
     loadWaypoint(name, nestedWayfinder);
   });
+
+  fixedParentWaypointNames.forEach((name) => {
+    let wayfinder = fixedParentWayfinderElement!;
+    if (name === "fixed-parent-to-fixed") {
+      wayfinder = fixedWayfinderElement;
+    }
+    if (name === "fixed-parent-to-body") {
+      wayfinder = bodyWayfinderElement;
+    }
+    loadWaypoint(name, wayfinder);
+  });
 }
 
 const customLogger: WatResultsLogger = (data: WatResultsLogData) => {
@@ -260,14 +308,14 @@ function loadWaypoint(name: string, wayfinder: HTMLElement): void {
   let wp: TestWaypoint = {
     name,
     element: document.getElementById(name + "-waypoint")!,
-    stash: { wf: wayfinder, t: null },
+    stash: { wf: wayfinder },
     enableLogging: enableResultsLogging,
     customLogger,
   };
   waypointsByName.set(name, wp);
 }
 
-function spawnTravelers(): void {
+function spawnTravelerElements(): void {
   waypointsByName.forEach((wp) => {
     if (hardcodedTravelerNames.includes(wp.name)) {
       return;
