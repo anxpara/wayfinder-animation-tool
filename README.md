@@ -7,6 +7,7 @@
   </a>
 </div>
 
+<h3 align="center">Wayfinder will be sunsetting soon(TM), in favor of a minimalist dom projection library</h3>
 <h3 align="center"> BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h3>
 <h5 align="center"> Demos: <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash</a> | <a href="https://codepen.io/anxpara/pen/poWQEOG" target="_blank">Conduit</a>
 </h5>
