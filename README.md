@@ -8,10 +8,6 @@
 </div>
 
 <h3 align="center">Wayfinder will be sunsetting soon(TM), in favor of a minimalist dom projection library</h3>
-<h3 align="center"> BETA | Animate the web intuitively | <a href="https://discord.gg/qTpEwE8q6k" target="_blank">Discord</a> </h3>
-<h5 align="center"> Demos: <a href="https://codepen.io/anxpara/pen/wveVQJm" target="_blank">Hello potion seller</a> | <a href="https://codepen.io/anxpara/pen/rNzBgOz" target="_blank">Splash</a> | <a href="https://codepen.io/anxpara/pen/poWQEOG" target="_blank">Conduit</a>
-</h5>
-
 <h1 align="center">
   <font size="2"><a href="https://wayfinderanimationtool.com" target="_blank">https://wayfinderanimationtool.com</a></font>
 </h1>
@@ -20,9 +16,22 @@
 $ npm install wayfinder-animation-tool --save
 ```
 
-Wayfinder Animation Tool is a light-weight library for JS/Typescript that augments your favorite animation engine (e.g. Anime.JS, Motion One, and more).
+<h2>Note about future of Wayfinder</h2>
 
-Wayfinder offers a new approach to web animation: treat elements like waypoints, project them onto a wayfinder div, then animate travelers to and from those projections with ease. This approach has multiple benefits:
+In 2021 I started building Wayfinder with the goal of making responsive, cross-dom web animations easy and straightforward to design and code. A fundamental technique of animating across the dom is "dom projection," in which you calculate the position and shape of one element in relation to another. To simplify my solution, I devised an html/css convention: "wayfinder" divs would act as common ground, the library would project any elements to any wayfinder divs above them in the hierarchy, and "traveler" divs would animate within the wayfinder divs to and from the projections of said elements. This convention made building the library easier, and using the library is nice if you understand the convention, but I feel that it made the library less approachable for anybody not familiar with the conventions I set.
+
+I've learned a lot from building Wayfinder, and with new perspective I can see a better approach to responsive, cross-dom animation on the web. I can envision a minimalist dom projection library which doesn't impose any html/css conventions, and which easily plugs straight into your favorite animation engine.
+
+I've already completed step 1 of this effort by publishing the alpha verison of https://github.com/anxpara/getActualClientRect. getActualClientRect is similar to getBoundingClientRect, except it doesn't obscure the transforms affecting the element, so you get the element's true position, size, and shape relative to the viewport. 
+
+Now that getActualClientRect is published, I will be able to use the viewport space to relate any two elements on a page, which makes dom projection a lot easier. Now I can focus on Wayfinder's successor, which means the sun will be setting on Wayfinder soon(TM). Wayfinder will still be available in its current state, I just won't be putting energy into maintaining it.
+
+-anx
+(12/14/23)
+
+<h1>Summary</h1>
+
+Wayfinder Animation Tool is a JS/Typescript library that augments your favorite animation engine and offers a new approach to web animation: treat elements like waypoints, project them onto a wayfinder div, then animate travelers to and from those projections with ease. This approach has multiple benefits:
 
 * waypoints can take advantage of responsive design so that your animations look great on any device or screen size
 * animations can span across the dom, opening up many possibilities
@@ -110,21 +119,5 @@ animate('#knight-traveler', {
  * if 'transform' is included, then the matrix3d param is returned via the transform property
  */ 
 ```
-
-</br>
-</br>
-
-<div align="center"><a href="https://wayfinderanimationtool.com"><img src="https://i.imgur.com/n0pQ2lc.png" width="250px"/></a></div>
-
-<h1 align="center">Support the development of Wayfinder</h1>
-
-#### All support is greatly appreciated, here are some ways you can help out:
-
-* Help beta test by making cool animations and sites
-* Join the Wayfinder <a href="https://discord.gg/qTpEwE8q6k">discord</a>
-* Submit <a href="https://github.com/anxpara/wayfinder-animation-tool/issues">bug reports</a>
-* Buy a coffee for me <a href="https://ko-fi.com/anxpara">Ko-fi</a>
-
-<3 anxpara
 
 <!-- prettier-ignore-end -->
