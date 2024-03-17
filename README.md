@@ -7,29 +7,20 @@
   </a>
 </div>
 
-<h3 align="center">Wayfinder will be sunsetting soon(TM), in favor of a minimalist dom projection library</h3>
-<h1 align="center">
-  <font size="2"><a href="https://wayfinderanimationtool.com" target="_blank">https://wayfinderanimationtool.com</a></font>
-</h1>
+# Wayfinder has been sunset
+
+I have published Projectrix v0.1.0 alpha, which is the successor to Wayfinder. Projectrix is a minimalist dom projection library that does what Wayfinder set out to do, but with a much simpler interface and without requiring any html/css conventions. I will no longer be maintaining Wayfinder.
+
+https://github.com/anxpara/projectrix
+
+-anx
+(3/17/24)
+
+## Wayfinder Summary
 
 ```bash
 $ npm install wayfinder-animation-tool --save
 ```
-
-<h2>Note about future of Wayfinder</h2>
-
-In 2021 I started building Wayfinder with the goal of making responsive, cross-dom web animations easy and straightforward to design and code. A fundamental technique of animating across the dom is "dom projection," in which you calculate the position and shape of one element in relation to another. To simplify my solution, I devised an html/css convention: "wayfinder" divs would act as common ground, the library would project any elements to any wayfinder divs above them in the hierarchy, and "traveler" divs would animate within the wayfinder divs to and from the projections of said elements. This convention made building the library easier, and using the library is nice if you understand the convention, but I feel that it made the library less approachable for anybody not familiar with the conventions I set.
-
-I've learned a lot from building Wayfinder, and with new perspective I can see a better approach to responsive, cross-dom animation on the web. I can envision a minimalist dom projection library which doesn't impose any html/css conventions, and which easily plugs straight into your favorite animation engine.
-
-I've already completed step 1 of this effort by publishing the alpha verison of https://github.com/anxpara/getActualClientRect. getActualClientRect is similar to getBoundingClientRect, except it doesn't obscure the transforms affecting the element, so you get the element's true position, size, and shape relative to the viewport. 
-
-Now that getActualClientRect is published, I will be able to use the viewport space to relate any two elements on a page, which makes dom projection a lot easier. Now I can focus on Wayfinder's successor, which means the sun will be setting on Wayfinder soon(TM). Wayfinder will still be available in its current state, I just won't be putting energy into maintaining it.
-
--anx
-(12/14/23)
-
-<h1>Summary</h1>
 
 Wayfinder Animation Tool is a JS/Typescript library that augments your favorite animation engine and offers a new approach to web animation: treat elements like waypoints, project them onto a wayfinder div, then animate travelers to and from those projections with ease. This approach has multiple benefits:
 
