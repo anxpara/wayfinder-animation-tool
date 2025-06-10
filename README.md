@@ -16,6 +16,11 @@ https://github.com/anxpara/projectrix
 -anx
 (3/17/24)
 
+Another update: I will be making this repo private on 9/10/25.
+
+-anx
+(6/10/25)
+
 ## Wayfinder Summary
 
 ```bash
